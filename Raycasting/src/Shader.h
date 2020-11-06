@@ -6,6 +6,8 @@
 #include <string>
 #include <fstream>
 
+#include <unordered_map>
+
 class Shader {
 public:
 	/* file must contain vertex and fragment shader
@@ -20,15 +22,21 @@ public:
 	// stores the id of an already initialized shader program
 	Shader(GLuint existingShader);
 
-	void setUniform1f(const std::string& uniformName, float value);
+	void setUniform1f(const std::string& uniformName, float  value);
 	void setUniform2f(const std::string& uniformName, float* values);
 	void setUniform3f(const std::string& uniformName, float* values);
 	void setUniform4f(const std::string& uniformName, float* values);
 
+	void setUniform2f(const std::string& uniformName, float a, float b);
+	void setUniform3f(const std::string& uniformName, float a, float b, float c);
+	void setUniform4f(const std::string& uniformName, float a, float b, float c, float d);
+
 	void setUniform1i(const std::string& uniformName, int value);
 
-	void bind();
-	void unbind();
+	GLuint getUniformLocation(const std::string& name);
+
+	void bind() const;
+	void unbind() const;
 
 	void freeMemory();
 
@@ -38,5 +46,6 @@ private:
 
 private:
 	GLuint id;
+	std::unordered_map<std::string, int> uniformLocationCache;
 
 };

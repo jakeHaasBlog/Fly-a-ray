@@ -16,6 +16,9 @@
     <ClCompile Include="src\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Geometry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\OpenglBufferObjects.h">
@@ -24,10 +27,8 @@
     <ClInclude Include="src\Shader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="shader.sh">
+    <ClInclude Include="src\Geometry.h">
       <Filter>Source Files</Filter>
-    </None>
+    </ClInclude>
   </ItemGroup>
 </Project>

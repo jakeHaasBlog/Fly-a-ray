@@ -5,6 +5,10 @@
 
 Shader::Shader(std::ifstream & fileStream) {
 
+	if (!fileStream.good()) {
+		std::cout << "shader file not found" << std::endl;
+	}
+
 	enum class ShaderType {
 		NONE = -1, VERTEX = 0, FRAGMENT = 1
 	};
@@ -24,7 +28,7 @@ Shader::Shader(std::ifstream & fileStream) {
 		}
 		else {
 			ss[(int)type] << line << '\n';
-			std::cout << line << std::endl;
+			//std::cout << line << std::endl;
 		}
 	}
 
@@ -43,25 +47,43 @@ Shader::Shader(GLuint existingShader) {
 
 void Shader::setUniform1f(const std::string & uniformName, float value) {
 	bind();
-	setUniform1f(uniformName, value);
+	glUniform1f(getUniformLocation(uniformName), value);
 	unbind();
 }
 
 void Shader::setUniform2f(const std::string & uniformName, float * values) {
 	bind();
-	setUniform2f(uniformName, values);
+	glUniform2f(getUniformLocation(uniformName), values[0], values[1]);
 	unbind();
 }
 
 void Shader::setUniform3f(const std::string & uniformName, float * values) {
 	bind();
-	setUniform3f(uniformName, values);
+	glUniform3f(getUniformLocation(uniformName), values[0], values[1], values[2]);
 	unbind();
 }
 
 void Shader::setUniform4f(const std::string & uniformName, float * values) {
 	bind();
-	setUniform4f(uniformName, values);
+	glUniform4f(getUniformLocation(uniformName), values[0], values[1], values[2], values[3]);
+	unbind();
+}
+
+void Shader::setUniform2f(const std::string & uniformName, float a, float b) {
+	bind();
+	glUniform2f(getUniformLocation(uniformName), a, b);
+	unbind();
+}
+
+void Shader::setUniform3f(const std::string & uniformName, float a, float b, float c) {
+	bind();
+	glUniform3f(getUniformLocation(uniformName), a, b, c);
+	unbind();
+}
+
+void Shader::setUniform4f(const std::string & uniformName, float a, float b, float c, float d) {
+	bind();
+	glUniform4f(getUniformLocation(uniformName), a, b, c, d);
 	unbind();
 }
 
@@ -71,11 +93,11 @@ void Shader::setUniform1i(const std::string & uniformName, int value) {
 	unbind();
 }
 
-void Shader::bind() {
+void Shader::bind() const {
 	glUseProgram(id);
 }
 
-void Shader::unbind() {
+void Shader::unbind() const {
 	glUseProgram(0);
 }
 
@@ -115,9 +137,13 @@ GLuint Shader::compileShader(GLuint type, const std::string& source) {
 		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
 		char* message = new char[length];
 		glGetShaderInfoLog(id, length, &length, message);
-		std::cout << "Failed to compile "
-			<< (type == GL_VERTEX_SHADER ? "vertex shader" : GL_GEOMETRY_SHADER ? "geometry shader" : "fragment shader")
-			<< std::endl;
+		if (type == GL_VERTEX_SHADER) {
+			std::cout << "Failed to compile vertex shader" << std::endl;
+		}
+		else if (type == GL_FRAGMENT_SHADER) {
+			std::cout << "Failed to compile fragment shader" << std::endl;
+		}
+	
 		std::cout << message << std::endl;
 		glDeleteShader(id);
 		delete[] message;
@@ -125,4 +151,19 @@ GLuint Shader::compileShader(GLuint type, const std::string& source) {
 	}
 
 	return id;
+}
+
+
+GLuint Shader::getUniformLocation(const std::string& name) {
+	if (uniformLocationCache.find(name) != uniformLocationCache.end()) {
+		return uniformLocationCache[name];
+	}
+
+	int location = glGetUniformLocation(id, name.c_str());
+	if (location == -1) {
+		std::cout << "Warning: uniform " << name << " doesn't exist" << std::endl;
+	}
+
+	uniformLocationCache[name] = location;
+	return location;
 }

@@ -72,7 +72,7 @@ void IndexBuffer::bufferSubData(void * data, size_t dataSizeInBytes) {
 	indexCount = dataSizeInBytes / sizeof(unsigned int);
 }
 
-unsigned int IndexBuffer::getCount() {
+unsigned int IndexBuffer::getCount() const {
 	return indexCount;
 }
 
@@ -170,17 +170,15 @@ void VertexArray::setAttributes(const std::string & vertexDataFormat, const Vert
 	ib.unbind();
 }
 
-void VertexArray::bind()
-{
+void VertexArray::bind() const {
 	glBindVertexArray(id);
 }
 
-void VertexArray::unbind()
-{
+void VertexArray::unbind() const {
 	glBindVertexArray(0);
 }
 
-GLuint VertexArray::getID() {
+GLuint VertexArray::getID() const {
 	return id;
 }
 

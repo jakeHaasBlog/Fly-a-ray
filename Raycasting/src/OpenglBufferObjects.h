@@ -46,7 +46,7 @@ public:
 	void bufferData(void* data, size_t dataSizeInBytes);
 	void bufferSubData(void* data, size_t dataSizeInBytes);
 
-	unsigned int getCount();
+	unsigned int getCount() const;
 
 	void bind() const;
 	void unbind() const;
@@ -70,10 +70,10 @@ public:
 
 	void setAttributes(const std::string& vertexDataFormat, const VertexBuffer& vb, const IndexBuffer& ib);
 
-	void bind();
-	void unbind();
+	void bind() const;
+	void unbind() const;
 
-	GLuint getID();
+	GLuint getID() const;
 
 	void freeMemory();
 
