@@ -25,6 +25,7 @@ namespace Geo {
 	public:
 		Rectangle(float x, float y, float width, float height);
 		Rectangle();
+
 	protected:
 		VertexBuffer& getVB();
 		IndexBuffer& getIB();

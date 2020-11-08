@@ -13,7 +13,8 @@ public:
 	/* file must contain vertex and fragment shader
 	- first line of vertex shader must be: #shader vertex
 	- first line of fragment shader must be: #shader fragment 
-	The file will be closed automatically in this function */
+	The file will be closed automatically in this function
+	* note that the '#vertex shader' tag must be the first line in the file*/
 	Shader(std::ifstream& fileStream);
 
 	// manually input vertex and fragent shaders as std::strings
@@ -31,9 +32,8 @@ public:
 	void setUniform3f(const std::string& uniformName, float a, float b, float c);
 	void setUniform4f(const std::string& uniformName, float a, float b, float c, float d);
 
+	// usually used for specifying the desired texture slot
 	void setUniform1i(const std::string& uniformName, int value);
-
-	GLuint getUniformLocation(const std::string& name);
 
 	void bind() const;
 	void unbind() const;
@@ -44,8 +44,10 @@ private:
 	GLuint createShader(const std::string& vertexShader, const std::string& fragmentShader);
 	GLuint compileShader(GLuint type, const std::string& source);
 
+	GLuint getUniformLocation(const std::string& name);
+
 private:
-	GLuint id;
+	GLuint id = 0;
 	std::unordered_map<std::string, int> uniformLocationCache;
 
 };

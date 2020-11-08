@@ -89,7 +89,7 @@ void Shader::setUniform4f(const std::string & uniformName, float a, float b, flo
 
 void Shader::setUniform1i(const std::string & uniformName, int value) {
 	bind();
-	setUniform1i(uniformName, value);
+	glUniform1i(getUniformLocation(uniformName), value);
 	unbind();
 }
 

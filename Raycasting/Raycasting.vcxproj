@@ -23,11 +23,17 @@
     <ClCompile Include="src\OpenglBufferObjects.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Source.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Geometry.h" />
     <ClInclude Include="src\OpenglBufferObjects.h" />
     <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\Texture.h" />
+    <ClInclude Include="TexturedQuad.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="texShader.sh" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

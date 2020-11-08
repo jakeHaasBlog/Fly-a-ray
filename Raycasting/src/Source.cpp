@@ -7,6 +7,7 @@
 
 #include "OpenglBufferObjects.h"
 #include "Shader.h"
+#include "Texture.h"
 
 #include "Geometry.h"
 
@@ -25,9 +26,28 @@ int main(int argc, char** argv) {
 	if (glewInit() != GLEW_OK)
 		printf("GLEW did not initialize properly\n");
 
-	Geo::Rectangle rect = Geo::Rectangle(0, 0, 0.2, 0.2);
-	Geo::Circle circle = Geo::Circle(-0.5, 0.5, 0.1);
-	Geo::LineSeg line = Geo::LineSeg(0, 0, -0.5, 0.5);
+	float vertices[] = {
+		0.0f, 0.0f,  0.0f, 0.0f,
+		0.0f, 1.0f,  0.0f, 1.0f,
+		1.0f, 1.0f,  1.0f, 1.0f,
+		1.0f, 0.0f,  1.0f, 0.0f,
+	};
+	VertexBuffer vb = VertexBuffer(vertices, 4 * sizeof(float) * 4);
+
+	unsigned int indices[] = {
+		0, 1, 2,
+		0, 2, 3
+	};
+
+	IndexBuffer ib = IndexBuffer(indices, 6 * sizeof(unsigned int));
+
+	VertexArray va = VertexArray("ff ff", vb, ib);
+
+	Texture tex = Texture(500, 500);
+
+	std::ifstream stream("texShader.sh");
+	Shader sh = Shader(stream);
+
 
 	float n = 0.0f;
 	while (!glfwWindowShouldClose(window)) {
@@ -37,13 +57,15 @@ int main(int argc, char** argv) {
 		glClear(GL_COLOR_BUFFER_BIT);
 		n += 0.01f;
 
-		rect.renderFilled(1, 0, 0);
-		rect.renderOutline(1, 1, 0);
-
-		circle.renderFilled(1, 0, 0);
-		circle.renderOutline(1, 1, 0);
-
-		line.render(1, 0, 0);
+		tex.bind(0);
+		sh.setUniform1i("u_texture", 0);
+		sh.bind();
+		tex.bind();
+		va.bind();
+		glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr);
+		va.unbind();
+		tex.unbind();
+		sh.unbind();
 	}
 
 	glfwDestroyWindow(window);
