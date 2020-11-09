@@ -35,6 +35,7 @@ public:
 	// usually used for specifying the desired texture slot
 	void setUniform1i(const std::string& uniformName, int value);
 
+	// important: you must set any required uniforms BEFORE you bind the shader for rendering because the shader is unbound in the setUniformX functions
 	void bind() const;
 	void unbind() const;
 

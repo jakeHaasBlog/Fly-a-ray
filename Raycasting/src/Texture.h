@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+// a texture managed by OpenGL, pixel data is stored in VRAM and accessed via shader programs
 class Texture {
 public:
 	// generates a default texture with float rbg encoding 
@@ -20,10 +21,10 @@ public:
 
 	// after calling this function all opengl render calls will render onto this texture instaid of the window
 	// IMPORTANT: you MUST call the unbindForRendering method when you are done rendering
-	void bindForRendering();
+	void bindForRendering(); // not implemented yet
 
 	// unbinds this texture for rendering and sets window back to render target
-	void unbindForRendering();
+	void unbindForRendering(); // not implemented yet
 
 	// sets the pixels in the texture
 	// pixelCount - the number of pixels in 'data'    aka. sizeof(data) / (3 * sizeof(float))
@@ -45,15 +46,15 @@ public:
 
 	// takes advantage of move semantics so returning the vector is not attrociously innefficient
 	// mipmap level will return the pixels of that level of the mipmap, level 0 is the original size, each level of mipmap is half the size of previous one
-	std::vector<float> getPixels(int mipmapLevel = 0);
+	std::vector<std::array<float, 3>> getPixels(int mipmapLevel = 0);
 
 	GLuint getID();
 
+	// deletes the texture from VRAM
 	void freeMemory();
 
 private:
 	GLuint id;
-	int currentTextureSlot;
-	bool usingMipMaps = false;
+	int width, height;
 
 };

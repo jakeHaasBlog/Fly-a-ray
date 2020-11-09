@@ -10,6 +10,7 @@
 #include "Texture.h"
 
 #include "Geometry.h"
+#include "TexturedQuad.h"
 
 int main(int argc, char** argv) {
 
@@ -26,27 +27,10 @@ int main(int argc, char** argv) {
 	if (glewInit() != GLEW_OK)
 		printf("GLEW did not initialize properly\n");
 
-	float vertices[] = {
-		0.0f, 0.0f,  0.0f, 0.0f,
-		0.0f, 1.0f,  0.0f, 1.0f,
-		1.0f, 1.0f,  1.0f, 1.0f,
-		1.0f, 0.0f,  1.0f, 0.0f,
-	};
-	VertexBuffer vb = VertexBuffer(vertices, 4 * sizeof(float) * 4);
 
-	unsigned int indices[] = {
-		0, 1, 2,
-		0, 2, 3
-	};
-
-	IndexBuffer ib = IndexBuffer(indices, 6 * sizeof(unsigned int));
-
-	VertexArray va = VertexArray("ff ff", vb, ib);
-
-	Texture tex = Texture(500, 500);
-
-	std::ifstream stream("texShader.sh");
-	Shader sh = Shader(stream);
+	Texture tex1("meme.jpg");
+	Texture tex2("pattern.png");
+	TexturedQuad tq = TexturedQuad(-0.9, -0.9, 1.8, 1.8, tex1);
 
 
 	float n = 0.0f;
@@ -57,16 +41,18 @@ int main(int argc, char** argv) {
 		glClear(GL_COLOR_BUFFER_BIT);
 		n += 0.01f;
 
-		tex.bind(0);
-		sh.setUniform1i("u_texture", 0);
-		sh.bind();
-		tex.bind();
-		va.bind();
-		glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr);
-		va.unbind();
-		tex.unbind();
-		sh.unbind();
+		if ((int)n / 5 % 2 == 0)
+			tq.setTexture(tex1);
+		else
+			tq.setTexture(tex2);
+
+		tq.setTextureSampleArea(n/2, n/3, sin(n) + 1.1f, sin(n) + 1.1f);
+		tq.render();
+
 	}
+
+	tex1.freeMemory();
+	tex2.freeMemory();
 
 	glfwDestroyWindow(window);
 	glfwTerminate();

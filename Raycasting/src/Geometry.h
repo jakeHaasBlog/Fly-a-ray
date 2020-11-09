@@ -27,9 +27,9 @@ namespace Geo {
 		Rectangle();
 
 	protected:
-		VertexBuffer& getVB();
-		IndexBuffer& getIB();
-		VertexArray& getVA();
+		VertexBuffer& getVB() override;
+		IndexBuffer& getIB() override;
+		VertexArray& getVA() override;
 
 		static Rectangle& getStencyl();
 
