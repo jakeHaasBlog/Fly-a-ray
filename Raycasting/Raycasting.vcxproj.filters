@@ -43,9 +43,4 @@
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="texShader.sh">
-      <Filter>Source Files</Filter>
-    </None>
-  </ItemGroup>
 </Project>

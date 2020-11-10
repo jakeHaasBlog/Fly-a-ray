@@ -12,6 +12,8 @@
 #include "Geometry.h"
 #include "TexturedQuad.h"
 
+#include "yse.hpp"
+
 int main(int argc, char** argv) {
 
 	if (!glfwInit())
@@ -27,9 +29,15 @@ int main(int argc, char** argv) {
 	if (glewInit() != GLEW_OK)
 		printf("GLEW did not initialize properly\n");
 
+	YSE::System().init();
+	YSE::sound mysound;
+	mysound.create("assets/ShootingStars.ogg");
+	mysound.setLooping(true);
+	mysound.play();
 
-	Texture tex1("meme.jpg");
-	Texture tex2("pattern.png");
+
+	Texture tex1("assets/meme.jpg");
+	Texture tex2("assets/pattern.png");
 	TexturedQuad tq = TexturedQuad(-0.9, -0.9, 1.8, 1.8, tex1);
 
 
@@ -49,10 +57,15 @@ int main(int argc, char** argv) {
 		tq.setTextureSampleArea(n/2, n/3, sin(n) + 1.1f, sin(n) + 1.1f);
 		tq.render();
 
+		mysound.setPosition(YSE::Vec(sin(n) * 10, 0.0f, cos(n) * 10));
+		//mysound.setVolume(1.0f - ((sin(n) * 0.5f) + 0.5f) + 0.1f);
+		YSE::System().update();
 	}
 
 	tex1.freeMemory();
 	tex2.freeMemory();
+
+	YSE::System().close();
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
