@@ -2,6 +2,7 @@
 A minimal old-school ray casting game
 
 Built with Visual Studio 2017
+
 libraries:
 - GLEW            interface for OpenGL functions
 - GLFW            handle for cross platform window
