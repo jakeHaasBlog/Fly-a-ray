@@ -9,6 +9,10 @@
 // a texture managed by OpenGL, pixel data is stored in VRAM and accessed via shader programs
 class Texture {
 public:
+	// default constructor, no texture will be generated and no opengl functions will be called, use this for defining Textures before GLEW is initilized
+	// must call one of the generateXXX functions before binding
+	Texture();
+
 	// generates a default texture with float rbg encoding 
 	Texture(int width, int height);
 
@@ -19,16 +23,21 @@ public:
 	// generates texture then reads pixel data from png or jpg file into it
 	Texture(const std::string& filename);
 
+	// generate functions will initialize an uninitialized texture or simply overwrite an existing one
+	void generateFromFile(const std::string& filename);
+	// generate functions will initialize an uninitialized texture or simply overwrite an existing one
+	void generateDefaultTexture(int width, int height);
+	// generate functions will initialize an uninitialized texture or simply overwrite an existing one
+	void generateFromData(int width, int height, float* data, size_t pixelCount);
+
+	void setDefaultTexParameters();
+
 	// after calling this function all opengl render calls will render onto this texture instaid of the window
 	// IMPORTANT: you MUST call the unbindForRendering method when you are done rendering
 	void bindForRendering(); // not implemented yet
 
 	// unbinds this texture for rendering and sets window back to render target
 	void unbindForRendering(); // not implemented yet
-
-	// sets the pixels in the texture
-	// pixelCount - the number of pixels in 'data'    aka. sizeof(data) / (3 * sizeof(float))
-	void subData(float* data, size_t pixelCount);
 
 	// binds texture to the given slot in the vram so shader programs can access it
 	void bind(int textureSlot = 0);
@@ -56,5 +65,5 @@ public:
 private:
 	GLuint id;
 	int width, height;
-
+	bool isInitilized = false;
 };

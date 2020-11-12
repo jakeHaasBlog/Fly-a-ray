@@ -2,7 +2,7 @@
 #include "Geometry.h"
 
 #include <stdio.h>
-
+#include "Window.h"
 
 namespace {
 	bool getRectRectIntersection(const Geo::Rectangle& rect1, const Geo::Rectangle& rect2, std::vector<std::array<float, 2>>* poi = nullptr) {
@@ -271,13 +271,11 @@ void Geo::GeoObject::render(const Shader & shader, const VertexBuffer & vb, cons
 {
 	shader.bind();
 
-	glDisable(GL_CULL_FACE);
 	va.bind();
 	ib.bind();
 	glDrawElements(inputType, ib.getCount(), GL_UNSIGNED_INT, nullptr);
 	va.unbind();
 	ib.unbind();
-	glEnable(GL_CULL_FACE);
 }
 
 void Geo::GeoObject::render(const Shader& shader)
@@ -342,21 +340,22 @@ Geo::Rectangle& Geo::Rectangle::getStencyl()
 
 void Geo::Rectangle::renderFilled(float r, float g, float b)
 {
-	std::string vertexShaderString =
+	static std::string vertexShaderString =
 		"#version 330 core\n"
 		"\n"
 		"layout(location = 0) in vec2 position;\n"
 		"\n"
 		"uniform vec2 u_stretch;\n"
 		"uniform vec2 u_translation;\n"
+		"uniform float u_aspectRatio;\n"
 		"\n"
 		"void main()\n"
 		"{\n"
-		"	gl_Position = vec4(position[0] * u_stretch[0] + u_translation[0], position[1] * u_stretch[1] + u_translation[1], 0, 1);\n"
+		"	gl_Position = vec4((position[0] / u_aspectRatio) * u_stretch[0] + (u_translation[0] / u_aspectRatio), position[1] * u_stretch[1] + u_translation[1], 0, 1);\n"
 		"	gl_Position[2] = 0;\n"
 		"};\n";
 
-	std::string fragmentShaderString =
+	static std::string fragmentShaderString =
 		"#version 330 core\n"
 		"\n"
 		"layout(location = 0) out vec4 color;\n"
@@ -370,6 +369,7 @@ void Geo::Rectangle::renderFilled(float r, float g, float b)
 
 	static Shader fillShader(vertexShaderString, fragmentShaderString);
 
+	fillShader.setUniform1f("u_aspectRatio", window.getAspectRatio());
 	fillShader.setUniform2f("u_stretch", width, height);
 	fillShader.setUniform2f("u_translation", x, y);
 	fillShader.setUniform3f("u_color", r, g, b);
@@ -379,21 +379,22 @@ void Geo::Rectangle::renderFilled(float r, float g, float b)
 
 void Geo::Rectangle::renderOutline(float r, float g, float b)
 {
-	std::string vertexShaderString =
+	static std::string vertexShaderString =
 		"#version 330 core\n"
 		"\n"
 		"layout(location = 0) in vec2 position;\n"
 		"\n"
 		"uniform vec2 u_stretch;\n"
 		"uniform vec2 u_translation;\n"
+		"uniform float u_aspectRatio;\n"
 		"\n"
 		"void main()\n"
 		"{\n"
-		"	gl_Position = vec4(position[0] * u_stretch[0] + u_translation[0], position[1] * u_stretch[1] + u_translation[1], 0, 1);\n"
+		"	gl_Position = vec4((position[0] / u_aspectRatio) * u_stretch[0] + (u_translation[0] / u_aspectRatio), position[1] * u_stretch[1] + u_translation[1], 0, 1);\n"
 		"	gl_Position[2] = 0;\n"
 		"};\n";
 
-	std::string fragmentShaderString =
+	static std::string fragmentShaderString =
 		"#version 330 core\n"
 		"\n"
 		"layout(location = 0) out vec4 color;\n"
@@ -415,6 +416,7 @@ void Geo::Rectangle::renderOutline(float r, float g, float b)
 	};
 	static IndexBuffer lineIB = IndexBuffer(lineIndices, 2 * 4 * sizeof(unsigned int));
 
+	lineShader.setUniform1f("u_aspectRatio", window.getAspectRatio());
 	lineShader.setUniform2f("u_stretch", width, height);
 	lineShader.setUniform2f("u_translation", x, y);
 	lineShader.setUniform3f("u_color", r, g, b);
@@ -657,7 +659,7 @@ VertexArray& Geo::Circle::getHighResCircleVA() {
 
 void Geo::Circle::renderFilled(float r, float g, float b)
 {
-	std::string vertexShaderString =
+	static std::string vertexShaderString =
 		"#version 330 core\n"
 		"\n"
 		"layout(location = 0) in vec2 position;\n"
@@ -666,16 +668,17 @@ void Geo::Circle::renderFilled(float r, float g, float b)
 		"\n"
 		"uniform vec2 u_stretch;\n"
 		"uniform vec2 u_translation;\n"
+		"uniform float u_aspectRatio;\n"
 		"\n"
 		"void main()\n"
 		"{\n"
 		"	v_utPos[0] = position[0];\n"
 		"	v_utPos[1] = position[1];\n"
-		"	gl_Position = vec4(position[0] * u_stretch[0] + u_translation[0], position[1] * u_stretch[1] + u_translation[1], 0, 1);\n"
+		"	gl_Position = vec4((position[0] / u_aspectRatio) * u_stretch[0] + (u_translation[0] / u_aspectRatio), position[1] * u_stretch[1] + u_translation[1], 0, 1);\n"
 		"	gl_Position[2] = 0;\n"
 		"};\n";
 
-	std::string fragmentShaderString =
+	static std::string fragmentShaderString =
 		"#version 330 core\n"
 		"\n"
 		"layout(location = 0) out vec4 color;\n"
@@ -698,6 +701,7 @@ void Geo::Circle::renderFilled(float r, float g, float b)
 
 	static Shader fillShader(vertexShaderString, fragmentShaderString);
 
+	fillShader.setUniform1f("u_aspectRatio", window.getAspectRatio());
 	fillShader.setUniform2f("u_stretch", radius, radius);
 	fillShader.setUniform2f("u_translation", x, y);
 	fillShader.setUniform3f("u_color", r, g, b);
@@ -707,7 +711,6 @@ void Geo::Circle::renderFilled(float r, float g, float b)
 
 void Geo::Circle::renderOutline(float r, float g, float b)
 {
-	// circle wireframe shader
 	static std::string vertexShaderString =
 		"#version 330 core\n"
 		"\n"
@@ -715,10 +718,11 @@ void Geo::Circle::renderOutline(float r, float g, float b)
 		"\n"
 		"uniform vec2 u_translation;\n"
 		"uniform vec2 u_stretch;\n"
+		"uniform float u_aspectRatio;\n"
 		"\n"
 		"void main()\n"
 		"{\n"
-		"	gl_Position = vec4(position[0] * u_stretch[0] + u_translation[0], position[1] * u_stretch[1] + u_translation[1], 0, 1);\n"
+		"	gl_Position = vec4((position[0] / u_aspectRatio) * u_stretch[0] + (u_translation[0] / u_aspectRatio), position[1] * u_stretch[1] + u_translation[1], 0, 1);\n"
 		"	gl_Position[2] = 0;\n"
 		"};\n";
 
@@ -736,6 +740,7 @@ void Geo::Circle::renderOutline(float r, float g, float b)
 
 	static Shader shader(vertexShaderString, fragmentShaderString);
 
+	shader.setUniform1f("u_aspectRatio", window.getAspectRatio());
 	shader.setUniform2f("u_stretch", radius, radius);
 	shader.setUniform2f("u_translation", x, y);
 	shader.setUniform3f("u_color", r, g, b);
@@ -858,10 +863,11 @@ void Geo::LineSeg::render(float r, float g, float b)
 		"\n"
 		"uniform vec2 u_translation;\n"
 		"uniform vec2 u_stretch;\n"
+		"uniform float u_aspectRatio;\n"
 		"\n"
 		"void main()\n"
 		"{\n"
-		"	gl_Position = vec4(position[0] * u_stretch[0] + u_translation[0], position[1] * u_stretch[1] + u_translation[1], 0, 1);\n"
+		"	gl_Position = vec4((position[0] / u_aspectRatio) * u_stretch[0] + (u_translation[0] / u_aspectRatio), position[1] * u_stretch[1] + u_translation[1], 0, 1);\n"
 		"	gl_Position[2] = 0;\n"
 		"};\n";
 
@@ -879,6 +885,7 @@ void Geo::LineSeg::render(float r, float g, float b)
 
 	static Shader shader(vertexShaderString, fragmentShaderString);
 
+	shader.setUniform1f("u_aspectRatio", window.getAspectRatio());
 	shader.setUniform3f("u_color", r, g, b);
 	shader.setUniform2f("u_translation", x1, y1);
 	shader.setUniform2f("u_stretch", x2 - x1, y2 - y1);

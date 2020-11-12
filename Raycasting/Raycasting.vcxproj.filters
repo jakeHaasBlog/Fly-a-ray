@@ -25,6 +25,12 @@
     <ClCompile Include="src\TexturedQuad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameLogicInterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\OpenglBufferObjects.h">
@@ -40,6 +46,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\TexturedQuad.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Window.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameLogicInterface.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,5 @@
 #include "TexturedQuad.h"
+#include "Window.h"
 
 TexturedQuad::TexturedQuad(float x, float y, float width, float height, Texture & texture) :
 	tex(&texture),
@@ -69,6 +70,7 @@ void TexturedQuad::render() {
 		"\n"
 		"uniform vec2 u_stretch;\n"
 		"uniform vec2 u_translation;\n"
+		"uniform float u_aspectRatio;\n"
 		"\n"
 		"uniform vec2 u_texture_stretch;\n"
 		"uniform vec2 u_texture_translation;\n"
@@ -77,7 +79,7 @@ void TexturedQuad::render() {
 		"\n"
 		"void main()\n"
 		"{\n"
-		"	gl_Position = vec4(position[0] * u_stretch[0] + u_translation[0], position[1] * u_stretch[1] + u_translation[1], 0, 1);\n"
+		"	gl_Position = vec4((position[0] / u_aspectRatio) * u_stretch[0] + (u_translation[0] / u_aspectRatio), position[1] * u_stretch[1] + u_translation[1], 0, 1);\n"
 		"	v_texCoord = vec2(uvCoord[0] * u_texture_stretch[0] + u_texture_translation[0], uvCoord[1] * u_texture_stretch[1] + u_texture_translation[1]);\n"
 		"};\n";
 
@@ -98,6 +100,7 @@ void TexturedQuad::render() {
 
 	static Shader sh = Shader(vertexShaderString, fragmentShaderString);
 
+	sh.setUniform1f("u_aspectRatio", window.getAspectRatio());
 	sh.setUniform1i("u_texture", 0);
 	sh.setUniform2f("u_stretch", width, height);
 	sh.setUniform2f("u_translation", x, y);

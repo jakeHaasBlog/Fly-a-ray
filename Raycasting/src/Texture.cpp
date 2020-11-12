@@ -6,19 +6,60 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+Texture::Texture() {
+	isInitilized = false;
+}
+
 Texture::Texture(int width, int height) {
+	generateDefaultTexture(width, height);
+}
 
-	this->width = width;
-	this->height = height;
+Texture::Texture(int width, int height, float * data, size_t pixelCount) {
+	generateFromData(width, height, data, pixelCount);
+}
 
-	glGenTextures(1, &id);
+Texture::Texture(const std::string & filename) {
+	generateFromFile(filename);
+}
+
+void Texture::generateFromFile(const std::string & filename) {
+
+	if (!isInitilized) {
+		glGenTextures(1, &id);
+		setDefaultTexParameters();
+	}
 	glBindTexture(GL_TEXTURE_2D, id);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	stbi_set_flip_vertically_on_load(true);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	int bitsPerPixel;
+	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &bitsPerPixel, 3);
+	std::vector<std::array<float, 3>> convertedPixels(width * height);
+
+	for (int i = 0; i < width * height * 3; i++) {
+		int pixIndex = i / 3;
+		int pixPart = i % 3;
+
+		convertedPixels[pixIndex][pixPart] = (float)data[i] / 255;
+	}
+
+	delete[] data;
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_FLOAT, &convertedPixels[0]);
+
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	isInitilized = true;
+}
+
+void Texture::generateDefaultTexture(int width, int height) {
+
+	if (!isInitilized) {
+		glGenTextures(1, &id);
+		setDefaultTexParameters();
+	}
+	glBindTexture(GL_TEXTURE_2D, id);
 
 	std::vector<std::array<float, 3>> pixels(width * height);
 	float r, g, b;
@@ -43,69 +84,27 @@ Texture::Texture(int width, int height) {
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-
+	isInitilized = true;
 }
 
-Texture::Texture(int width, int height, float * data, size_t pixelCount) {
-
-	this->width = width;
-	this->height = height;
-
-	glGenTextures(1, &id);
-	glBindTexture(GL_TEXTURE_2D, id);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_NEAREST_MIPMAP_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_FLOAT, data);
-
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-}
-
-Texture::Texture(const std::string & filename) {
-
-	stbi_set_flip_vertically_on_load(true);
-
-	int bitsPerPixel;
-	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &bitsPerPixel, 3);
-	std::vector<std::array<float, 3>> convertedPixels(width * height);
-
-	for (int i = 0; i < width * height * 3; i++) {
-		int pixIndex = i / 3;
-		int pixPart = i % 3;
-		
-		convertedPixels[pixIndex][pixPart] = (float)data[i] / 255;
+void Texture::generateFromData(int width, int height, float * data, size_t pixelCount) {
+	if (!isInitilized) {
+		glGenTextures(1, &id);
+		setDefaultTexParameters();
 	}
-
-	delete[] data;
-
-	glGenTextures(1, &id);
-	glBindTexture(GL_TEXTURE_2D, id);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_NEAREST_MIPMAP_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_FLOAT, &convertedPixels[0]);
-
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-}
-
-void Texture::subData(float * data, size_t pixelCount) {
 	glBindTexture(GL_TEXTURE_2D, id);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_FLOAT, data);
 	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	isInitilized = true;
+}
+
+void Texture::setDefaultTexParameters() {
+	glBindTexture(GL_TEXTURE_2D, id);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_NEAREST_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
