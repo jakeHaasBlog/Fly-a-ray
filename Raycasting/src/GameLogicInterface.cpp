@@ -55,8 +55,20 @@ void GameLogicInterface::update(float deltaTime) {
 	Geo::LineSeg::renderLine(-1.0f, 1.0f, 1.0f, -1.0f, 1, 1, 1);
 	Geo::LineSeg::renderLine(1.0f, 1.0f, -1.0f, -1.0f, 1, 1, 1);
 
+	static float greenCircleVelocity = 0.001f;
+	static float greenCirclePos = 0.0f;
+
+	// another example of using deltatime to create smooth motion, this is the code for the green ball that goes back and forth across the screen
+	greenCirclePos += greenCircleVelocity * deltaTime;
+	float renderAt = fmod(greenCirclePos, 2.0f);
+	if ((int)(greenCirclePos / 2.0f) % 2 == 0)
+		renderAt = 1.0f - renderAt;
+	else
+		renderAt = -1.0f + renderAt;
+	Geo::Circle::fillCircle(renderAt, 0.0f, 0.05f, 0.1f, 1.0f, 0.3f);
+	Geo::Circle::fillCircle(renderAt, 0.0f, 0.04f, 0.1f, 0.7f, 0.2f);
+
 	mysound.setPosition(YSE::Vec(sin(n) * 10, 0.0f, cos(n) * 10));
-	//mysound.setVolume(1.0f - ((sin(n) * 0.5f) + 0.5f) + 0.1f);
 	YSE::System().update();
 }
 
