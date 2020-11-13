@@ -15,9 +15,20 @@ void GameLogicInterface::init() {
 	tex2.generateFromFile("assets/pattern.png");
 }
 
+// deltaTime is the milliseconds between frames. Use this for calculating movement to avoid slowing down if there is lag 
 void GameLogicInterface::update(float deltaTime) {
 	static float n = 0.0f;
-	n += 0.01f;
+	n += 0.001f * deltaTime;
+	printf("Deltatime = %f\n", deltaTime);
+
+
+	// I like to call this the suffering function...
+	float lagCauser = 0.0f;
+	for (int i = 0; i < 1500000 * ((sin(n / 5.0f) + 1.0f) / 2.0f); i++) { 
+		lagCauser *= sin((float)i / 1000);
+	}
+	// purposely causes occasional lag to demonstrate how deltaTime should be used
+	// note that the suffering function only works in debug mode. In release mode the compiler optimizes it away because the lagCauser variable isn't used anywhere
 
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);

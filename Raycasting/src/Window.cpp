@@ -30,6 +30,9 @@ void Window::mainUpdateLoop() {
 		glfwSwapBuffers(windowHandle);
 		glfwPollEvents();
 
+		end = clock.now();
+		deltaTime = (float)((end - start).count() / 1000000);
+		start = clock.now();
 		GameLogicInterface::update(deltaTime);
 
 		static uint64_t frame = 0;
