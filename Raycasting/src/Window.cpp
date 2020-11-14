@@ -16,6 +16,11 @@ Window::Window() {
 	windowHandle = glfwCreateWindow(1920, 1080, "Ray Casting Project", NULL, NULL);
 	glfwMakeContextCurrent(windowHandle);
 	glfwSwapInterval(1);
+
+	glfwSetKeyCallback(windowHandle, keyCallback);
+	glfwSetCharCallback(windowHandle, charCallback);
+	glfwSetMouseButtonCallback(windowHandle, mouseButtonCallback);
+	glfwSetCursorPosCallback(windowHandle, mouseMoveCallback);
 }
 
 void Window::mainUpdateLoop() {
@@ -100,6 +105,19 @@ float Window::getBottomScreenBound() {
 	return viewportBounds[3];
 }
 
+bool Window::keyIsDown(int glfwKey) {
+	int state = glfwGetKey(windowHandle, glfwKey);
+	return state == GLFW_PRESS;
+}
+
+float Window::getMouseX() {
+	return mouseX;
+}
+
+float Window::getMouseY() {
+	return mouseY;
+}
+
 GLFWwindow * Window::getHandle() {
 	return windowHandle;
 }
@@ -125,4 +143,24 @@ void Window::setViewport() {
 	glViewport(0, 0, width, height);
 
 	viewportBounds = { -1 * aspectRatio,  1 * aspectRatio, 1.0f, -1.0f};
+}
+
+void Window::keyCallback(GLFWwindow * wind, int key, int scancode, int action, int mods) {
+	GameLogicInterface::keyCallback(key, scancode, action, mods);
+}
+
+void Window::charCallback(GLFWwindow * wind, unsigned int codepoint) {
+	GameLogicInterface::characterCallback(codepoint);
+}
+
+void Window::mouseButtonCallback(GLFWwindow * wind, int button, int action, int mods) {
+	GameLogicInterface::mouseButtonCallback(button, action, mods);
+}
+
+void Window::mouseMoveCallback(GLFWwindow * wind, double xPos, double yPos) {
+	int width, height;
+	glfwGetWindowSize(window.windowHandle, &width, &height);
+	window.mouseX = ((float)(xPos - width / 2) / (width / 2)) * window.aspectRatio;
+	window.mouseY = (float)(-yPos + height / 2) / (height / 2);
+	GameLogicInterface::mouseMoveCallback(xPos, yPos);
 }

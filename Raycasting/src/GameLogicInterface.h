@@ -14,4 +14,9 @@ namespace GameLogicInterface {
 	void init();
 	void update(float deltaTime);
 	void cleanup();
+
+	void mouseMoveCallback(double xPos, double yPos);
+	void mouseButtonCallback(int button, int action, int mods);
+	void keyCallback(int key, int scancode, int action, int mods);
+	void characterCallback(unsigned int codepoint);
 };

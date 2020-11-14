@@ -5,6 +5,9 @@ YSE::sound mysound;
 Texture tex1;
 Texture tex2;
 TexturedQuad tq = TexturedQuad(-0.9, -0.9, 1.8, 1.8, tex1);
+std::vector<std::array<float, 5>> fragments;
+
+Geo::Circle c;
 
 void GameLogicInterface::init() {
 	mysound.create("assets/ShootingStars.ogg");
@@ -68,6 +71,25 @@ void GameLogicInterface::update(float deltaTime) {
 	Geo::Circle::fillCircle(renderAt, 0.0f, 0.05f, 0.1f, 1.0f, 0.3f);
 	Geo::Circle::fillCircle(renderAt, 0.0f, 0.04f, 0.1f, 0.7f, 0.2f);
 
+	c.x = window.getMouseX();
+	c.y = window.getMouseY();
+	c.radius = 0.05f;
+	c.renderFilled(1, 0, 0);
+	for (int i = 0; i < fragments.size(); i++) {
+
+		Geo::Circle::fillCircle(fragments[i][0], fragments[i][1], 0.03f, 1.0f, 0.3f, 0.4f);
+
+		fragments[i][0] += fragments[i][2] * deltaTime;
+		fragments[i][1] += fragments[i][3] * deltaTime;
+		fragments[i][4] -= 1.0f;
+
+		if (fragments[i][4] <= 0.0f) {
+			fragments.erase(fragments.begin() + i);
+			i--;
+		}
+	}
+
+
 	mysound.setPosition(YSE::Vec(sin(n) * 10, 0.0f, cos(n) * 10));
 	YSE::System().update();
 }
@@ -75,4 +97,83 @@ void GameLogicInterface::update(float deltaTime) {
 void GameLogicInterface::cleanup() {
 	tex1.freeMemory();
 	tex2.freeMemory();
+}
+
+void GameLogicInterface::mouseMoveCallback(double xPos, double yPos)
+{
+}
+
+void GameLogicInterface::mouseButtonCallback(int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+		float offset = ((float)rand() / RAND_MAX) * 3.14159f * 2.0f;
+		for (int i = 0; i < 10; i++) {
+			fragments.push_back({
+				window.getMouseX(),
+				window.getMouseY(),
+				sin(3.14159f * 2.0f * (float)i / 10 + offset) * 0.00036f,
+				cos(3.14159f * 2.0f * (float)i / 10 + offset) * 0.00036f,
+				600.0f
+			});
+		}
+	}
+}
+
+void GameLogicInterface::keyCallback(int key, int scancode, int action, int mods)
+{
+	if (key == GLFW_KEY_W && action == GLFW_PRESS) {
+		for (int i = 0; i < 100; i++) {
+			float offset = ((float)rand() / RAND_MAX) * 3.14159f - 3.14159f / 2;
+			fragments.push_back({
+				0,
+				0,
+				sin(offset) * 0.00036f,
+				cos(offset) * 0.00036f,
+				600.0f
+			});
+		}
+	}
+
+	if (key == GLFW_KEY_A && action == GLFW_PRESS) {
+		for (int i = 0; i < 100; i++) {
+			float offset = ((float)rand() / RAND_MAX) * 3.14159f - 3.14159f;
+			fragments.push_back({
+				0,
+				0,
+				sin(offset) * 0.00036f,
+				cos(offset) * 0.00036f,
+				600.0f
+				});
+		}
+	}
+
+	if (key == GLFW_KEY_S && action == GLFW_PRESS) {
+		for (int i = 0; i < 100; i++) {
+			float offset = ((float)rand() / RAND_MAX) * 3.14159f + 3.14159f / 2;
+			fragments.push_back({
+				0,
+				0,
+				sin(offset) * 0.00036f,
+				cos(offset) * 0.00036f,
+				600.0f
+				});
+		}
+	}
+
+	if (key == GLFW_KEY_D && action == GLFW_PRESS) {
+		for (int i = 0; i < 100; i++) {
+			float offset = ((float)rand() / RAND_MAX) * 3.14159f;
+			fragments.push_back({
+				0,
+				0,
+				sin(offset) * 0.00036f,
+				cos(offset) * 0.00036f,
+				600.0f
+				});
+		}
+	}
+}
+
+void GameLogicInterface::characterCallback(unsigned int codepoint)
+{
 }

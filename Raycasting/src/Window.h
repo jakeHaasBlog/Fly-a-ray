@@ -34,9 +34,15 @@ public:
 	float getTopScreenBound();
 	float getBottomScreenBound();
 
+	bool keyIsDown(int glfwKey);
+
+	float getMouseX();
+	float getMouseY();
+
 	GLFWwindow* getHandle();
 
 private:
+
 	std::string title;
 	GLFWwindow* windowHandle;
 
@@ -48,6 +54,11 @@ private:
 
 	void setViewport(); // scale window, correct aspect ratio
 
+	float mouseX, mouseY;
+	static void keyCallback(GLFWwindow* wind, int key, int scancode, int action, int mods);
+	static void charCallback(GLFWwindow* wind, unsigned int codepoint);
+	static void mouseButtonCallback(GLFWwindow* wind, int button, int action, int mods);
+	static void mouseMoveCallback(GLFWwindow* wind, double xPos, double yPos);
 };
 
 #define window Window::getWindowInstance()
