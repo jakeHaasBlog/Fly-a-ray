@@ -5,7 +5,7 @@ YSE::sound mysound;
 Texture tex1;
 Texture tex2;
 TexturedQuad tq = TexturedQuad(-0.9, -0.9, 1.8, 1.8, tex1);
-std::vector<std::array<float, 5>> fragments;
+std::list<std::array<float, 5>> fragments;
 
 Geo::Circle c;
 
@@ -75,17 +75,16 @@ void GameLogicInterface::update(float deltaTime) {
 	c.y = window.getMouseY();
 	c.radius = 0.05f;
 	c.renderFilled(1, 0, 0);
-	for (int i = 0; i < fragments.size(); i++) {
+	for (auto itter = fragments.begin(); itter != fragments.end(); itter++) {
 
-		Geo::Circle::fillCircle(fragments[i][0], fragments[i][1], 0.03f, 1.0f, 0.3f, 0.4f);
+		Geo::Circle::fillCircle((*itter)[0], (*itter)[1], 0.03f, 1.0f, 0.3f, 0.4f);
 
-		fragments[i][0] += fragments[i][2] * deltaTime;
-		fragments[i][1] += fragments[i][3] * deltaTime;
-		fragments[i][4] -= 1.0f;
+		(*itter)[0] += (*itter)[2] * deltaTime;
+		(*itter)[1] += (*itter)[3] * deltaTime;
+		(*itter)[4] -= deltaTime / 16.0f;
 
-		if (fragments[i][4] <= 0.0f) {
-			fragments.erase(fragments.begin() + i);
-			i--;
+		if ((*itter)[4] <= 0.0f) {
+			fragments.erase(itter);
 		}
 	}
 
