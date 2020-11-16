@@ -39,6 +39,8 @@ public:
 	float getMouseX();
 	float getMouseY();
 
+	void close();
+
 	GLFWwindow* getHandle();
 
 private:

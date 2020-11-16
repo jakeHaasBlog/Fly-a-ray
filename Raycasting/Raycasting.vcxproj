@@ -19,9 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\GameLogicInterface.cpp" />
     <ClCompile Include="src\Geometry.cpp" />
     <ClCompile Include="src\OpenglBufferObjects.cpp" />
+    <ClCompile Include="src\SeeableEntity.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Source.cpp" />
     <ClCompile Include="src\Texture.cpp" />
@@ -29,9 +31,11 @@
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\GameLogicInterface.h" />
     <ClInclude Include="src\Geometry.h" />
     <ClInclude Include="src\OpenglBufferObjects.h" />
+    <ClInclude Include="src\SeeableEntity.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\TexturedQuad.h" />

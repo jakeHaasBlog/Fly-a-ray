@@ -28,6 +28,9 @@ void Window::mainUpdateLoop() {
 	std::chrono::high_resolution_clock clock;
 	std::chrono::time_point<std::chrono::steady_clock> start = clock.now();
 	std::chrono::time_point<std::chrono::steady_clock> end = clock.now();
+
+	std::chrono::time_point<std::chrono::steady_clock> startUpdateTIme = clock.now();
+	float updateTime = 0.0f;
 	float deltaTime = 0.0f;
 	while (!glfwWindowShouldClose(windowHandle)) {
 		setViewport();
@@ -38,7 +41,10 @@ void Window::mainUpdateLoop() {
 		end = clock.now();
 		deltaTime = (float)((end - start).count() / 1000000);
 		start = clock.now();
+
+		startUpdateTIme = clock.now();
 		GameLogicInterface::update(deltaTime);
+		updateTime = (float)(((double)(clock.now() - startUpdateTIme).count()) / 1000000);
 
 		static uint64_t frame = 0;
 		frame++;
@@ -46,7 +52,7 @@ void Window::mainUpdateLoop() {
 			calculateFPS();
 
 			char t[50];
-			sprintf_s(t, "FPS: %.1f", getFrameRate());
+			sprintf_s(t, "FPS: %.1f - update time ~= %fms", getFrameRate(), updateTime);
 			setTitle(t);
 		}
 
@@ -116,6 +122,10 @@ float Window::getMouseX() {
 
 float Window::getMouseY() {
 	return mouseY;
+}
+
+void Window::close() {
+	glfwSetWindowShouldClose(windowHandle, true);
 }
 
 GLFWwindow * Window::getHandle() {

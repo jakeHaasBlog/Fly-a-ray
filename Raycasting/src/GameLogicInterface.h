@@ -7,6 +7,8 @@
 #include "Texture.h"
 #include "TexturedQuad.h"
 #include "Geometry.h"
+#include "Camera.h"
+#include "SeeableEntity.h"
 #include "yse.hpp"
 
 
