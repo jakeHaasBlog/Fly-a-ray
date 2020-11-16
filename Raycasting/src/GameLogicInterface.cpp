@@ -55,6 +55,7 @@ void GameLogicInterface::update(float deltaTime) {
 	for (SeeableEntity& e : walls) {
 		e.renderPrimitive({ -cam.getX(), -cam.getY() }, 1.0f);
 	}
+	glViewport(0, 0, window.getWidth(), window.getHeight());
 
 	YSE::System().update();
 }
