@@ -3,7 +3,7 @@
 
 // this stops the variables declared here from becoming globaly accessable
 namespace {
-	Camera cam = Camera(0, 0, 0, (3.14159f * 2.0f) / 5.0f, 2000);
+	Camera cam = Camera(0, 0, 0, (3.14159f * 2.0f) / 5.0f, 30);
 	std::vector<SeeableEntity> walls = {};
 }
 
@@ -47,10 +47,12 @@ void GameLogicInterface::update(float deltaTime) {
 		cam.setY(cam.getY() + deltaY);
 	}
 
-	//cam.renderPrimitiveRays({ 0, 0 }, 1.0f, walls);
+	int height = 0.3f * window.getHeight();
+	int width = height * window.getAspectRatio();
+	int beginX = window.getWidth() - width;
+	glViewport(beginX, 0, width, height);
 	cam.renderPrimitiveRays({ -cam.getX(), -cam.getY() }, 1.0f, walls);
 	for (SeeableEntity& e : walls) {
-		//e.renderPrimitive({ 0, 0 }, 1.0f);
 		e.renderPrimitive({ -cam.getX(), -cam.getY() }, 1.0f);
 	}
 
