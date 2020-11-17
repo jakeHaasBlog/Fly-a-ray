@@ -11,6 +11,8 @@ public:
 	void renderPrimitiveRays(std::array<float, 2> translation, float scale);
 	void renderPrimitiveRays(std::array<float, 2> translation, float scale, std::vector<SeeableEntity>& seeableEntities);
 
+	void renderView(std::vector<SeeableEntity>& seeableEntities);
+
 	void setX(float x);
 	void setY(float y);
 	void setDirection(float direction);
