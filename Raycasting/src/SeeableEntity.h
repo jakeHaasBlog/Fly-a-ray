@@ -16,8 +16,14 @@ public:
 	float getG();
 	float getB();
 
+	void setR(float r);
+	void setG(float g);
+	void setB(float b);
+
+	void setColor(float r, float g, float b);
+
 protected:
-	std::array<float, 3> color = { 0.8, 0.8, 0.9 };
+	std::array<float, 3> color = { 1, 1, 1 };
 	Texture* tex = nullptr;
 
 };

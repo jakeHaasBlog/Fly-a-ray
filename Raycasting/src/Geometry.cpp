@@ -702,7 +702,7 @@ void Geo::Circle::renderFilled(float r, float g, float b)
 	static Shader fillShader(vertexShaderString, fragmentShaderString);
 
 	fillShader.setUniform1f("u_aspectRatio", window.getAspectRatio());
-	fillShader.setUniform2f("u_stretch", radius, radius);
+	fillShader.setUniform2f("u_stretch", radius * 2, radius * 2);
 	fillShader.setUniform2f("u_translation", x, y);
 	fillShader.setUniform3f("u_color", r, g, b);
 
@@ -741,7 +741,7 @@ void Geo::Circle::renderOutline(float r, float g, float b)
 	static Shader shader(vertexShaderString, fragmentShaderString);
 
 	shader.setUniform1f("u_aspectRatio", window.getAspectRatio());
-	shader.setUniform2f("u_stretch", radius, radius);
+	shader.setUniform2f("u_stretch", radius * 2, radius * 2);
 	shader.setUniform2f("u_translation", x, y);
 	shader.setUniform3f("u_color", r, g, b);
 

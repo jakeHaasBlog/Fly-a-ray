@@ -23,6 +23,7 @@
     <ClCompile Include="src\GameLogicInterface.cpp" />
     <ClCompile Include="src\Geometry.cpp" />
     <ClCompile Include="src\OpenglBufferObjects.cpp" />
+    <ClCompile Include="src\SeeableCircle.cpp" />
     <ClCompile Include="src\SeeableEntity.cpp" />
     <ClCompile Include="src\SeeableLine.cpp" />
     <ClCompile Include="src\SeeableRectangle.cpp" />
@@ -37,6 +38,7 @@
     <ClInclude Include="src\GameLogicInterface.h" />
     <ClInclude Include="src\Geometry.h" />
     <ClInclude Include="src\OpenglBufferObjects.h" />
+    <ClInclude Include="src\SeeableCircle.h" />
     <ClInclude Include="src\SeeableEntity.h" />
     <ClInclude Include="src\SeeableLine.h" />
     <ClInclude Include="src\SeeableRectangle.h" />

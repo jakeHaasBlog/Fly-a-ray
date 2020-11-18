@@ -88,7 +88,9 @@ void Camera::renderView(std::vector<SeeableEntity*>& seeableEntities) {
 			std::array<float, 2> closestIntersect;
 			float closest;
 			float dist;
+			SeeableEntity* entity = nullptr;
 			bool isIntersecting = seeableEntities[0]->seenBy(ray, dist, tmp, &intersect);
+			if (isIntersecting) entity = seeableEntities[0];
 			closest = dist;
 			closestIntersect = intersect;
 
@@ -97,6 +99,7 @@ void Camera::renderView(std::vector<SeeableEntity*>& seeableEntities) {
 					if (dist < closest || !isIntersecting) {
 						closest = dist;
 						closestIntersect = intersect;
+						entity = e;
 					}
 					isIntersecting = true;
 				}
@@ -106,9 +109,9 @@ void Camera::renderView(std::vector<SeeableEntity*>& seeableEntities) {
 				float dFacing = abs(a - direction);
 				float rayDist = closest * cos(dFacing);
 				float height = 2.0f - rayDist / 2.0f;
-				float colorFade = height / 3.0f;
+				float colorFade = (height / 3.0f);
 				if (height < 0) height = 0;
-				Geo::Rectangle::fillRect(renderAreaX, renderAreaY - height / 2, renderAreaWidth, height, colorFade, colorFade, colorFade);
+				Geo::Rectangle::fillRect(renderAreaX, renderAreaY - height / 2, renderAreaWidth, height, colorFade * entity->getR(), colorFade * entity->getG(), colorFade * entity->getB());
 			}
 		}
 

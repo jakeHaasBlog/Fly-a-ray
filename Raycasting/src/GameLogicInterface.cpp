@@ -33,8 +33,14 @@ void GameLogicInterface::init() {
 	walls.push_back(new SeeableLine(0.75f, -0.7f, 1.3f, -0.7f));
 
 	walls.push_back(new SeeableRectangle(0, -0.35, 0.1, 0.1));
+	(*(walls.end() - 1))->setColor(1.0f, 0.0f, 0.0f);
 	walls.push_back(new SeeableRectangle(-0.225f, -0.35, 0.1, 0.1));
+	(*(walls.end() - 1))->setColor(0.0f, 1.0f, 0.0f);
 	walls.push_back(new SeeableRectangle(-0.45f, -0.35, 0.1, 0.1));
+	(*(walls.end() - 1))->setColor(0.0f, 0.0f, 1.0f);
+
+	walls.push_back(new SeeableCircle(-0.7f, 0.35f, 0.1f));
+	(*(walls.end() - 1))->setColor(1.0f, 0.0f, 0.0f);
 
 }
 
@@ -91,7 +97,9 @@ void GameLogicInterface::update(float deltaTime) {
 }
 
 void GameLogicInterface::cleanup() {
-
+	for (SeeableEntity* entity : walls) {
+		delete entity;
+	}
 }
 
 void GameLogicInterface::mouseMoveCallback(double xPos, double yPos)

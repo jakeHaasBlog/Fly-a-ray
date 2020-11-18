@@ -12,6 +12,7 @@
 #include "yse.hpp"
 #include "SeeableLine.h"
 #include "SeeableRectangle.h"
+#include "SeeableCircle.h"
 
 namespace GameLogicInterface {
 	void init();
