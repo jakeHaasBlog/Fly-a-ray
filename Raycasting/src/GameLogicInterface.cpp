@@ -4,33 +4,37 @@
 // this stops the variables declared here from becoming globaly accessable
 namespace {
 	Camera cam = Camera(0, 0, 0, 1.152, 100);
-	std::vector<SeeableEntity> walls = {};
+	std::vector<SeeableEntity*> walls = {};
 }
 
 void GameLogicInterface::init() {
 
 	glfwSetInputMode(window.getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	walls.push_back(SeeableEntity(1.5f, 0.9f, 1.5f, -0.9f));
-	walls.push_back(SeeableEntity(-1.5f, 0.9f, -1.5f, -0.9f));
-	walls.push_back(SeeableEntity(-1.5f, 0.9f, 1.5f, 0.9f));
-	walls.push_back(SeeableEntity(-1.5f, -0.9f, 1.5f, -0.9f));
+	walls.push_back(new SeeableLine(1.5f, 0.9f, 1.5f, -0.9f));
+	walls.push_back(new SeeableLine(-1.5f, 0.9f, -1.5f, -0.9f));
+	walls.push_back(new SeeableLine(-1.5f, 0.9f, 1.5f, 0.9f));
+	walls.push_back(new SeeableLine(-1.5f, -0.9f, 1.5f, -0.9f));
+					
+	walls.push_back(new SeeableLine(-1.5f, 0.0f, -0.75f, 0.0f));
+	walls.push_back(new SeeableLine(-0.75f, -0.9f, -0.75f, -0.2f));
 
-	walls.push_back(SeeableEntity(-1.5f, 0.0f, -0.75f, 0.0f));
-	walls.push_back(SeeableEntity(-0.75f, -0.9f, -0.75f, -0.2f));
+	walls.push_back(new SeeableLine(-0.55f, 0.0f, -0.15f, 0.0f));
+	walls.push_back(new SeeableLine(-0.15f, 0.0f, -0.15f, 0.5f));
+	walls.push_back(new SeeableLine(-0.15f, 0.5f, -0.25f, 0.5f));
+	walls.push_back(new SeeableLine(-0.25f, 0.5f, -0.25, 0.9f));
 
-	walls.push_back(SeeableEntity(-0.55f, 0.0f, -0.15f, 0.0f));
-	walls.push_back(SeeableEntity(-0.15f, 0.0f, -0.15f, 0.5f));
-	walls.push_back(SeeableEntity(-0.15f, 0.5f, -0.25f, 0.5f));
-	walls.push_back(SeeableEntity(-0.25f, 0.5f, -0.25, 0.9f));
+	walls.push_back(new SeeableLine(0.2f, 0.9f, 0.2f, 0.2f));
+	walls.push_back(new SeeableLine(0.2f, 0.0f, 1.5f, 0.0f));
+	walls.push_back(new SeeableLine(1.0f, 0.0f, 1.0f, 0.5f));
 
-	walls.push_back(SeeableEntity(0.2f, 0.9f, 0.2f, 0.2f));
-	walls.push_back(SeeableEntity(0.2f, 0.0f, 1.5f, 0.0f));
-	walls.push_back(SeeableEntity(1.0f, 0.0f, 1.0f, 0.5f));
+	walls.push_back(new SeeableLine(0.75f, 0.0f, 0.75f, -0.7f));
+	walls.push_back(new SeeableLine(0.75f, -0.5f, 1.0f, -0.5f));
+	walls.push_back(new SeeableLine(0.75f, -0.7f, 1.3f, -0.7f));
 
-	walls.push_back(SeeableEntity(0.75f, 0.0f, 0.75f, -0.7f));
-	walls.push_back(SeeableEntity(0.75f, -0.5f, 1.0f, -0.5f));
-	walls.push_back(SeeableEntity(0.75f, -0.7f, 1.3f, -0.7f));
+	walls.push_back(new SeeableRectangle(0, -0.35, 0.1, 0.1));
+	walls.push_back(new SeeableRectangle(-0.225f, -0.35, 0.1, 0.1));
+	walls.push_back(new SeeableRectangle(-0.45f, -0.35, 0.1, 0.1));
 
 }
 
@@ -47,6 +51,29 @@ void GameLogicInterface::update(float deltaTime) {
 		cam.setY(cam.getY() + deltaY);
 	}
 
+	if (window.keyIsDown(GLFW_KEY_A)) {
+		float deltaX = cos(cam.getDirection() + 3.14159f / 2.0f) * 0.0001f * deltaTime;
+		float deltaY = sin(cam.getDirection() + 3.14159f / 2.0f) * 0.0001f * deltaTime;
+		cam.setX(cam.getX() + deltaX);
+		cam.setY(cam.getY() + deltaY);
+	}
+
+	if (window.keyIsDown(GLFW_KEY_D)) {
+		float deltaX = cos(cam.getDirection() - 3.14159f / 2.0f) * 0.0001f * deltaTime;
+		float deltaY = sin(cam.getDirection() - 3.14159f / 2.0f) * 0.0001f * deltaTime;
+		cam.setX(cam.getX() + deltaX);
+		cam.setY(cam.getY() + deltaY);
+	}
+
+	if (window.keyIsDown(GLFW_KEY_S)) {
+		float deltaX = cos(cam.getDirection()) * 0.0002f * deltaTime;
+		float deltaY = sin(cam.getDirection()) * 0.0002f * deltaTime;
+		cam.setX(cam.getX() - deltaX);
+		cam.setY(cam.getY() - deltaY);
+	}
+
+
+
 	cam.renderView(walls);
 
 	int height = 0.3f * window.getHeight();
@@ -55,8 +82,8 @@ void GameLogicInterface::update(float deltaTime) {
 	glViewport(beginX, 0, width, height);
 	Geo::Rectangle::fillRect(window.getLeftScreenBound(), window.getBottomScreenBound(), window.getRightScreenBound() - window.getLeftScreenBound(), window.getTopScreenBound() - window.getBottomScreenBound(), 0, 0, 0);
 	cam.renderPrimitiveRays({ -cam.getX(), -cam.getY() }, 1.0f, walls);
-	for (SeeableEntity& e : walls) {
-		e.renderPrimitive({ -cam.getX(), -cam.getY() }, 1.0f);
+	for (SeeableEntity* e : walls) {
+		e->renderPrimitive({ -cam.getX(), -cam.getY() }, 1.0f);
 	}
 	glViewport(0, 0, window.getWidth(), window.getHeight());
 

@@ -24,6 +24,8 @@
     <ClCompile Include="src\Geometry.cpp" />
     <ClCompile Include="src\OpenglBufferObjects.cpp" />
     <ClCompile Include="src\SeeableEntity.cpp" />
+    <ClCompile Include="src\SeeableLine.cpp" />
+    <ClCompile Include="src\SeeableRectangle.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Source.cpp" />
     <ClCompile Include="src\Texture.cpp" />
@@ -36,6 +38,8 @@
     <ClInclude Include="src\Geometry.h" />
     <ClInclude Include="src\OpenglBufferObjects.h" />
     <ClInclude Include="src\SeeableEntity.h" />
+    <ClInclude Include="src\SeeableLine.h" />
+    <ClInclude Include="src\SeeableRectangle.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\TexturedQuad.h" />

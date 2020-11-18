@@ -10,7 +10,8 @@
 #include "Camera.h"
 #include "SeeableEntity.h"
 #include "yse.hpp"
-
+#include "SeeableLine.h"
+#include "SeeableRectangle.h"
 
 namespace GameLogicInterface {
 	void init();

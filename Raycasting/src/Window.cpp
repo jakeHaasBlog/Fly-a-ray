@@ -13,7 +13,8 @@ Window::Window() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	windowHandle = glfwCreateWindow(1920, 1080, "Ray Casting Project", NULL, NULL);
+	glfwWindowHint(GLFW_MAXIMIZED, true);
+	windowHandle = glfwCreateWindow(1920, 1080, "Ray Casting Project", glfwGetPrimaryMonitor(), NULL);
 	glfwMakeContextCurrent(windowHandle);
 	glfwSwapInterval(1);
 

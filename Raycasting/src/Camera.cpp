@@ -24,7 +24,7 @@ void Camera::renderPrimitiveRays(std::array<float, 2> translation, float scale) 
 
 }
 
-void Camera::renderPrimitiveRays(std::array<float, 2> translation, float scale, std::vector<SeeableEntity>& seeableEntities) {
+void Camera::renderPrimitiveRays(std::array<float, 2> translation, float scale, std::vector<SeeableEntity*>& seeableEntities) {
 
 	for (int i = 0; i < rayCount; i++) {
 		float a = direction - fov / 2 + (fov / rayCount) * i;
@@ -39,12 +39,12 @@ void Camera::renderPrimitiveRays(std::array<float, 2> translation, float scale, 
 			std::array<float, 2> closestIntersect;
 			float closest;
 			float dist;
-			bool isIntersecting = seeableEntities[0].seenBy(ray, dist, tmp, &intersect);
+			bool isIntersecting = seeableEntities[0]->seenBy(ray, dist, tmp, &intersect);
 			closest = dist;
 			closestIntersect = intersect;
 
-			for (SeeableEntity e : seeableEntities) {
-				if (e.seenBy(ray, dist, tmp, &intersect)) {
+			for (SeeableEntity* e : seeableEntities) {
+				if (e->seenBy(ray, dist, tmp, &intersect)) {
 					if (dist < closest || !isIntersecting) {
 						closest = dist;
 						closestIntersect = intersect;
@@ -69,7 +69,7 @@ void Camera::renderPrimitiveRays(std::array<float, 2> translation, float scale, 
 
 }
 
-void Camera::renderView(std::vector<SeeableEntity>& seeableEntities) {
+void Camera::renderView(std::vector<SeeableEntity*>& seeableEntities) {
 
 	for (int i = 0; i < rayCount; i++) {
 		float a = direction - fov / 2 + (fov / rayCount) * i;
@@ -88,12 +88,12 @@ void Camera::renderView(std::vector<SeeableEntity>& seeableEntities) {
 			std::array<float, 2> closestIntersect;
 			float closest;
 			float dist;
-			bool isIntersecting = seeableEntities[0].seenBy(ray, dist, tmp, &intersect);
+			bool isIntersecting = seeableEntities[0]->seenBy(ray, dist, tmp, &intersect);
 			closest = dist;
 			closestIntersect = intersect;
 
-			for (SeeableEntity e : seeableEntities) {
-				if (e.seenBy(ray, dist, tmp, &intersect)) {
+			for (SeeableEntity* e : seeableEntities) {
+				if (e->seenBy(ray, dist, tmp, &intersect)) {
 					if (dist < closest || !isIntersecting) {
 						closest = dist;
 						closestIntersect = intersect;
@@ -105,9 +105,10 @@ void Camera::renderView(std::vector<SeeableEntity>& seeableEntities) {
 			if (isIntersecting) {
 				float dFacing = abs(a - direction);
 				float rayDist = closest * cos(dFacing);
-				float height = 2.0f - rayDist;
+				float height = 2.0f - rayDist / 2.0f;
+				float colorFade = height / 3.0f;
 				if (height < 0) height = 0;
-				Geo::Rectangle::fillRect(renderAreaX, renderAreaY - height / 2, renderAreaWidth, height, 1.0f - (closest / 4.0f), 1.0f - (closest / 4.0f), 1.0f);
+				Geo::Rectangle::fillRect(renderAreaX, renderAreaY - height / 2, renderAreaWidth, height, colorFade, colorFade, colorFade);
 			}
 		}
 
