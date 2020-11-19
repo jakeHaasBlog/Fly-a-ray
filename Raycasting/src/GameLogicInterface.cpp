@@ -5,6 +5,7 @@
 namespace {
 	Camera cam = Camera(0, 0, 0, 1.152, 100);
 	std::vector<SeeableEntity*> walls = {};
+	Texture testTex;
 }
 
 void GameLogicInterface::init() {
@@ -42,6 +43,7 @@ void GameLogicInterface::init() {
 	walls.push_back(new SeeableCircle(-0.7f, 0.35f, 0.1f));
 	(*(walls.end() - 1))->setColor(1.0f, 0.0f, 0.0f);
 
+	testTex.generateDefaultTexture(512, 512);
 }
 
 // deltaTime is the milliseconds between frames. Use this for calculating movement to avoid slowing down if there is lag 
@@ -77,8 +79,6 @@ void GameLogicInterface::update(float deltaTime) {
 		cam.setX(cam.getX() - deltaX);
 		cam.setY(cam.getY() - deltaY);
 	}
-
-
 
 	cam.renderView(walls);
 

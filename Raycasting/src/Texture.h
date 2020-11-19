@@ -13,6 +13,9 @@ public:
 	// must call one of the generateXXX functions before binding
 	Texture();
 
+	// hold a pre-initialized texture
+	Texture(GLuint id);
+
 	// generates a default texture with float rbg encoding 
 	Texture(int width, int height);
 
@@ -32,16 +35,15 @@ public:
 
 	void setDefaultTexParameters();
 
-	// after calling this function all opengl render calls will render onto this texture instaid of the window
-	// IMPORTANT: you MUST call the unbindForRendering method when you are done rendering
-	void bindForRendering(); // not implemented yet
-
-	// unbinds this texture for rendering and sets window back to render target
-	void unbindForRendering(); // not implemented yet
-
 	// binds texture to the given slot in the vram so shader programs can access it
 	void bind(int textureSlot = 0);
 	void unbind();
+
+	// opengl render calls will now render to this texture
+	void bindAsRenderTarget();
+
+	// opengl render calls will now render to the window
+	void unbindAsRenderTarget();
 
 	// 0 = linear  *will make pixels stand out (great for pixel art)*
 	// 1 = nearest *will blemd pixels to make them smoother (great for realism)*
@@ -66,4 +68,7 @@ private:
 	GLuint id;
 	int width, height;
 	bool isInitilized = false;
+
+	GLuint frameBufferID;
+	void generateFrameBuffer();
 };

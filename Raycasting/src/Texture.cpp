@@ -6,8 +6,17 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+#include "Window.h"
+#include <iostream>
+
 Texture::Texture() {
 	isInitilized = false;
+}
+
+Texture::Texture(GLuint id)
+{
+	this->id = id;
+	isInitilized = true;
 }
 
 Texture::Texture(int width, int height) {
@@ -27,6 +36,7 @@ void Texture::generateFromFile(const std::string & filename) {
 	if (!isInitilized) {
 		glGenTextures(1, &id);
 		setDefaultTexParameters();
+		generateFrameBuffer();
 	}
 	glBindTexture(GL_TEXTURE_2D, id);
 
@@ -50,37 +60,44 @@ void Texture::generateFromFile(const std::string & filename) {
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
+
 	isInitilized = true;
 }
 
 void Texture::generateDefaultTexture(int width, int height) {
-
+	this->width = width;
+	this->height = height;
 	if (!isInitilized) {
 		glGenTextures(1, &id);
+		glBindTexture(GL_TEXTURE_2D, id);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 		setDefaultTexParameters();
+		glBindTexture(GL_TEXTURE_2D, id);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		generateFrameBuffer();
 	}
 	glBindTexture(GL_TEXTURE_2D, id);
-
+	
 	std::vector<std::array<float, 3>> pixels(width * height);
 	float r, g, b;
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++) {
-
+	
 			pixels[x + y * width][0] = 0.0f;
 			pixels[x + y * width][1] = 1.0f;
 			pixels[x + y * width][2] = 0.2f;
-
+	
 			if ((x / 50) % 2 == 0 != (y / 50) % 2 == 1) {
 				pixels[x + y * width][0] = 1.0f;
 				pixels[x + y * width][1] = 0.0f;
 				pixels[x + y * width][2] = 1.0f;
 			}
-
+	
 		}
 	}
-
+	
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_FLOAT, &pixels[0]);
-
+	
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -88,14 +105,18 @@ void Texture::generateDefaultTexture(int width, int height) {
 }
 
 void Texture::generateFromData(int width, int height, float * data, size_t pixelCount) {
+	this->width = width;
+	this->height = height;
 	if (!isInitilized) {
 		glGenTextures(1, &id);
 		setDefaultTexParameters();
+		generateFrameBuffer();
 	}
 	glBindTexture(GL_TEXTURE_2D, id);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_FLOAT, data);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
+
 	isInitilized = true;
 }
 
@@ -115,6 +136,22 @@ void Texture::bind(int textureSlot) {
 
 void Texture::unbind() {
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Texture::bindAsRenderTarget()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
+	glViewport(0, 0, width, height);
+}
+
+void Texture::unbindAsRenderTarget()
+{
+	glBindTexture(GL_TEXTURE_2D, id);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glViewport(0, 0, window.getWidth(), window.getHeight());
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void Texture::setSamplingMode(int sampleMode) {
@@ -148,6 +185,21 @@ GLuint Texture::getID() {
 }
 
 void Texture::freeMemory() {
+	glDeleteFramebuffers(1, &frameBufferID);
 	glDeleteTextures(1, &id);
 	unbind();
+}
+
+void Texture::generateFrameBuffer()
+{
+	glGenFramebuffers(1, &frameBufferID);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
+
+	// attach it to currently bound framebuffer object
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, id, 0);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
