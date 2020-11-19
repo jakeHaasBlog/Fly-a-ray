@@ -44,10 +44,14 @@ void GameLogicInterface::init() {
 	(*(walls.end() - 1))->setColor(1.0f, 0.0f, 0.0f);
 
 	testTex.generateDefaultTexture(512, 512);
+
+	window.setResolution(1920, 1080);
+
 }
 
 // deltaTime is the milliseconds between frames. Use this for calculating movement to avoid slowing down if there is lag 
 void GameLogicInterface::update(float deltaTime) {
+
 
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);

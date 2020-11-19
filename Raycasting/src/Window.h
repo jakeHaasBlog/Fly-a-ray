@@ -6,6 +6,8 @@
 #include <string>
 #include <array>
 
+#include "Texture.h"
+
 class Window {
 public:
 	static Window& getWindowInstance();
@@ -19,6 +21,7 @@ public:
 
 	void setSize(int width, int height);
 	void setTitle(const std::string& title);
+	void setResolution(int width, int height);
 
 	int getWidth();
 	int getHeight();
@@ -42,6 +45,7 @@ public:
 	void close();
 
 	GLFWwindow* getHandle();
+	void initFramebuffer();
 
 private:
 
@@ -61,6 +65,8 @@ private:
 	static void charCallback(GLFWwindow* wind, unsigned int codepoint);
 	static void mouseButtonCallback(GLFWwindow* wind, int button, int action, int mods);
 	static void mouseMoveCallback(GLFWwindow* wind, double xPos, double yPos);
+
+	Texture framebuffer;
 };
 
 #define window Window::getWindowInstance()

@@ -9,6 +9,9 @@
 #include "Window.h"
 #include <iostream>
 
+std::stack<std::array<int, 4>> Texture::renderTargetBoundings;
+std::stack<int> Texture::renderTargetIDs;
+
 Texture::Texture() {
 	isInitilized = false;
 }
@@ -109,7 +112,11 @@ void Texture::generateFromData(int width, int height, float * data, size_t pixel
 	this->height = height;
 	if (!isInitilized) {
 		glGenTextures(1, &id);
+		glBindTexture(GL_TEXTURE_2D, id);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 		setDefaultTexParameters();
+		glBindTexture(GL_TEXTURE_2D, id);
+		glGenerateMipmap(GL_TEXTURE_2D);
 		generateFrameBuffer();
 	}
 	glBindTexture(GL_TEXTURE_2D, id);
@@ -142,9 +149,36 @@ void Texture::bindAsRenderTarget()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
 	glViewport(0, 0, width, height);
+
+	renderTargetBoundings.push({ 0, 0, width, height });
+	renderTargetIDs.push(frameBufferID);
 }
 
 void Texture::unbindAsRenderTarget()
+{
+	if (!renderTargetIDs.empty()) {
+
+		glBindTexture(GL_TEXTURE_2D, id);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		renderTargetBoundings.pop();
+		renderTargetIDs.pop();
+
+		if (!renderTargetIDs.empty()) {
+			glBindFramebuffer(GL_FRAMEBUFFER, renderTargetIDs.top());
+			glViewport(renderTargetBoundings.top()[0], renderTargetBoundings.top()[1], renderTargetBoundings.top()[2], renderTargetBoundings.top()[3]);
+		}
+		else {
+			bindWindowAsRenderTarget();
+		}
+	}
+	else {
+		bindWindowAsRenderTarget();
+	}
+}
+
+void Texture::bindWindowAsRenderTarget()
 {
 	glBindTexture(GL_TEXTURE_2D, id);
 	glGenerateMipmap(GL_TEXTURE_2D);
@@ -152,6 +186,11 @@ void Texture::unbindAsRenderTarget()
 
 	glViewport(0, 0, window.getWidth(), window.getHeight());
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	while (!renderTargetIDs.empty()) {
+		renderTargetIDs.pop();
+		renderTargetBoundings.pop();
+	}
 }
 
 void Texture::setSamplingMode(int sampleMode) {

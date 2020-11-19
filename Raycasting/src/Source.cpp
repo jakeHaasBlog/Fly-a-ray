@@ -11,6 +11,7 @@ int main(int argc, char** argv) {
 	if (glewInit() != GLEW_OK) printf("GLEW did not initialize properly\n");
 	YSE::System().init();
 
+	window.setResolution(1920, 1080);
 	GameLogicInterface::init();
 	window.mainUpdateLoop();
 	GameLogicInterface::cleanup();

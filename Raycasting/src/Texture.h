@@ -4,7 +4,10 @@
 #include "GLFW/glfw3.h"
 
 #include <string>
+#include <array>
 #include <vector>
+
+#include <stack>
 
 // a texture managed by OpenGL, pixel data is stored in VRAM and accessed via shader programs
 class Texture {
@@ -44,6 +47,7 @@ public:
 
 	// opengl render calls will now render to the window
 	void unbindAsRenderTarget();
+	void bindWindowAsRenderTarget();
 
 	// 0 = linear  *will make pixels stand out (great for pixel art)*
 	// 1 = nearest *will blemd pixels to make them smoother (great for realism)*
@@ -71,4 +75,7 @@ private:
 
 	GLuint frameBufferID;
 	void generateFrameBuffer();
+
+	static std::stack<std::array<int, 4>> renderTargetBoundings;
+	static std::stack<int> renderTargetIDs;
 };

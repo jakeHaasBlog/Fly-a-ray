@@ -4,6 +4,7 @@
 #include "GameLogicInterface.h"
 #include "yse.hpp"
 
+
 Window & Window::getWindowInstance() {
 	static Window w;
 	return w;
@@ -44,7 +45,15 @@ void Window::mainUpdateLoop() {
 		start = clock.now();
 
 		startUpdateTIme = clock.now();
+		framebuffer.bindAsRenderTarget();
 		GameLogicInterface::update(deltaTime);
+		framebuffer.unbindAsRenderTarget();
+
+		static TexturedQuad q(getLeftScreenBound(), getBottomScreenBound(), getRightScreenBound() - getLeftScreenBound(), getTopScreenBound() - getBottomScreenBound(), framebuffer);
+		q.setBounding(getLeftScreenBound(), getBottomScreenBound(), getRightScreenBound() - getLeftScreenBound(), getTopScreenBound() - getBottomScreenBound());
+		q.setTexture(framebuffer);
+		q.render();
+
 		updateTime = (float)(((double)(clock.now() - startUpdateTIme).count()) / 1000000);
 
 		static uint64_t frame = 0;
@@ -154,6 +163,13 @@ void Window::setViewport() {
 	glViewport(0, 0, width, height);
 
 	viewportBounds = { -1 * aspectRatio,  1 * aspectRatio, 1.0f, -1.0f};
+}
+
+void Window::setResolution(int width, int height)
+{
+	float* data = new float[width * height * 3];
+	framebuffer.generateFromData(width, height, data, width * height);
+	delete[] data;
 }
 
 void Window::keyCallback(GLFWwindow * wind, int key, int scancode, int action, int mods) {
