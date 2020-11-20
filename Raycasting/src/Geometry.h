@@ -106,5 +106,7 @@ namespace Geo {
 		bool getIntersection(const Geo::Circle& circle, std::vector<std::array<float, 2>>* poi = nullptr);
 		bool getIntersection(const Geo::LineSeg& line, std::vector<std::array<float, 2>>* poi = nullptr);
 		bool getIntersection(const Geo::Rectangle& rect, std::vector<std::array<float, 2>>* poi = nullptr);
+
+		float getLength();
 	};
 }

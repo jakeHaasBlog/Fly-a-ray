@@ -918,3 +918,8 @@ bool Geo::LineSeg::getIntersection(const Geo::Rectangle & rect, std::vector<std:
 {
 	return getLineRectIntersection(rect, *this, poi);
 }
+
+float Geo::LineSeg::getLength()
+{
+	return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
+}
