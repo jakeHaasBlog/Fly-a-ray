@@ -46,6 +46,9 @@
     <ClCompile Include="src\SeeableCircle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\BatchQuads.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\OpenglBufferObjects.h">
@@ -82,6 +85,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\SeeableCircle.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BatchQuads.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

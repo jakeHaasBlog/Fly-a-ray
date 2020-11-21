@@ -109,6 +109,7 @@ VertexArray::VertexArray() {
 	glGenVertexArrays(1, &id);
 }
 
+// ** note: to-do, add support for integer attributes
 void VertexArray::setAttributes(const std::string & vertexDataFormat, const VertexBuffer & vb, const IndexBuffer & ib) {
 	bind();
 	vb.bind();
