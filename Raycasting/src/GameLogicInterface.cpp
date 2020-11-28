@@ -6,6 +6,10 @@ namespace {
 	Camera cam = Camera(0, 0, 0, 1.152, 100);
 	std::vector<SeeableEntity*> walls = {};
 	Texture testTex;
+	BatchQuads bq;
+	Texture bqTex;
+	Texture bqTex2;
+	Texture bqTex3;
 }
 
 void GameLogicInterface::init() {
@@ -46,6 +50,27 @@ void GameLogicInterface::init() {
 	testTex.generateDefaultTexture(512, 512);
 
 	window.setResolution(1920, 1080);
+
+	bqTex.generateDefaultTexture(200, 200);
+	bq.setTextureSlot(0, &bqTex);
+
+	bqTex2.generateDefaultTexture(500, 500);
+	bq.setTextureSlot(1, &bqTex2);
+
+	bqTex3.generateDefaultTexture(1500, 1500);
+	bq.setTextureSlot(2, &bqTex3);
+
+	int xWid = 1000;
+	int yWid = 1000;
+	for (int x = 0; x < xWid; x++) {
+		for (int y = 0; y < yWid; y++) {
+			float x1 = (float)x / xWid * 2.0f - 1.0f;
+			float y1 = (float)y / yWid * 2.0f - 1.0f;
+
+			bq.addQuad(x1, y1, (float)2.0f / (xWid * 1.2f), (float)2.0f / (yWid * 1.2f), x1 / 2, y1 / 2, x1 * y1, rand() % 3);
+
+		}
+	}
 
 }
 
@@ -96,6 +121,8 @@ void GameLogicInterface::update(float deltaTime) {
 		e->renderPrimitive({ -cam.getX(), -cam.getY() }, 1.0f);
 	}
 	glViewport(0, 0, window.getWidth(), window.getHeight());
+
+	bq.renderAll();
 
 	YSE::System().update();
 }
