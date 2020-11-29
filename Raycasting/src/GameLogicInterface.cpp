@@ -5,11 +5,11 @@
 namespace {
 	Camera cam = Camera(0, 0, 0, 1.152, 100);
 	std::vector<SeeableEntity*> walls = {};
-	Texture testTex;
 	BatchQuads bq;
 	Texture bqTex;
 	Texture bqTex2;
 	Texture bqTex3;
+	TexturedQuad testQuad;
 }
 
 void GameLogicInterface::init() {
@@ -47,30 +47,35 @@ void GameLogicInterface::init() {
 	walls.push_back(new SeeableCircle(-0.7f, 0.35f, 0.1f));
 	(*(walls.end() - 1))->setColor(1.0f, 0.0f, 0.0f);
 
-	testTex.generateDefaultTexture(512, 512);
-
 	window.setResolution(1920, 1080);
 
-	bqTex.generateDefaultTexture(200, 200);
-	bq.setTextureSlot(0, &bqTex);
-
-	bqTex2.generateDefaultTexture(500, 500);
-	bq.setTextureSlot(1, &bqTex2);
-
-	bqTex3.generateDefaultTexture(1500, 1500);
-	bq.setTextureSlot(2, &bqTex3);
-
-	int xWid = 1000;
-	int yWid = 1000;
+	int xWid = 200 / 4;
+	int yWid = 100 / 4;
+	float d = (float)(2.0f / (yWid * 1.2));
 	for (int x = 0; x < xWid; x++) {
 		for (int y = 0; y < yWid; y++) {
-			float x1 = (float)x / xWid * 2.0f - 1.0f;
-			float y1 = (float)y / yWid * 2.0f - 1.0f;
+			float x1 = x * d - (d * xWid / 2);
+			float y1 = y * d - (d * yWid / 2);
 
-			bq.addQuad(x1, y1, (float)2.0f / (xWid * 1.2f), (float)2.0f / (yWid * 1.2f), x1 / 2, y1 / 2, x1 * y1, rand() % 3);
+			bq.addQuad(x1, y1, d * 0.9, d * 0.9, x1 / 2, y1 / 2, x1 * y1);
 
 		}
 	}
+
+	bqTex.generateFromFile("assets/test.png");
+	bq.setTextureSlot(0, &bqTex);
+
+	bq.addQuad(0, 0, 0.5, 0.5, 0, 0, 0, 0);
+	bq.setQuadTextureSampleBounds(bq.size() - 1, 362, 50, 100, 100);
+
+	bq.addQuad(0.5, 0, 0.5, 0.5, 0, 0, 0, 0);
+	bq.setQuadTextureSampleBounds(bq.size() - 1, 50, 512-150, 100, 100);
+
+	bq.addQuad(-0.5, 0, 0.5, 0.5, 0, 0, 0, 0);
+	bq.setQuadTextureSampleBounds(bq.size() - 1, 186, 512-326, 140, 140);
+
+	testQuad.setBounding(0, -0.5, 0.5, 0.5);
+	testQuad.setTexture(bqTex);
 
 }
 
@@ -122,7 +127,26 @@ void GameLogicInterface::update(float deltaTime) {
 	}
 	glViewport(0, 0, window.getWidth(), window.getHeight());
 
+
+	for (int i = 0; i < bq.size(); i++) {
+		int r = rand() % 400;
+		switch (r) {
+		case 0:
+			bq.setQuadTextureSampleBounds(i, 362, 50, 100, 100);
+			break;
+		case 1:
+			bq.setQuadTextureSampleBounds(i, 50, 512 - 150, 100, 100);
+			break;
+		case 2:
+			bq.setQuadTextureSampleBounds(i, 186, 512 - 326, 140, 140);
+			break;
+		case 3:
+			bq.setQuadTextureSampleBounds(i, 0.0f, 0.0f, 1.0f, 1.0f);
+			break;
+		}
+	}
 	bq.renderAll();
+	testQuad.render();
 
 	YSE::System().update();
 }

@@ -1,5 +1,7 @@
 #include "BatchQuads.h"
 
+#include "Window.h"
+
 Shader* BatchQuads::defaultShader = nullptr;
 
 BatchQuads::BatchQuads()
@@ -127,6 +129,44 @@ void BatchQuads::setBottomRightQuadColor(int i, float r, float g, float b)
 	buffersReady = false;
 }
 
+void BatchQuads::setQuadTexture(int i, int textureSlot)
+{
+	vertices[i].texture1 = textureSlot;
+	vertices[i].texture2 = textureSlot;
+	vertices[i].texture3 = textureSlot;
+	vertices[i].texture4 = textureSlot;
+}
+
+void BatchQuads::setQuadTextureSampleBounds(int i, int pixX, int pixY, int pixWidth, int pixHeight)
+{
+	Texture* setTex = boundTextures[vertices[i].texture1]; // if you get an exception on this line it is because the texture slot being indexed by this quad is not set
+	float screenCoordsX = (float)pixX / setTex->getWidth();
+	float screenCoordsY = (float)pixY / setTex->getHeight();
+	float normWidth = (float)pixWidth / setTex->getWidth();
+	float normHeight = (float)pixHeight / setTex->getHeight();
+
+	setQuadTextureSampleBounds(i, screenCoordsX, screenCoordsY, normWidth, normHeight);
+	buffersReady = false;
+}
+
+void BatchQuads::setQuadTextureSampleBounds(int i, float screenCoordX, float screenCoordY, float width, float height)
+{
+	// bl, tl, tr, br
+	vertices[i].texX1 = screenCoordX;
+	vertices[i].texY1 = screenCoordY;
+
+	vertices[i].texX2 = screenCoordX;
+	vertices[i].texY2 = screenCoordY + height;
+
+	vertices[i].texX3 = screenCoordX + width;
+	vertices[i].texY3 = screenCoordY + height;
+
+	vertices[i].texX4 = screenCoordX + width;
+	vertices[i].texY4 = screenCoordY;
+
+	buffersReady = false;
+}
+
 void BatchQuads::setTextureSlot(int slot, Texture * tex)
 {
 	boundTextures[slot] = tex;
@@ -146,6 +186,7 @@ void BatchQuads::renderAll()
 
 	bindTextures();
 
+	quadShader->setUniform1f("u_aspectRatio", window.getAspectRatio());
 	quadShader->bind();
 	va->bind();
 	glDrawElements(GL_TRIANGLES, ib->getCount(), GL_UNSIGNED_INT, nullptr);
@@ -173,9 +214,11 @@ void BatchQuads::updateBuffers()
 			"out vec3 v_color;\n"
 			"out float v_tex;\n"
 			"\n"
+			"uniform float u_aspectRatio;\n"
+			"\n"
 			"void main()\n"
 			"{\n"
-			"	gl_Position = vec4(position, 0, 1);\n"
+			"	gl_Position = vec4(position[0] / u_aspectRatio, position[1], 0, 1);\n"
 			"	gl_Position[2] = 0;\n"
 			"   v_uvCoord = uvCoord;\n"
 			"   v_color = color;\n"

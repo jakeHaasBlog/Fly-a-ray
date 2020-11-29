@@ -36,13 +36,6 @@ Texture::Texture(const std::string & filename) {
 
 void Texture::generateFromFile(const std::string & filename) {
 
-	if (!isInitilized) {
-		glGenTextures(1, &id);
-		setDefaultTexParameters();
-		generateFrameBuffer();
-	}
-	glBindTexture(GL_TEXTURE_2D, id);
-
 	stbi_set_flip_vertically_on_load(true);
 
 	int bitsPerPixel;
@@ -58,12 +51,22 @@ void Texture::generateFromFile(const std::string & filename) {
 
 	delete[] data;
 
+	if (!isInitilized) {
+		glGenTextures(1, &id);
+		glBindTexture(GL_TEXTURE_2D, id);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+		setDefaultTexParameters();
+		glBindTexture(GL_TEXTURE_2D, id);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		generateFrameBuffer();
+	}
+	glBindTexture(GL_TEXTURE_2D, id);
+
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_FLOAT, &convertedPixels[0]);
 
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-
 	isInitilized = true;
 }
 
@@ -221,6 +224,16 @@ std::vector<std::array<float, 3>> Texture::getPixels(int mipmapLevel) {
 
 GLuint Texture::getID() {
 	return id;
+}
+
+int Texture::getWidth()
+{
+	return width;
+}
+
+int Texture::getHeight()
+{
+	return height;
 }
 
 void Texture::freeMemory() {

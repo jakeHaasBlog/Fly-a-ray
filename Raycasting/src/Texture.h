@@ -65,6 +65,9 @@ public:
 
 	GLuint getID();
 
+	int getWidth();
+	int getHeight();
+
 	// deletes the texture from VRAM
 	void freeMemory();
 

@@ -52,6 +52,12 @@ public:
 	void setBottomLeftQuadColor(int i, float r, float g, float b);
 	void setBottomRightQuadColor(int i, float r, float g, float b);
 
+	void setQuadTexture(int i, int textureSlot);
+
+	// when using this function a texture must be set for that quad
+	void setQuadTextureSampleBounds(int i, int pixX, int pixY, int pixWidth, int pixHeight);
+	void setQuadTextureSampleBounds(int i, float screenCoordX, float screenCoordY, float width, float height);
+
 	void setTextureSlot(int slot, Texture* tex);
 
 	void useShader(Shader& shader);
