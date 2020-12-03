@@ -112,7 +112,6 @@ void TexturedQuad::render() {
 		"void main()\n"
 		"{\n"
 		"	color = texture(u_texture, v_texCoord);\n"
-		"	color[3] = 1;\n"
 		"};\n";
 
 	static Shader sh = Shader(vertexShaderString, fragmentShaderString);

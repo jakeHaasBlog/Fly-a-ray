@@ -10,6 +10,7 @@ namespace {
 	Texture bqTex2;
 	Texture bqTex3;
 	TexturedQuad testQuad;
+	bool mouseEnabled = false;
 }
 
 void GameLogicInterface::init() {
@@ -49,8 +50,8 @@ void GameLogicInterface::init() {
 
 	window.setResolution(1920, 1080);
 
-	int xWid = 200 / 4;
-	int yWid = 100 / 4;
+	int xWid = 200 / 1;
+	int yWid = 100 / 1;
 	float d = (float)(2.0f / (yWid * 1.2));
 	for (int x = 0; x < xWid; x++) {
 		for (int y = 0; y < yWid; y++) {
@@ -66,15 +67,18 @@ void GameLogicInterface::init() {
 	bq.setTextureSlot(0, &bqTex);
 
 	bq.addQuad(0, 0, 0.5, 0.5, 0, 0, 0, 0);
+	bq.setQuadTexture(bq.size() - 1, 0);
 	bq.setQuadTextureSampleBounds(bq.size() - 1, 362, 50, 100, 100);
 
 	bq.addQuad(0.5, 0, 0.5, 0.5, 0, 0, 0, 0);
+	bq.setQuadTexture(bq.size() - 1, 0);
 	bq.setQuadTextureSampleBounds(bq.size() - 1, 50, 512-150, 100, 100);
 
 	bq.addQuad(-0.5, 0, 0.5, 0.5, 0, 0, 0, 0);
+	bq.setQuadTexture(bq.size() - 1, 0);
 	bq.setQuadTextureSampleBounds(bq.size() - 1, 186, 512-326, 140, 140);
 
-	testQuad.setBounding(0, -0.5, 0.5, 0.5);
+	testQuad.setBounding(-1.0f, -0.5, 0.5, 0.5);
 	testQuad.setTexture(bqTex);
 
 }
@@ -116,38 +120,55 @@ void GameLogicInterface::update(float deltaTime) {
 
 	cam.renderView(walls);
 
-	int height = 0.3f * window.getHeight();
-	int width = height * window.getAspectRatio();
-	int beginX = window.getWidth() - width;
-	glViewport(beginX, 0, width, height);
+	static Texture minimapTexture(1920, 1080);
+	minimapTexture.bindAsRenderTarget();
 	Geo::Rectangle::fillRect(window.getLeftScreenBound(), window.getBottomScreenBound(), window.getRightScreenBound() - window.getLeftScreenBound(), window.getTopScreenBound() - window.getBottomScreenBound(), 0, 0, 0);
 	cam.renderPrimitiveRays({ -cam.getX(), -cam.getY() }, 1.0f, walls);
 	for (SeeableEntity* e : walls) {
 		e->renderPrimitive({ -cam.getX(), -cam.getY() }, 1.0f);
 	}
-	glViewport(0, 0, window.getWidth(), window.getHeight());
+	minimapTexture.unbindAsRenderTarget();
+
+	static TexturedQuad minimapQuad;
+	minimapQuad.setTexture(minimapTexture);
+	minimapQuad.setX(window.getRightScreenBound() - 0.65f);
+	minimapQuad.setY(window.getBottomScreenBound());
+	minimapQuad.setWidth(0.65f);
+	minimapQuad.setHeight(0.4f);
 
 
 	for (int i = 0; i < bq.size(); i++) {
 		int r = rand() % 400;
 		switch (r) {
 		case 0:
+			bq.setQuadTexture(i, 0);
 			bq.setQuadTextureSampleBounds(i, 362, 50, 100, 100);
 			break;
 		case 1:
+			bq.setQuadTexture(i, 0);
 			bq.setQuadTextureSampleBounds(i, 50, 512 - 150, 100, 100);
 			break;
 		case 2:
+			bq.setQuadTexture(i, 0);
 			bq.setQuadTextureSampleBounds(i, 186, 512 - 326, 140, 140);
 			break;
 		case 3:
+			bq.setQuadTexture(i, 0);
 			bq.setQuadTextureSampleBounds(i, 0.0f, 0.0f, 1.0f, 1.0f);
+			break;
+		case 4:
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+			bq.setQuadTexture(i, -1);
 			break;
 		}
 	}
 	bq.renderAll();
 	testQuad.render();
 
+	minimapQuad.render();
 	YSE::System().update();
 }
 
@@ -177,7 +198,9 @@ void GameLogicInterface::mouseButtonCallback(int button, int action, int mods)
 void GameLogicInterface::keyCallback(int key, int scancode, int action, int mods)
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-		window.close();
+		mouseEnabled = !mouseEnabled;
+		glfwSetInputMode(window.getHandle(), GLFW_CURSOR, mouseEnabled ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+		//glfwSetWindowShouldClose(window.getHandle(), true);
 	}
 }
 

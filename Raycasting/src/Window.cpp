@@ -49,7 +49,8 @@ void Window::mainUpdateLoop() {
 		GameLogicInterface::update(deltaTime);
 		framebuffer.unbindAsRenderTarget();
 
-		static TexturedQuad q(getLeftScreenBound(), getBottomScreenBound(), getRightScreenBound() - getLeftScreenBound(), getTopScreenBound() - getBottomScreenBound(), framebuffer);
+		static TexturedQuad q(0, 0, 0, 0, framebuffer);
+		q.setTexture(framebuffer);
 		q.setBounding(getLeftScreenBound(), getBottomScreenBound(), getRightScreenBound() - getLeftScreenBound(), getTopScreenBound() - getBottomScreenBound());
 		q.setTexture(framebuffer);
 		q.render();
@@ -167,7 +168,7 @@ void Window::setViewport() {
 
 void Window::setResolution(int width, int height)
 {
-	float* data = new float[width * height * 3];
+	float* data = new float[width * height * 4];
 	framebuffer.generateFromData(width, height, data, width * height);
 	delete[] data;
 }

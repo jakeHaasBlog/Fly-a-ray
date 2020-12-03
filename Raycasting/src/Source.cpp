@@ -11,6 +11,9 @@ int main(int argc, char** argv) {
 	if (glewInit() != GLEW_OK) printf("GLEW did not initialize properly\n");
 	YSE::System().init();
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	window.setResolution(1920, 1080);
 	GameLogicInterface::init();
 	window.mainUpdateLoop();

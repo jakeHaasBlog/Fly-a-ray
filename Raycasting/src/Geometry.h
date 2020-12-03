@@ -35,11 +35,11 @@ namespace Geo {
 
 	public:
 		float x, y, width, height;
-		void renderFilled(float r, float g, float b);
-		void renderOutline(float r, float g, float b);
+		void renderFilled(float r, float g, float b, float a = 1.0f);
+		void renderOutline(float r, float g, float b, float a = 1.0f);
 
-		static void fillRect(float x, float y, float width, float height, float r, float g, float b);
-		static void outlineRect(float x, float y, float width, float height, float r, float g, float b);
+		static void fillRect(float x, float y, float width, float height, float r, float g, float b, float a = 1.0f);
+		static void outlineRect(float x, float y, float width, float height, float r, float g, float b, float a = 1.0f);
 
 		bool getIntersection(const Geo::LineSeg& line, std::vector<std::array<float, 2>>* poi = nullptr) const;
 		bool getIntersection(const Geo::Rectangle& rect, std::vector<std::array<float, 2>>* poi = nullptr) const;
@@ -76,11 +76,11 @@ namespace Geo {
 
 	public:
 		float x, y, radius;
-		void renderFilled(float r, float g, float b);
-		void renderOutline(float r, float g, float b);
+		void renderFilled(float r, float g, float b, float a = 1.0f);
+		void renderOutline(float r, float g, float b, float a = 1.0f);
 
-		static void fillCircle(float x, float y, float radius, float r, float g, float b);
-		static void outlineCircle(float x, float y, float radius, float r, float g, float b);
+		static void fillCircle(float x, float y, float radius, float r, float g, float b, float a = 1.0f);
+		static void outlineCircle(float x, float y, float radius, float r, float g, float b, float a = 1.0f);
 
 		bool getIntersection(const Geo::Circle& circle, std::vector<std::array<float, 2>>* poi = nullptr);
 		bool getIntersection(const Geo::Rectangle& rect, std::vector<std::array<float, 2>>* poi = nullptr);
@@ -100,8 +100,8 @@ namespace Geo {
 	public:
 		float x1, y1;
 		float x2, y2;
-		void render(float r, float g, float b);
-		static void renderLine(float x1, float y1, float x2, float y2, float r, float g, float b);
+		void render(float r, float g, float b, float a = 1.0f);
+		static void renderLine(float x1, float y1, float x2, float y2, float r, float g, float b, float a = 1.0f);
 
 		bool getIntersection(const Geo::Circle& circle, std::vector<std::array<float, 2>>* poi = nullptr);
 		bool getIntersection(const Geo::LineSeg& line, std::vector<std::array<float, 2>>* poi = nullptr);
