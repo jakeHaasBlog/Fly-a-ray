@@ -22,8 +22,8 @@ public:
 	// generates a default texture with float rbg encoding 
 	Texture(int width, int height);
 
-	// generates a texture with given data in float rgb encoding
-	// pixelCount - the number of pixels in 'data'    aka. sizeof(data) / (3 * sizeof(float))
+	// generates a texture with given data in float rgba encoding
+	// pixelCount - the number of pixels in 'data'    aka. sizeof(data) / (4 * sizeof(float))
 	Texture(int width, int height, float* data, size_t pixelCount);
 
 	// generates texture then reads pixel data from png or jpg file into it
@@ -36,6 +36,7 @@ public:
 	// generate functions will initialize an uninitialized texture or simply overwrite an existing one
 	void generateFromData(int width, int height, float* data, size_t pixelCount);
 
+	// includes interpolation and clamping
 	void setDefaultTexParameters();
 
 	// binds texture to the given slot in the vram so shader programs can access it
@@ -61,9 +62,12 @@ public:
 
 	// takes advantage of move semantics so returning the vector is not attrociously innefficient
 	// mipmap level will return the pixels of that level of the mipmap, level 0 is the original size, each level of mipmap is half the size of previous one
-	std::vector<std::array<float, 3>> getPixels(int mipmapLevel = 0);
+	std::vector<std::array<float, 4>> getPixels(int mipmapLevel = 0);
 
 	GLuint getID();
+
+	int getWidth();
+	int getHeight();
 
 	// deletes the texture from VRAM
 	void freeMemory();

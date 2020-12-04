@@ -93,6 +93,13 @@ void Shader::setUniform1i(const std::string & uniformName, int value) {
 	unbind();
 }
 
+void Shader::setUniformIntArray(const std::string & uniformName, int * values, int count)
+{
+	bind();
+	glUniform1iv(getUniformLocation(uniformName), count, values);
+	unbind();
+}
+
 void Shader::bind() const {
 	glUseProgram(id);
 }

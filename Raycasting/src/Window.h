@@ -45,7 +45,6 @@ public:
 	void close();
 
 	GLFWwindow* getHandle();
-	void initFramebuffer();
 
 private:
 

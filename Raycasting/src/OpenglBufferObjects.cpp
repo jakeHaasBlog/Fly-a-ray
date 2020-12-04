@@ -109,6 +109,7 @@ VertexArray::VertexArray() {
 	glGenVertexArrays(1, &id);
 }
 
+// ** note: to-do, add support for integer attributes
 void VertexArray::setAttributes(const std::string & vertexDataFormat, const VertexBuffer & vb, const IndexBuffer & ib) {
 	bind();
 	vb.bind();
@@ -121,6 +122,7 @@ void VertexArray::setAttributes(const std::string & vertexDataFormat, const Vert
 
 	for (char c : vertexDataFormat) {
 		if (c == 'f') totalStride += sizeof(float);
+		if (c == 'i') totalStride += sizeof(int);
 	}
 
 	for (char c : vertexDataFormat) {
@@ -139,6 +141,19 @@ void VertexArray::setAttributes(const std::string & vertexDataFormat, const Vert
 				);
 
 				totalOffset += currentAttribFormat.length() * sizeof(float);
+			}
+
+			else if (currentAttribFormat.at(0) == 'i') {
+				glVertexAttribIPointer
+				(
+					currentAttributeIndex,
+					currentAttribFormat.length(),
+					GL_INT,
+					totalStride,
+					(const void*)(totalOffset)
+				);
+
+				totalOffset += currentAttribFormat.length() * sizeof(int);
 			}
 
 			currentAttributeIndex++;
@@ -163,6 +178,18 @@ void VertexArray::setAttributes(const std::string & vertexDataFormat, const Vert
 		);
 
 		totalOffset += currentAttribFormat.length() * sizeof(float);
+	}
+	else if (currentAttribFormat.at(0) == 'i') {
+		glVertexAttribIPointer
+		(
+			currentAttributeIndex,
+			currentAttribFormat.length(),
+			GL_INT,
+			totalStride,
+			(const void*)(totalOffset)
+		);
+
+		totalOffset += currentAttribFormat.length() * sizeof(int);
 	}
 
 	unbind();

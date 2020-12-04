@@ -10,6 +10,15 @@ TexturedQuad::TexturedQuad(float x, float y, float width, float height, Texture 
 {
 }
 
+TexturedQuad::TexturedQuad()
+{
+	tex = nullptr;
+	x = 0;
+	y = 0;
+	width = 1;
+	height = 1;
+}
+
 void TexturedQuad::setX(float x) {
 	this->x = x;
 }
@@ -43,6 +52,14 @@ void TexturedQuad::setTextureSampleArea(float x, float y, float width, float hei
 	texY = y;
 	texWidth = width;
 	texHeight = height;
+}
+
+void TexturedQuad::setTextureSampleArea(int pixX, int pixY, float pixWidth, float pixHeight)
+{
+	texX = (float)pixX / tex->getWidth();
+	texY = (float)pixY / tex->getHeight();
+	texWidth = (float)pixWidth / tex->getWidth();
+	texHeight = (float)pixHeight / tex->getHeight();
 }
 
 void TexturedQuad::render() {
@@ -95,7 +112,6 @@ void TexturedQuad::render() {
 		"void main()\n"
 		"{\n"
 		"	color = texture(u_texture, v_texCoord);\n"
-		"	color[3] = 1;\n"
 		"};\n";
 
 	static Shader sh = Shader(vertexShaderString, fragmentShaderString);
@@ -106,7 +122,13 @@ void TexturedQuad::render() {
 	sh.setUniform2f("u_translation", x, y);
 	sh.setUniform2f("u_texture_stretch", texWidth, texHeight);
 	sh.setUniform2f("u_texture_translation", texX, texY);
-	tex->bind();
+	if (tex == nullptr) {
+		static Texture defaultTexture(512, 512);
+		defaultTexture.bind(0);
+	}
+	else {
+		tex->bind();
+	}
 	sh.bind();
 	va.bind();
 	glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr);

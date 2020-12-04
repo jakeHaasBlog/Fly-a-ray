@@ -13,6 +13,7 @@ public:
 	// every quad requires a texture reference, the texture itself must be managed elsewhere
 	// by default the entire texture is stretched over the quad, use setTextureSampleArea() to specify which part of the texture to render
 	TexturedQuad(float x, float y, float width, float height, Texture& texture);
+	TexturedQuad();
 
 	void setX(float x);
 	void setY(float y);
@@ -24,6 +25,7 @@ public:
 	// specify what part of the texture will be rendered over the quad
 	// bottom left of texture is (0, 0), top right is (1, 1)
 	void setTextureSampleArea(float x, float y, float width, float height);
+	void setTextureSampleArea(int pixX, int pixY, float pixWidth, float pixHeight);
 
 	void render();
 

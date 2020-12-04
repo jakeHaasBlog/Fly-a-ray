@@ -338,7 +338,7 @@ Geo::Rectangle& Geo::Rectangle::getStencyl()
 	return rect;
 }
 
-void Geo::Rectangle::renderFilled(float r, float g, float b)
+void Geo::Rectangle::renderFilled(float r, float g, float b, float a)
 {
 	static std::string vertexShaderString =
 		"#version 330 core\n"
@@ -360,11 +360,11 @@ void Geo::Rectangle::renderFilled(float r, float g, float b)
 		"\n"
 		"layout(location = 0) out vec4 color;\n"
 		"\n"
-		"uniform vec3 u_color;\n"
+		"uniform vec4 u_color;\n"
 		"\n"
 		"void main()\n"
 		"{\n"
-		"	color = vec4(u_color, 1);\n"
+		"	color = u_color;\n"
 		"};\n";
 
 	static Shader fillShader(vertexShaderString, fragmentShaderString);
@@ -372,12 +372,12 @@ void Geo::Rectangle::renderFilled(float r, float g, float b)
 	fillShader.setUniform1f("u_aspectRatio", window.getAspectRatio());
 	fillShader.setUniform2f("u_stretch", width, height);
 	fillShader.setUniform2f("u_translation", x, y);
-	fillShader.setUniform3f("u_color", r, g, b);
+	fillShader.setUniform4f("u_color", r, g, b, a);
 
 	render(fillShader);
 }
 
-void Geo::Rectangle::renderOutline(float r, float g, float b)
+void Geo::Rectangle::renderOutline(float r, float g, float b, float a)
 {
 	static std::string vertexShaderString =
 		"#version 330 core\n"
@@ -399,11 +399,11 @@ void Geo::Rectangle::renderOutline(float r, float g, float b)
 		"\n"
 		"layout(location = 0) out vec4 color;\n"
 		"\n"
-		"uniform vec3 u_color;\n"
+		"uniform vec4 u_color;\n"
 		"\n"
 		"void main()\n"
 		"{\n"
-		"	color = vec4(u_color, 1);\n"
+		"	color = u_color;\n"
 		"};\n";
 
 	static Shader lineShader(vertexShaderString, fragmentShaderString);
@@ -419,29 +419,29 @@ void Geo::Rectangle::renderOutline(float r, float g, float b)
 	lineShader.setUniform1f("u_aspectRatio", window.getAspectRatio());
 	lineShader.setUniform2f("u_stretch", width, height);
 	lineShader.setUniform2f("u_translation", x, y);
-	lineShader.setUniform3f("u_color", r, g, b);
+	lineShader.setUniform4f("u_color", r, g, b, a);
 
 	render(lineShader, getVB(), lineIB, getVA(), GL_LINES);
 }
 
-void Geo::Rectangle::fillRect(float x, float y, float width, float height, float r, float g, float b)
+void Geo::Rectangle::fillRect(float x, float y, float width, float height, float r, float g, float b, float a)
 {
 	Rectangle& rect = getStencyl();
 	rect.x = x;
 	rect.y = y;
 	rect.width = width;
 	rect.height = height;
-	rect.renderFilled(r, g, b);
+	rect.renderFilled(r, g, b, a);
 }
 
-void Geo::Rectangle::outlineRect(float x, float y, float width, float height, float r, float g, float b)
+void Geo::Rectangle::outlineRect(float x, float y, float width, float height, float r, float g, float b, float a)
 {
 	Rectangle& rect = getStencyl();
 	rect.x = x;
 	rect.y = y;
 	rect.width = width;
 	rect.height = height;
-	rect.renderOutline(r, g, b);
+	rect.renderOutline(r, g, b, a);
 }
 
 bool Geo::Rectangle::getIntersection(const Geo::LineSeg & line, std::vector<std::array<float, 2>>* poi) const
@@ -657,7 +657,7 @@ VertexArray& Geo::Circle::getHighResCircleVA() {
 
 
 
-void Geo::Circle::renderFilled(float r, float g, float b)
+void Geo::Circle::renderFilled(float r, float g, float b, float a)
 {
 	static std::string vertexShaderString =
 		"#version 330 core\n"
@@ -683,7 +683,7 @@ void Geo::Circle::renderFilled(float r, float g, float b)
 		"\n"
 		"layout(location = 0) out vec4 color;\n"
 		"\n"
-		"uniform vec3 u_color;\n"
+		"uniform vec4 u_color;\n"
 		"\n"
 		"in vec2 v_utPos;\n"
 		"\n"
@@ -696,7 +696,7 @@ void Geo::Circle::renderFilled(float r, float g, float b)
 		"	if (distSq > 0.25)\n"
 		"		discard;\n"
 		"\n"
-		"	color = vec4(u_color, 1);\n"
+		"	color = u_color;\n"
 		"}\n";
 
 	static Shader fillShader(vertexShaderString, fragmentShaderString);
@@ -709,7 +709,7 @@ void Geo::Circle::renderFilled(float r, float g, float b)
 	render(fillShader);
 }
 
-void Geo::Circle::renderOutline(float r, float g, float b)
+void Geo::Circle::renderOutline(float r, float g, float b, float a)
 {
 	static std::string vertexShaderString =
 		"#version 330 core\n"
@@ -731,11 +731,11 @@ void Geo::Circle::renderOutline(float r, float g, float b)
 		"\n"
 		"layout(location = 0) out vec4 color;\n"
 		"\n"
-		"uniform vec3 u_color;\n"
+		"uniform vec4 u_color;\n"
 		"\n"
 		"void main()\n"
 		"{\n"
-		"	color = vec4(u_color, 1);\n"
+		"	color = u_color;\n"
 		"};\n";
 
 	static Shader shader(vertexShaderString, fragmentShaderString);
@@ -743,7 +743,7 @@ void Geo::Circle::renderOutline(float r, float g, float b)
 	shader.setUniform1f("u_aspectRatio", window.getAspectRatio());
 	shader.setUniform2f("u_stretch", radius * 2, radius * 2);
 	shader.setUniform2f("u_translation", x, y);
-	shader.setUniform3f("u_color", r, g, b);
+	shader.setUniform4f("u_color", r, g, b, a);
 
 	if (radius > 0.42)
 		render(shader, getHighResCircleVB(), getHighResCircleIB(), getHighResCircleVA(), GL_LINES);
@@ -755,22 +755,22 @@ void Geo::Circle::renderOutline(float r, float g, float b)
 		render(shader, getLowResCircleVB(), getLowResCircleIB(), getLowResCircleVA(), GL_LINES);
 }
 
-void Geo::Circle::fillCircle(float x, float y, float radius, float r, float g, float b)
+void Geo::Circle::fillCircle(float x, float y, float radius, float r, float g, float b, float a)
 {
 	Circle& circle = getStencyl();
 	circle.x = x;
 	circle.y = y;
 	circle.radius = radius;
-	circle.renderFilled(r, g, b);
+	circle.renderFilled(r, g, b, a);
 }
 
-void Geo::Circle::outlineCircle(float x, float y, float radius, float r, float g, float b)
+void Geo::Circle::outlineCircle(float x, float y, float radius, float r, float g, float b, float a)
 {
 	Circle& circle = getStencyl();
 	circle.x = x;
 	circle.y = y;
 	circle.radius = radius;
-	circle.renderOutline(r, g, b);
+	circle.renderOutline(r, g, b, a);
 }
 
 bool Geo::Circle::getIntersection(const Geo::Circle & circle, std::vector<std::array<float, 2>>* poi)
@@ -853,7 +853,7 @@ VertexArray & Geo::LineSeg::getVA()
 	return va;
 }
 
-void Geo::LineSeg::render(float r, float g, float b)
+void Geo::LineSeg::render(float r, float g, float b, float a)
 {
 	// circle wireframe shader
 	static std::string vertexShaderString =
@@ -894,14 +894,14 @@ void Geo::LineSeg::render(float r, float g, float b)
 
 }
 
-void Geo::LineSeg::renderLine(float x1, float y1, float x2, float y2, float r, float g, float b)
+void Geo::LineSeg::renderLine(float x1, float y1, float x2, float y2, float r, float g, float b, float a)
 {
 	static LineSeg line;
 	line.x1 = x1;
 	line.x2 = x2;
 	line.y1 = y1;
 	line.y2 = y2;
-	line.render(r, g, b);
+	line.render(r, g, b, a);
 }
 
 bool Geo::LineSeg::getIntersection(const Geo::Circle & circle, std::vector<std::array<float, 2>>* poi)
@@ -917,4 +917,9 @@ bool Geo::LineSeg::getIntersection(const Geo::LineSeg & line, std::vector<std::a
 bool Geo::LineSeg::getIntersection(const Geo::Rectangle & rect, std::vector<std::array<float, 2>>* poi)
 {
 	return getLineRectIntersection(rect, *this, poi);
+}
+
+float Geo::LineSeg::getLength()
+{
+	return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
 }

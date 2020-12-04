@@ -13,6 +13,8 @@
 #include "SeeableLine.h"
 #include "SeeableRectangle.h"
 #include "SeeableCircle.h"
+#include "BatchQuads.h"
+#include "BatchLines.h"
 
 namespace GameLogicInterface {
 	void init();
