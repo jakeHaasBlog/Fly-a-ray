@@ -63,7 +63,7 @@ public:
 
 	void useShader(Shader& shader);
 
-	void renderAll();
+	void renderAll(float scale = 1.0f, std::array<float, 2> translation = { 0.0f, 0.0f });
 
 	int size();
 

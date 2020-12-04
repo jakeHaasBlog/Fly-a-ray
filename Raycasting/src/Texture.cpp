@@ -153,9 +153,9 @@ void Texture::unbind() {
 void Texture::bindAsRenderTarget()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
-	glViewport(0, 0, 1920, 1080);
+	glViewport(0, 0, width, height);
 
-	renderTargetBoundings.push({ 0, 0, 1920, 1080 });
+	renderTargetBoundings.push({ 0, 0, width, height });
 	renderTargetIDs.push(frameBufferID);
 }
 

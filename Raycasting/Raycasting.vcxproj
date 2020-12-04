@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\BatchLines.cpp" />
     <ClCompile Include="src\BatchQuads.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\GameLogicInterface.cpp" />
@@ -35,6 +36,7 @@
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\BatchLines.h" />
     <ClInclude Include="src\BatchQuads.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\GameLogicInterface.h" />

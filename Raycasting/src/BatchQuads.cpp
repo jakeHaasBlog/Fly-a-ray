@@ -15,9 +15,14 @@ BatchQuads::BatchQuads(int numOfQuads) :
 
 BatchQuads::~BatchQuads()
 {
-	delete vb;
-	delete ib;
-	delete va;
+	if (vb)
+		delete vb;
+
+	if (ib)
+		delete ib;
+
+	if (va)
+		delete va;
 }
 
 void BatchQuads::addQuad(float x, float y, float width, float height, float r, float g, float b, float a, int _texture)
@@ -257,7 +262,7 @@ void BatchQuads::useShader(Shader & shader)
 	quadShader = &shader;
 }
 
-void BatchQuads::renderAll()
+void BatchQuads::renderAll(float scale, std::array<float, 2> translation)
 {
 	if (!buffersReady) {
 		updateBuffers();
@@ -267,6 +272,8 @@ void BatchQuads::renderAll()
 	bindTextures();
 
 	quadShader->setUniform1f("u_aspectRatio", window.getAspectRatio());
+	quadShader->setUniform1f("u_stretch", scale);
+	quadShader->setUniform2f("u_translation", translation[0], translation[1]);
 	quadShader->bind();
 	va->bind();
 	glDrawElements(GL_TRIANGLES, ib->getCount(), GL_UNSIGNED_INT, nullptr);
@@ -295,10 +302,12 @@ void BatchQuads::updateBuffers()
 			"out float v_tex;\n"
 			"\n"
 			"uniform float u_aspectRatio;\n"
+			"uniform float u_stretch;\n"
+			"uniform vec2 u_translation;\n"
 			"\n"
 			"void main()\n"
 			"{\n"
-			"	gl_Position = vec4(position[0] / u_aspectRatio, position[1], 0, 1);\n"
+			"	gl_Position = vec4((position[0] * u_stretch + u_translation[0]) / u_aspectRatio, position[1]  * u_stretch + u_translation[1], 0, 1);\n"
 			"	gl_Position[2] = 0;\n"
 			"   v_uvCoord = uvCoord;\n"
 			"   v_color = color;\n"

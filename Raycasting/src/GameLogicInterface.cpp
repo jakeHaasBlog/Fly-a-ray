@@ -6,6 +6,7 @@ namespace {
 	Camera cam = Camera(0, 0, 0, 1.152, 100);
 	std::vector<SeeableEntity*> walls = {};
 	BatchQuads bq;
+	BatchLines bl;
 	Texture bqTex;
 	Texture bqTex2;
 	Texture bqTex3;
@@ -50,15 +51,15 @@ void GameLogicInterface::init() {
 
 	window.setResolution(1920, 1080);
 
-	int xWid = 200 / 1;
-	int yWid = 100 / 1;
+	int xWid = 200 / 2;
+	int yWid = 100 / 2;
 	float d = (float)(2.0f / (yWid * 1.2));
 	for (int x = 0; x < xWid; x++) {
 		for (int y = 0; y < yWid; y++) {
 			float x1 = x * d - (d * xWid / 2);
 			float y1 = y * d - (d * yWid / 2);
 
-			bq.addQuad(x1, y1, d * 0.9, d * 0.9, x1 / 2, y1 / 2, x1 * y1);
+			bq.addQuad(x1 / 2 + 1.0f, y1, d * 0.9, d * 0.9, x1 / 2, y1 / 2, x1 * y1);
 
 		}
 	}
@@ -77,6 +78,12 @@ void GameLogicInterface::init() {
 	bq.addQuad(-0.5, 0, 0.5, 0.5, 0, 0, 0, 0);
 	bq.setQuadTexture(bq.size() - 1, 0);
 	bq.setQuadTextureSampleBounds(bq.size() - 1, 186, 512-326, 140, 140);
+
+	int numLines = 120;
+	for (int i = 0; i < numLines; i++) {
+		float x = ((float)i / numLines) * 4 - 2.0f;
+		bl.addLine(x / 2 - 1.0f, 0.9f, x / 2 - 1.0f, -0.9f);
+	}
 
 	testQuad.setBounding(-1.0f, -0.5, 0.5, 0.5);
 	testQuad.setTexture(bqTex);
@@ -120,7 +127,7 @@ void GameLogicInterface::update(float deltaTime) {
 
 	cam.renderView(walls);
 
-	static Texture minimapTexture(1920, 1080);
+	static Texture minimapTexture(192, 108);
 	minimapTexture.bindAsRenderTarget();
 	Geo::Rectangle::fillRect(window.getLeftScreenBound(), window.getBottomScreenBound(), window.getRightScreenBound() - window.getLeftScreenBound(), window.getTopScreenBound() - window.getBottomScreenBound(), 0, 0, 0);
 	cam.renderPrimitiveRays({ -cam.getX(), -cam.getY() }, 1.0f, walls);
@@ -165,7 +172,40 @@ void GameLogicInterface::update(float deltaTime) {
 			break;
 		}
 	}
-	bq.renderAll();
+	static float x = 0.0f;
+	x += 0.001f * deltaTime;
+
+	static float y = 0.0f;
+	y += 0.0005f * deltaTime;
+
+	static float s = 0.0f;
+	s += 0.01f;
+
+	static float colorShift = 0.0f;
+	colorShift += 0.03f * deltaTime / 16.0f;
+	for (int i = 0; i < bl.size(); i++) {
+		float percent = (float)i / bl.size();
+		float colorRotator = colorShift + percent * 5;
+		float colorRotator2 = colorShift - percent * 5;
+
+		float r1 = sin(colorRotator / 1) / 2 + 0.5f;
+		float g1 = sin(colorRotator / 2) / 2 + 0.5f;
+		float b1 = sin(colorRotator / 4) / 2 + 0.5f;
+
+		float r2 = sin(colorRotator2 / 1) / 2 + 0.5f;
+		float g2 = sin(colorRotator2 / 2) / 2 + 0.5f;
+		float b2 = sin(colorRotator2 / 4) / 2 + 0.5f;
+
+		bl.setBeginLineColor(i, r1, g1, b1, 1.0f);
+		bl.setEndLineColor(i, r2, g2, b2, 1.0f);
+
+		BatchLine& line = bl.getLine(i);
+		line.y1 = (sin(colorRotator) / 2 + 0.5f) * 0.3 + 0.7f;
+
+	}
+
+	bq.renderAll(sin(s) / 3 + 1.0f, { sin(x)/4, sin(y)/4 });
+	bl.renderAll();
 	testQuad.render();
 
 	minimapQuad.render();
@@ -200,7 +240,6 @@ void GameLogicInterface::keyCallback(int key, int scancode, int action, int mods
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
 		mouseEnabled = !mouseEnabled;
 		glfwSetInputMode(window.getHandle(), GLFW_CURSOR, mouseEnabled ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
-		//glfwSetWindowShouldClose(window.getHandle(), true);
 	}
 }
 
