@@ -54,12 +54,12 @@ void GameLogicInterface::init() {
 	int xWid = 200 / 2;
 	int yWid = 100 / 2;
 	float d = (float)(2.0f / (yWid * 1.2));
-	for (int x = 0; x < xWid; x++) {
+	for (int x = 0; x < xWid / 2; x++) {
 		for (int y = 0; y < yWid; y++) {
 			float x1 = x * d - (d * xWid / 2);
 			float y1 = y * d - (d * yWid / 2);
 
-			bq.addQuad(x1 / 2 + 1.0f, y1, d * 0.9, d * 0.9, x1 / 2, y1 / 2, x1 * y1);
+			bq.addQuad(x1 + 1.5f, y1, d * 0.9, d * 0.9, x1 / 2, y1 / 2, x1 * y1);
 
 		}
 	}
