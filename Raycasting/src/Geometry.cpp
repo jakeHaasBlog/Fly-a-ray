@@ -267,7 +267,7 @@ namespace {
 }
 
 
-void Geo::GeoObject::render(const Shader & shader, const VertexBuffer & vb, const IndexBuffer & ib, const VertexArray & va, int inputType)
+void Geo::GeoObject::render(Shader & shader, VertexBuffer & vb, IndexBuffer & ib, VertexArray & va, int inputType)
 {
 	shader.bind();
 
@@ -278,7 +278,7 @@ void Geo::GeoObject::render(const Shader & shader, const VertexBuffer & vb, cons
 	ib.unbind();
 }
 
-void Geo::GeoObject::render(const Shader& shader)
+void Geo::GeoObject::render(Shader& shader)
 {
 	render(shader, getVB(), getIB(), getVA(), GL_TRIANGLES);
 }

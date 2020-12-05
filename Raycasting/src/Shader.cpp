@@ -3,46 +3,22 @@
 #include <iostream>
 #include <sstream>
 
-Shader::Shader(std::ifstream & fileStream) {
-
-	if (!fileStream.good()) {
-		std::cout << "shader file not found" << std::endl;
-	}
-
-	enum class ShaderType {
-		NONE = -1, VERTEX = 0, FRAGMENT = 1
-	};
-
-	std::string line;
-	std::stringstream ss[3];
-	ShaderType type = ShaderType::NONE;
-	while (getline(fileStream, line)) {
-		if (line.find("#shader") != std::string::npos) {
-
-			if (line.find("vertex") != std::string::npos) {
-				type = ShaderType::VERTEX;
-			}
-			else if (line.find("fragment") != std::string::npos) {
-				type = ShaderType::FRAGMENT;
-			}
-		}
-		else {
-			ss[(int)type] << line << '\n';
-			//std::cout << line << std::endl;
-		}
-	}
-
-	fileStream.close();
-
-	id = createShader(ss[0].str(), ss[1].str());
+Shader::Shader(const std::string& filepath) :
+	filepath(filepath)
+{
+	isUsingFile = true;
 }
 
-Shader::Shader(const std::string & vertexShader, const std::string & fragmentShader) {
-	id = createShader(vertexShader, fragmentShader);
+Shader::Shader(const std::string & vertexShader, const std::string & fragmentShader) :
+	vs(vertexShader),
+	fs(fragmentShader)
+{
+	isUsingFile = false;
 }
 
 Shader::Shader(GLuint existingShader) {
 	id = existingShader;
+	isInitialized = true;
 }
 
 void Shader::setUniform1f(const std::string & uniformName, float value) {
@@ -100,16 +76,19 @@ void Shader::setUniformIntArray(const std::string & uniformName, int * values, i
 	unbind();
 }
 
-void Shader::bind() const {
+void Shader::bind() {
+	if (!isInitialized) initialize();
 	glUseProgram(id);
 }
 
-void Shader::unbind() const {
+void Shader::unbind() {
 	glUseProgram(0);
 }
 
 void Shader::freeMemory() {
-	glDeleteProgram(id);
+	if (isInitialized) {
+		glDeleteProgram(id);
+	}
 	unbind();
 }
 
@@ -173,4 +152,47 @@ GLuint Shader::getUniformLocation(const std::string& name) {
 
 	uniformLocationCache[name] = location;
 	return location;
+}
+
+void Shader::initialize()
+{
+	if (isUsingFile) {
+		std::ifstream fileStream(filepath);
+
+		if (!fileStream.good()) {
+			std::cout << "shader file not found" << std::endl;
+		}
+
+		enum class ShaderType {
+			NONE = -1, VERTEX = 0, FRAGMENT = 1
+		};
+
+		std::string line;
+		std::stringstream ss[3];
+		ShaderType type = ShaderType::NONE;
+		while (getline(fileStream, line)) {
+			if (line.find("#shader") != std::string::npos) {
+
+				if (line.find("vertex") != std::string::npos) {
+					type = ShaderType::VERTEX;
+				}
+				else if (line.find("fragment") != std::string::npos) {
+					type = ShaderType::FRAGMENT;
+				}
+			}
+			else {
+				ss[(int)type] << line << '\n';
+				//std::cout << line << std::endl;
+			}
+		}
+
+		fileStream.close();
+
+		id = createShader(ss[0].str(), ss[1].str());
+	}
+	else {
+		id = createShader(vs, fs);
+	}
+
+	isInitialized = true;
 }

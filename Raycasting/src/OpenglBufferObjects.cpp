@@ -1,7 +1,6 @@
 #include "OpenglBufferObjects.h"
 
 VertexBuffer::VertexBuffer() {
-	glGenBuffers(1, &id);
 }
 
 VertexBuffer::VertexBuffer(GLuint existingBuffer) {
@@ -24,15 +23,19 @@ void VertexBuffer::bufferSubData(void * data, size_t dataSizeInBytes) {
 	unbind();
 }
 
-void VertexBuffer::bind() const {
+void VertexBuffer::bind() {
+	if (!isInitialized) {
+		glGenBuffers(1, &id);
+		isInitialized = true;
+	}
 	glBindBuffer(GL_ARRAY_BUFFER, id);
 }
 
-void VertexBuffer::unbind() const {
+void VertexBuffer::unbind() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-GLuint VertexBuffer::getID() const {
+GLuint VertexBuffer::getID() {
 	return id;
 }
 
@@ -45,18 +48,24 @@ void VertexBuffer::freeMemory() {
 
 
 IndexBuffer::IndexBuffer() {
-	glGenBuffers(1, &id);
 }
 
 IndexBuffer::IndexBuffer(GLuint existingBuffer) {
 	id = existingBuffer;
+	isInitialized = true;
 }
 
 IndexBuffer::IndexBuffer(void * data, size_t dataSizeInBytes) : IndexBuffer() {
 	bufferData(data, dataSizeInBytes);
+	isInitialized = true;
 }
 
 void IndexBuffer::bufferData(void * data, size_t dataSizeInBytes) {
+	if (!isInitialized) {
+		glGenBuffers(1, &id);
+		isInitialized = true;
+	}
+
 	bind();
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, dataSizeInBytes, data, GL_STATIC_DRAW);
 	unbind();
@@ -65,6 +74,11 @@ void IndexBuffer::bufferData(void * data, size_t dataSizeInBytes) {
 }
 
 void IndexBuffer::bufferSubData(void * data, size_t dataSizeInBytes) {
+	if (!isInitialized) {
+		glGenBuffers(1, &id);
+		isInitialized = true;
+	}
+
 	bind();
 	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, dataSizeInBytes, data);
 	unbind();
@@ -72,45 +86,64 @@ void IndexBuffer::bufferSubData(void * data, size_t dataSizeInBytes) {
 	indexCount = dataSizeInBytes / sizeof(unsigned int);
 }
 
-unsigned int IndexBuffer::getCount() const {
+unsigned int IndexBuffer::getCount() {
 	return indexCount;
 }
 
-void IndexBuffer::bind() const {
+void IndexBuffer::bind() {
+	if (!isInitialized) {
+		glGenBuffers(1, &id);
+		isInitialized = true;
+	}
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
 }
 
-void IndexBuffer::unbind() const {
+void IndexBuffer::unbind() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-GLuint IndexBuffer::getID() const {
+GLuint IndexBuffer::getID() {
+	if (!isInitialized) {
+		glGenBuffers(1, &id);
+		isInitialized = true;
+	}
+
 	return id;
 }
 
 void IndexBuffer::freeMemory()
 {
-	glDeleteBuffers(1, &id);
+	if (isInitialized) {
+		glDeleteBuffers(1, &id);
+	}
+
 	unbind();
 }
 
 
 
-VertexArray::VertexArray(const std::string & vertexDataFormat, const VertexBuffer & vb, const IndexBuffer & ib) {
+VertexArray::VertexArray(const std::string & vertexDataFormat, VertexBuffer & vb, IndexBuffer & ib) {
 	glGenVertexArrays(1, &id);
 	setAttributes(vertexDataFormat, vb, ib);
 }
 
 VertexArray::VertexArray(GLuint exisingBufferID) {
 	id = exisingBufferID;
+	isInitialized = true;
 }
 
 VertexArray::VertexArray() {
-	glGenVertexArrays(1, &id);
 }
 
 // ** note: to-do, add support for integer attributes
-void VertexArray::setAttributes(const std::string & vertexDataFormat, const VertexBuffer & vb, const IndexBuffer & ib) {
+void VertexArray::setAttributes(const std::string & vertexDataFormat, VertexBuffer & vb, IndexBuffer & ib) {
+
+	if (!isInitialized) {
+		glGenVertexArrays(1, &id);
+		isInitialized = true;
+	}
+
 	bind();
 	vb.bind();
 	ib.bind();
@@ -197,20 +230,33 @@ void VertexArray::setAttributes(const std::string & vertexDataFormat, const Vert
 	ib.unbind();
 }
 
-void VertexArray::bind() const {
+void VertexArray::bind() {
+	if (!isInitialized) {
+		glGenVertexArrays(1, &id);
+		isInitialized = true;
+	}
+
 	glBindVertexArray(id);
 }
 
-void VertexArray::unbind() const {
+void VertexArray::unbind() {
 	glBindVertexArray(0);
 }
 
-GLuint VertexArray::getID() const {
+GLuint VertexArray::getID() {
+	if (!isInitialized) {
+		glGenVertexArrays(1, &id);
+		isInitialized = true;
+	}
+
 	return id;
 }
 
 void VertexArray::freeMemory()
 {
-	glDeleteVertexArrays(1, &id);
+	if (isInitialized) {
+		glDeleteVertexArrays(1, &id);
+	}
+	
 	unbind();
 }

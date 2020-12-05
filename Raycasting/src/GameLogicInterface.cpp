@@ -12,9 +12,31 @@ namespace {
 	Texture bqTex3;
 	TexturedQuad testQuad;
 	bool mouseEnabled = false;
+
+	VertexBuffer vb;
+	IndexBuffer ib;
+	VertexArray va;
+	Shader sh("assets/basicShader.sh");
 }
 
 void GameLogicInterface::init() {
+
+	float vert[] = {
+		0.0f, 0.0f,
+		0.0f, 1.0f,
+		1.0f, 1.0f,
+		1.0f, 0.0f,
+	};
+	vb.bufferData(vert, 8 * sizeof(float));
+
+	unsigned int ind[] = {
+		0, 1, 2,
+		0, 2, 3,
+	};
+	ib.bufferData(ind, 6 * sizeof(unsigned int));
+
+	va.setAttributes("ff", vb, ib);
+
 
 	glfwSetInputMode(window.getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -207,6 +229,14 @@ void GameLogicInterface::update(float deltaTime) {
 	bq.renderAll(sin(s) / 3 + 1.0f, { sin(x)/4, sin(y)/4 });
 	bl.renderAll();
 	testQuad.render();
+
+
+	sh.bind();
+	va.bind();
+	glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr);
+	va.unbind();
+	sh.unbind();
+
 
 	minimapQuad.render();
 	YSE::System().update();
