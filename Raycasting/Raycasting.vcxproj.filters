@@ -52,6 +52,12 @@
     <ClCompile Include="src\BatchLines.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Sound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LoopingSound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\OpenglBufferObjects.h">
@@ -94,6 +100,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\BatchLines.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sound.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LoopingSound.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

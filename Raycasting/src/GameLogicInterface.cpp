@@ -12,6 +12,12 @@ namespace {
 	Texture bqTex3;
 	TexturedQuad testQuad;
 	bool mouseEnabled = false;
+
+	Sound s("assets/Blast.wav");
+	LoopingSound loopingMusic("assets/Mariah Carey.wav");
+
+	int noiseMakerWallIndex = 0;
+
 }
 
 void GameLogicInterface::init() {
@@ -19,9 +25,13 @@ void GameLogicInterface::init() {
 	glfwSetInputMode(window.getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	walls.push_back(new SeeableLine(1.5f, 0.9f, 1.5f, -0.9f));
+	(*(walls.end() - 1))->setColor(1.0f, 0.8f, 0.6f);
 	walls.push_back(new SeeableLine(-1.5f, 0.9f, -1.5f, -0.9f));
+	(*(walls.end() - 1))->setColor(1.0f, 0.8f, 0.6f);
 	walls.push_back(new SeeableLine(-1.5f, 0.9f, 1.5f, 0.9f));
+	(*(walls.end() - 1))->setColor(1.0f, 0.8f, 0.6f);
 	walls.push_back(new SeeableLine(-1.5f, -0.9f, 1.5f, -0.9f));
+	(*(walls.end() - 1))->setColor(1.0f, 0.8f, 0.6f);
 					
 	walls.push_back(new SeeableLine(-1.5f, 0.0f, -0.75f, 0.0f));
 	walls.push_back(new SeeableLine(-0.75f, -0.9f, -0.75f, -0.2f));
@@ -48,6 +58,10 @@ void GameLogicInterface::init() {
 
 	walls.push_back(new SeeableCircle(-0.7f, 0.35f, 0.1f));
 	(*(walls.end() - 1))->setColor(1.0f, 0.0f, 0.0f);
+
+	walls.push_back(new SeeableCircle(1.3, 0.3, 0.02f));
+	noiseMakerWallIndex = walls.size() - 1;
+	(*(walls.end() - 1))->setColor(1.0f, 0.0f, 1.0f);
 
 	window.setResolution(1920, 1080);
 
@@ -88,6 +102,10 @@ void GameLogicInterface::init() {
 	testQuad.setBounding(-1.0f, -0.5, 0.5, 0.5);
 	testQuad.setTexture(bqTex);
 
+	loopingMusic.setVolume(0.3f);
+	loopingMusic.setPlaybackSpeed(1.0f);
+
+	loopingMusic.play3D();
 }
 
 // deltaTime is the milliseconds between frames. Use this for calculating movement to avoid slowing down if there is lag 
@@ -199,6 +217,8 @@ void GameLogicInterface::update(float deltaTime) {
 		bl.setBeginLineColor(i, r1, g1, b1, 1.0f);
 		bl.setEndLineColor(i, r2, g2, b2, 1.0f);
 
+		
+
 		BatchLine& line = bl.getLine(i);
 		line.y1 = (sin(colorRotator) / 2 + 0.5f) * 0.3 + 0.7f;
 
@@ -207,6 +227,16 @@ void GameLogicInterface::update(float deltaTime) {
 	bq.renderAll(sin(s) / 3 + 1.0f, { sin(x)/4, sin(y)/4 });
 	bl.renderAll();
 	testQuad.render();
+
+	static int tick = 0;
+	tick++;
+	if ((tick / 30) % 2 == 0) {
+		walls[noiseMakerWallIndex]->setColor(1, 0, 0);
+	}
+	else {
+		walls[noiseMakerWallIndex]->setColor(0, 1, 0);
+	}
+	loopingMusic.setPositionRelitive({ cam.getX(), cam.getY() }, cam.getDirection(), { 1.3, 0.3 });
 
 	minimapQuad.render();
 	YSE::System().update();
@@ -240,6 +270,19 @@ void GameLogicInterface::keyCallback(int key, int scancode, int action, int mods
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
 		mouseEnabled = !mouseEnabled;
 		glfwSetInputMode(window.getHandle(), GLFW_CURSOR, mouseEnabled ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+	}
+
+	if (key == GLFW_KEY_E && action == GLFW_PRESS) {
+		s.play3D({ cam.getX(), cam.getY() }, cam.getDirection(), { -0.7f, 0.35f });
+	}
+
+	if (key == GLFW_KEY_R && GLFW_PRESS) {
+		if (loopingMusic.isPlaying()) {
+			loopingMusic.pause();
+		}
+		else {
+			loopingMusic.resume();
+		}
 	}
 }
 
