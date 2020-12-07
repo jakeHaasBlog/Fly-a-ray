@@ -257,7 +257,6 @@ void GameLogicInterface::mouseMoveCallback(double xPos, double yPos)
 	previousY = yPos;
 
 	cam.setDirection(cam.getDirection() - deltaX);
-
 }
 
 void GameLogicInterface::mouseButtonCallback(int button, int action, int mods)

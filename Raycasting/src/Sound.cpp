@@ -1,34 +1,33 @@
 #include "Sound.h"
 
 Sound::Sound(const std::string & filepath) :
-	filepath(filepath)
+	filepath(filepath),
+	sounds(std::list<std::unique_ptr<YSE::sound>>())
+{
+}
+
+Sound::~Sound()
 {
 }
 
 void Sound::setVolume(float volume)
 {
-	tryInitialize();
-	sound.setVolume(volume);
+	this->volume = volume;
 }
 
 void Sound::setPlaybackSpeed(float speed)
 {
-	tryInitialize();
-	sound.setSpeed(speed);
+	this->playbackSpeed = speed;
 }
 
 void Sound::play2D()
-{
-	tryInitialize();
-	
-	sound.set2D(true);
-	sound.play();
+{	
+	is3D = false;
+	makeSound();
 }
 
 void Sound::play3D(float x, float y, float z)
 {
-	tryInitialize();
-
 	is3D = true;
 	this->x = x;
 	this->y = y;
@@ -38,8 +37,6 @@ void Sound::play3D(float x, float y, float z)
 
 void Sound::play3D(std::array<float, 2> observerPos, float observerFacingDirection, std::array<float, 3> soundPos)
 {
-	tryInitialize();
-
 	observerFacingDirection += 3.14159f / 2.0f;
 
 	float observerFacingDirectionX = cos(observerFacingDirection);
@@ -71,25 +68,30 @@ const std::string & Sound::getFilepath()
 
 void Sound::makeSound()
 {
-	sound.create(filepath.c_str());
-	sound.setVolume(volume);
-	sound.setSpeed(playbackSpeed);
+
+	for (auto i = sounds.begin(); i != sounds.end(); i++) {
+		if (!((*i)->isPlaying())) {
+			sounds.erase(i);
+			i--;
+		}
+	}
+	
+	sounds.emplace_back(std::make_unique<YSE::sound>());
+	std::list<std::unique_ptr<YSE::sound>>::iterator sound = sounds.end();
+	sound--;
+
+	(*sound)->create(filepath.c_str());
+	(*sound)->setVolume(volume);
+	(*sound)->setSpeed(playbackSpeed);
 	
 	if (is3D) {
-		sound.setPosition({ x, y, z });
-		sound.set2D(false);
+		(*sound)->setPosition({ x, y, z });
+		(*sound)->set2D(false);
 	}
 	else {
-		sound.set2D(true);
+		(*sound)->set2D(true);
 	}
 
-	sound.play();
-}
+	(*sound)->play();
 
-void Sound::tryInitialize()
-{
-	if (!isInitialized) {
-		sound.create(filepath.c_str());
-		isInitialized = true;
-	}
 }

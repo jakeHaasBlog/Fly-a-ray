@@ -5,10 +5,14 @@
 
 #include <array>
 
+#include <list>
+#include <memory>
+
 class Sound {
 public:
 	// volume defaults to 0.3 and is paused
 	Sound(const std::string& filepath);
+	~Sound();
 
 	// between 0 and 1
 	void setVolume(float volume);
@@ -28,7 +32,6 @@ public:
 	const std::string& getFilepath();
 
 private:
-	YSE::sound sound;
 	bool isInitialized = false;
 	const std::string filepath;
 
@@ -39,6 +42,6 @@ private:
 
 	void makeSound();
 
-	void tryInitialize();
+	std::list<std::unique_ptr<YSE::sound>> sounds;
 
 };
