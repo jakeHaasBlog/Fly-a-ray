@@ -7,33 +7,19 @@ LoopingSound::LoopingSound(const std::string filepath) :
 
 void LoopingSound::setVolume(float volume)
 {
-	if (!isInitialized) {
-		sound.create(filepath.c_str());
-		sound.setLooping(true);
-		isInitialized = true;
-	}
-
+	tryInitialize();
 	sound.setVolume(volume);
 }
 
 void LoopingSound::setPlaybackSpeed(float speed)
 {
-	if (!isInitialized) {
-		sound.create(filepath.c_str());
-		sound.setLooping(true);
-		isInitialized = true;
-	}
-
+	tryInitialize();
 	sound.setSpeed(speed);
 }
 
 void LoopingSound::play2D()
 {
-	if (!isInitialized) {
-		sound.create(filepath.c_str());
-		sound.setLooping(true);
-		isInitialized = true;
-	}
+	tryInitialize();
 
 	sound.set2D(true);
 	sound.setTime(0);
@@ -42,11 +28,7 @@ void LoopingSound::play2D()
 
 void LoopingSound::setPosition(float x, float y, float z)
 {
-	if (!isInitialized) {
-		sound.create(filepath.c_str());
-		sound.setLooping(true);
-		isInitialized = true;
-	}
+	tryInitialize();
 
 	this->x = x;
 	this->y = y;
@@ -55,18 +37,14 @@ void LoopingSound::setPosition(float x, float y, float z)
 	sound.setPosition({ x, y, z });
 }
 
-void LoopingSound::setPositionRelitive(std::array<float, 2> observerPos, float observerFacingDirection, std::array<float, 3> soundPos)
+void LoopingSound::setPosition(std::array<float, 2> observerPos, float observerFacingDirection, std::array<float, 3> soundPos)
 {
+	tryInitialize();
+
 	observerFacingDirection += 3.14159f / 2.0f;
 
 	float observerFacingDirectionX = cos(observerFacingDirection);
 	float observerFacingDirectionY = sin(observerFacingDirection);
-
-	if (!isInitialized) {
-		sound.create(filepath.c_str());
-		sound.setLooping(true);
-		isInitialized = true;
-	}
 
 	std::array<float, 2> vecToSound = {
 		soundPos[0] - observerPos[0],
@@ -88,11 +66,7 @@ void LoopingSound::setPositionRelitive(std::array<float, 2> observerPos, float o
 
 void LoopingSound::play3D()
 {
-	if (!isInitialized) {
-		sound.create(filepath.c_str());
-		sound.setLooping(true);
-		isInitialized = true;
-	}
+	tryInitialize();
 
 	sound.set2D(false);
 	sound.setPosition({ x, y, z });
@@ -102,93 +76,64 @@ void LoopingSound::play3D()
 
 void LoopingSound::pause()
 {
-	if (!isInitialized) {
-		sound.create(filepath.c_str());
-		sound.setLooping(true);
-		isInitialized = true;
-	}
-
+	tryInitialize();
 	sound.pause();
 }
 
 void LoopingSound::resume()
 {
-	if (!isInitialized) {
-		sound.create(filepath.c_str());
-		sound.setLooping(true);
-		isInitialized = true;
-	}
-
+	tryInitialize();
 	sound.play();
 }
 
 void LoopingSound::setTime(float time)
 {
-	if (!isInitialized) {
-		sound.create(filepath.c_str());
-		sound.setLooping(true);
-		isInitialized = true;
-	}
-
-	sound.setTime(time);
+	tryInitialize();
+	sound.setTime(time * getSoundLength());
 }
 
 bool LoopingSound::isPlaying()
 {
-	if (!isInitialized) {
-		sound.create(filepath.c_str());
-		sound.setLooping(true);
-		isInitialized = true;
-	}
-
+	tryInitialize();
 	return sound.isPlaying();
 }
 
 float LoopingSound::getCurrentTime()
 {
-	if (!isInitialized) {
-		sound.create(filepath.c_str());
-		sound.setLooping(true);
-		isInitialized = true;
-	}
-
-	return sound.getTime();
+	tryInitialize();
+	return sound.getTime() / sound.getLength();
 }
 
-float LoopingSound::getMaxTime()
+float LoopingSound::getSoundLength()
 {
-	if (!isInitialized) {
-		sound.create(filepath.c_str());
-		sound.setLooping(true);
-		isInitialized = true;
-	}
+	tryInitialize();
 
-	return sound.getLength();
+	YSE::System().getDevice(0).getAvailableSampleRate(0);
+	return sound.getLength() / YSE::System().getDevice(0).getAvailableSampleRate(0);
 }
 
 float LoopingSound::getVolume()
 {
-	if (!isInitialized) {
-		sound.create(filepath.c_str());
-		sound.setLooping(true);
-		isInitialized = true;
-	}
-
+	tryInitialize();
 	return sound.getVolume();
 }
 
 float LoopingSound::getPlaybackSpeed()
 {
-	if (!isInitialized) {
-		sound.create(filepath.c_str());
-		sound.setLooping(true);
-		isInitialized = true;
-	}
-
+	tryInitialize();
 	return sound.getSpeed();
 }
 
 const std::string & LoopingSound::getFilepath()
 {
 	return filepath;
+}
+
+void LoopingSound::tryInitialize()
+{
+	if (!isInitialized) {
+		sound.create(filepath.c_str());
+		sound.setLooping(true);
+		isInitialized = true;
+	}
 }

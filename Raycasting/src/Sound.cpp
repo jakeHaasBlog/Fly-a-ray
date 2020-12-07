@@ -7,31 +7,19 @@ Sound::Sound(const std::string & filepath) :
 
 void Sound::setVolume(float volume)
 {
-	if (!isInitialized) {
-		sound.create(filepath.c_str());
-		sound.set2D(true);
-		isInitialized = true;
-	}
+	tryInitialize();
 	sound.setVolume(volume);
 }
 
 void Sound::setPlaybackSpeed(float speed)
 {
-	if (!isInitialized) {
-		sound.create(filepath.c_str());
-		sound.set2D(true);
-		isInitialized = true;
-	}
+	tryInitialize();
 	sound.setSpeed(speed);
 }
 
 void Sound::play2D()
 {
-	if (!isInitialized) {
-		sound.create(filepath.c_str());
-		sound.set2D(true);
-		isInitialized = true;
-	}
+	tryInitialize();
 	
 	sound.set2D(true);
 	sound.play();
@@ -39,11 +27,7 @@ void Sound::play2D()
 
 void Sound::play3D(float x, float y, float z)
 {
-	if (!isInitialized) {
-		sound.create(filepath.c_str());
-		sound.set2D(true);
-		isInitialized = true;
-	}
+	tryInitialize();
 
 	is3D = true;
 	this->x = x;
@@ -54,15 +38,12 @@ void Sound::play3D(float x, float y, float z)
 
 void Sound::play3D(std::array<float, 2> observerPos, float observerFacingDirection, std::array<float, 3> soundPos)
 {
+	tryInitialize();
+
 	observerFacingDirection += 3.14159f / 2.0f;
 
 	float observerFacingDirectionX = cos(observerFacingDirection);
 	float observerFacingDirectionY = sin(observerFacingDirection);
-
-	if (!isInitialized) {
-		sound.create(filepath.c_str());
-		isInitialized = true;
-	}
 
 	std::array<float, 2> vecToSound = {
 		soundPos[0] - observerPos[0],
@@ -103,4 +84,12 @@ void Sound::makeSound()
 	}
 
 	sound.play();
+}
+
+void Sound::tryInitialize()
+{
+	if (!isInitialized) {
+		sound.create(filepath.c_str());
+		isInitialized = true;
+	}
 }

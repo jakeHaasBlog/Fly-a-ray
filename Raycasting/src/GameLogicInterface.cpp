@@ -236,7 +236,7 @@ void GameLogicInterface::update(float deltaTime) {
 	else {
 		walls[noiseMakerWallIndex]->setColor(0, 1, 0);
 	}
-	loopingMusic.setPositionRelitive({ cam.getX(), cam.getY() }, cam.getDirection(), { 1.3, 0.3 });
+	loopingMusic.setPosition({ cam.getX(), cam.getY() }, cam.getDirection(), { 1.3, 0.3 });
 
 	minimapQuad.render();
 	YSE::System().update();
@@ -276,13 +276,20 @@ void GameLogicInterface::keyCallback(int key, int scancode, int action, int mods
 		s.play3D({ cam.getX(), cam.getY() }, cam.getDirection(), { -0.7f, 0.35f });
 	}
 
-	if (key == GLFW_KEY_R && GLFW_PRESS) {
+	if (key == GLFW_KEY_R && action == GLFW_PRESS) {
 		if (loopingMusic.isPlaying()) {
 			loopingMusic.pause();
 		}
 		else {
 			loopingMusic.resume();
 		}
+	}
+
+	if (key == GLFW_KEY_L && action == GLFW_PRESS) {
+		loopingMusic.setVolume(loopingMusic.getVolume() + 0.05f);
+	}
+	if (key == GLFW_KEY_K && action == GLFW_PRESS) {
+		loopingMusic.setVolume(loopingMusic.getVolume() - 0.05f);
 	}
 }
 
