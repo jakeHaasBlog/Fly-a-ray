@@ -15,7 +15,7 @@ public:
 	- first line of fragment shader must be: #shader fragment 
 	The file will be closed automatically in this function
 	* note that the '#vertex shader' tag must be the first line in the file*/
-	Shader(std::ifstream& fileStream);
+	Shader(const std::string& filepath);
 
 	// manually input vertex and fragent shaders as std::strings
 	Shader(const std::string& vertexShader, const std::string& fragmentShader);
@@ -37,8 +37,8 @@ public:
 	void setUniformIntArray(const std::string& uniformName, int* values, int count);
 
 	// important: you must set any required uniforms BEFORE you bind the shader for rendering because the shader is unbound in the setUniformX functions
-	void bind() const;
-	void unbind() const;
+	void bind();
+	void unbind();
 
 	void freeMemory();
 
@@ -51,5 +51,13 @@ private:
 private:
 	GLuint id = 0;
 	std::unordered_map<std::string, int> uniformLocationCache;
+
+	void initialize();
+
+	bool isInitialized = false;
+	bool isUsingFile;
+	const std::string filepath;
+	const std::string fs;
+	const std::string vs;
 
 };
