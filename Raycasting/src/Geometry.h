@@ -17,8 +17,8 @@ namespace Geo {
 		virtual VertexBuffer& getVB() = 0;
 		virtual IndexBuffer& getIB() = 0;
 		virtual VertexArray& getVA() = 0;
-		void render(const Shader& shader);
-		void render(const Shader& shader, const VertexBuffer& vb, const IndexBuffer& ib, const VertexArray& va, int inputType);
+		void render(Shader& shader);
+		void render(Shader& shader, VertexBuffer& vb, IndexBuffer& ib, VertexArray& va, int inputType);
 	};
 
 	class Rectangle : protected GeoObject {

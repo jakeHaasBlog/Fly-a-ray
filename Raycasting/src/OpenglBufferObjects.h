@@ -19,15 +19,16 @@ public:
 	void bufferData(void* data, size_t dataSizeInBytes);
 	void bufferSubData(void* data, size_t dataSizeInBytes);
 
-	void bind() const;
-	void unbind() const;
+	void bind();
+	void unbind();
 
-	GLuint getID() const;
+	GLuint getID();
 
 	void freeMemory();
 
 private:
 	GLuint id = 0;
+	bool isInitialized = false;
 
 };
 
@@ -46,38 +47,40 @@ public:
 	void bufferData(void* data, size_t dataSizeInBytes);
 	void bufferSubData(void* data, size_t dataSizeInBytes);
 
-	unsigned int getCount() const;
+	unsigned int getCount();
 
-	void bind() const;
-	void unbind() const;
+	void bind();
+	void unbind();
 
-	GLuint getID() const;
+	GLuint getID();
 
 	void freeMemory();
 
 private:
 	GLuint id = 0;
 	unsigned int indexCount = 0;
+	bool isInitialized = false;
 };
 
 
 class VertexArray {
 public:
 
-	VertexArray(const std::string& vertexDataFormat, const VertexBuffer& vb, const IndexBuffer& ib);
+	VertexArray(const std::string& vertexDataFormat, VertexBuffer& vb, IndexBuffer& ib);
 	VertexArray(GLuint exisingBufferID);
 	VertexArray();
 
-	void setAttributes(const std::string& vertexDataFormat, const VertexBuffer& vb, const IndexBuffer& ib);
+	void setAttributes(const std::string& vertexDataFormat, VertexBuffer& vb, IndexBuffer& ib);
 
-	void bind() const;
-	void unbind() const;
+	void bind();
+	void unbind();
 
-	GLuint getID() const;
+	GLuint getID();
 
 	void freeMemory();
 
 private:
 	GLuint id;
+	bool isInitialized = false;
 
 };

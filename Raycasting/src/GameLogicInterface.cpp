@@ -18,9 +18,30 @@ namespace {
 
 	int noiseMakerWallIndex = 0;
 
+	VertexBuffer vb;
+	IndexBuffer ib;
+	VertexArray va;
+	Shader sh("assets/basicShader.sh");
 }
 
 void GameLogicInterface::init() {
+
+	float vert[] = {
+		0.0f, 0.0f,
+		0.0f, 1.0f,
+		1.0f, 1.0f,
+		1.0f, 0.0f,
+	};
+	vb.bufferData(vert, 8 * sizeof(float));
+
+	unsigned int ind[] = {
+		0, 1, 2,
+		0, 2, 3,
+	};
+	ib.bufferData(ind, 6 * sizeof(unsigned int));
+
+	va.setAttributes("ff", vb, ib);
+
 
 	glfwSetInputMode(window.getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -237,6 +258,12 @@ void GameLogicInterface::update(float deltaTime) {
 		walls[noiseMakerWallIndex]->setColor(0, 1, 0);
 	}
 	loopingMusic.setPosition({ cam.getX(), cam.getY() }, cam.getDirection(), { 1.3, 0.3 });
+
+	sh.bind();
+	va.bind();
+	glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr);
+	va.unbind();
+	sh.unbind();
 
 	minimapQuad.render();
 	YSE::System().update();
