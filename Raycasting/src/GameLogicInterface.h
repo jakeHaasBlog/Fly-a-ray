@@ -15,6 +15,8 @@
 #include "SeeableCircle.h"
 #include "BatchQuads.h"
 #include "BatchLines.h"
+#include "Sound.h"
+#include "LoopingSound.h"
 
 namespace GameLogicInterface {
 	void init();
