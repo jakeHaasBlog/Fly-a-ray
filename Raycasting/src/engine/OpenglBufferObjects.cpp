@@ -1,4 +1,4 @@
-#include "OpenglBufferObjects.h"
+#include "engine/OpenglBufferObjects.h"
 
 VertexBuffer::VertexBuffer() {
 }

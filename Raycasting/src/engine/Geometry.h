@@ -1,7 +1,7 @@
 #pragma once
 
-#include "OpenglBufferObjects.h"
-#include "Shader.h"
+#include "engine/OpenglBufferObjects.h"
+#include "engine/Shader.h"
 
 #include <array>
 #include <vector>

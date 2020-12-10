@@ -19,41 +19,41 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\BatchLines.cpp" />
-    <ClCompile Include="src\BatchQuads.cpp" />
-    <ClCompile Include="src\Camera.cpp" />
-    <ClCompile Include="src\GameLogicInterface.cpp" />
-    <ClCompile Include="src\Geometry.cpp" />
-    <ClCompile Include="src\LoopingSound.cpp" />
-    <ClCompile Include="src\OpenglBufferObjects.cpp" />
-    <ClCompile Include="src\SeeableCircle.cpp" />
-    <ClCompile Include="src\SeeableEntity.cpp" />
-    <ClCompile Include="src\SeeableLine.cpp" />
-    <ClCompile Include="src\SeeableRectangle.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
-    <ClCompile Include="src\Sound.cpp" />
-    <ClCompile Include="src\Source.cpp" />
-    <ClCompile Include="src\Texture.cpp" />
-    <ClCompile Include="src\TexturedQuad.cpp" />
-    <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="src\engine\BatchLines.cpp" />
+    <ClCompile Include="src\engine\BatchQuads.cpp" />
+    <ClCompile Include="src\engine\Camera.cpp" />
+    <ClCompile Include="src\engine\Geometry.cpp" />
+    <ClCompile Include="src\engine\LoopingSound.cpp" />
+    <ClCompile Include="src\engine\OpenglBufferObjects.cpp" />
+    <ClCompile Include="src\engine\SeeableCircle.cpp" />
+    <ClCompile Include="src\engine\SeeableEntity.cpp" />
+    <ClCompile Include="src\engine\SeeableLine.cpp" />
+    <ClCompile Include="src\engine\SeeableRectangle.cpp" />
+    <ClCompile Include="src\engine\Shader.cpp" />
+    <ClCompile Include="src\engine\Sound.cpp" />
+    <ClCompile Include="src\engine\Source.cpp" />
+    <ClCompile Include="src\engine\Texture.cpp" />
+    <ClCompile Include="src\engine\TexturedQuad.cpp" />
+    <ClCompile Include="src\engine\Window.cpp" />
+    <ClCompile Include="src\game\GameLogicInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\BatchLines.h" />
-    <ClInclude Include="src\BatchQuads.h" />
-    <ClInclude Include="src\Camera.h" />
-    <ClInclude Include="src\GameLogicInterface.h" />
-    <ClInclude Include="src\Geometry.h" />
-    <ClInclude Include="src\LoopingSound.h" />
-    <ClInclude Include="src\OpenglBufferObjects.h" />
-    <ClInclude Include="src\SeeableCircle.h" />
-    <ClInclude Include="src\SeeableEntity.h" />
-    <ClInclude Include="src\SeeableLine.h" />
-    <ClInclude Include="src\SeeableRectangle.h" />
-    <ClInclude Include="src\Shader.h" />
-    <ClInclude Include="src\Sound.h" />
-    <ClInclude Include="src\Texture.h" />
-    <ClInclude Include="src\TexturedQuad.h" />
-    <ClInclude Include="src\Window.h" />
+    <ClInclude Include="src\engine\BatchLines.h" />
+    <ClInclude Include="src\engine\BatchQuads.h" />
+    <ClInclude Include="src\engine\Camera.h" />
+    <ClInclude Include="src\engine\Geometry.h" />
+    <ClInclude Include="src\engine\LoopingSound.h" />
+    <ClInclude Include="src\engine\OpenglBufferObjects.h" />
+    <ClInclude Include="src\engine\SeeableCircle.h" />
+    <ClInclude Include="src\engine\SeeableEntity.h" />
+    <ClInclude Include="src\engine\SeeableLine.h" />
+    <ClInclude Include="src\engine\SeeableRectangle.h" />
+    <ClInclude Include="src\engine\Shader.h" />
+    <ClInclude Include="src\engine\Sound.h" />
+    <ClInclude Include="src\engine\Texture.h" />
+    <ClInclude Include="src\engine\TexturedQuad.h" />
+    <ClInclude Include="src\engine\Window.h" />
+    <ClInclude Include="src\game\GameLogicInterface.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

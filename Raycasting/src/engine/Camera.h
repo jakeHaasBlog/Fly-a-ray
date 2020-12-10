@@ -2,7 +2,7 @@
 
 #include <array>
 
-#include "SeeableEntity.h"
+#include "engine/SeeableEntity.h"
 
 class Camera {
 public:

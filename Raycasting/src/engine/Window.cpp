@@ -1,7 +1,7 @@
-#include "Window.h"
+#include "engine/Window.h"
 #include <chrono>
 
-#include "GameLogicInterface.h"
+#include "game/GameLogicInterface.h"
 #include "yse.hpp"
 
 

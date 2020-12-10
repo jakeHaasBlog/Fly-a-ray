@@ -3,8 +3,8 @@
 #include <vector>
 #include <array>
 
-#include "OpenglBufferObjects.h"
-#include "Shader.h"
+#include "engine/OpenglBufferObjects.h"
+#include "engine/Shader.h"
 
 #include <memory>
 

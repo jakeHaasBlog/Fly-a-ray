@@ -1,10 +1,10 @@
 #pragma once
 
-#include "SeeableEntity.h"
+#include "engine/SeeableEntity.h"
 
-class SeeableLine : public SeeableEntity {
+class SeeableRectangle : public SeeableEntity {
 public:
-	SeeableLine(float x1, float y1, float x2, float y2, Texture* tex = nullptr);
+	SeeableRectangle(float x, float y, float width, float height, Texture* tex = nullptr);
 
 	bool seenBy(Geo::LineSeg& ray, float& dist, float& intersectedAt, std::array<float, 2>* poi = nullptr) override;
 
@@ -12,6 +12,6 @@ public:
 	virtual void renderPrimitive(std::array<float, 2> translation, float scale) override;
 
 private:
-	Geo::LineSeg line;
+	Geo::Rectangle rect;
 
 };
