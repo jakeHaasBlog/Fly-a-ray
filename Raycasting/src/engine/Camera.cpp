@@ -1,7 +1,7 @@
 #include "Camera.h"
 
-#include "TexturedQuad.h"
-#include "Window.h"
+#include "engine/TexturedQuad.h"
+#include "engine/Window.h"
 #include <math.h>
 
 Camera::Camera(float x, float y, float direction, float fov, int rayCount) {

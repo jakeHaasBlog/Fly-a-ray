@@ -2,8 +2,8 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 
-#include "Window.h"
-#include "GameLogicInterface.h"
+#include "engine/Window.h"
+#include "game/GameLogicInterface.h"
 
 int main(int argc, char** argv) {
 	if (!glfwInit()) printf("GLFW did not initialize properly\n");

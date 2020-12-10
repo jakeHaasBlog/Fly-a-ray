@@ -1,5 +1,5 @@
-#include "TexturedQuad.h"
-#include "Window.h"
+#include "engine/TexturedQuad.h"
+#include "engine/Window.h"
 
 TexturedQuad::TexturedQuad(float x, float y, float width, float height, Texture & texture) :
 	tex(&texture),

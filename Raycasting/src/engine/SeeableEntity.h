@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Geometry.h"
-#include "Texture.h"
+#include "engine/Geometry.h"
+#include "engine/Texture.h"
 
 class SeeableEntity {
 public:

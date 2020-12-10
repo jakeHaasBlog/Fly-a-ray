@@ -1,4 +1,4 @@
-#include "SeeableEntity.h"
+#include "engine/SeeableEntity.h"
 
 Texture * SeeableEntity::getTexture() {
 	return tex;
