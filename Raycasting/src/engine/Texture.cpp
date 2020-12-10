@@ -1,4 +1,4 @@
-#include "Texture.h"
+#include "engine/Texture.h"
 
 #include <array>
 #include <vector>
@@ -6,7 +6,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-#include "Window.h"
+#include "engine/Window.h"
 #include <iostream>
 
 std::stack<std::array<int, 4>> Texture::renderTargetBoundings;

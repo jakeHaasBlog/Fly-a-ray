@@ -5,108 +5,126 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Source Files\engine">
+      <UniqueIdentifier>{b46e1bee-ca8e-4b6b-982e-4a8c65c0f36d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game">
+      <UniqueIdentifier>{776e3bff-c058-497e-b061-95725c68d22e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\audio">
+      <UniqueIdentifier>{a116e547-2185-430f-aeca-cd5e98aaa1cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\primitives">
+      <UniqueIdentifier>{d9e3dfd4-489f-48b9-bf55-8adfc4e7fed6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\raycasting utils">
+      <UniqueIdentifier>{eef9e595-6390-4d36-9135-812ad25488d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\opengl utils">
+      <UniqueIdentifier>{d566ba02-e57b-411c-aa1c-dc77be1daf54}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Source.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\engine\Source.cpp">
+      <Filter>Source Files\engine</Filter>
     </ClCompile>
-    <ClCompile Include="src\OpenglBufferObjects.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\game\GameLogicInterface.cpp">
+      <Filter>Source Files\game</Filter>
     </ClCompile>
-    <ClCompile Include="src\Shader.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\engine\BatchLines.cpp">
+      <Filter>Source Files\engine\primitives</Filter>
     </ClCompile>
-    <ClCompile Include="src\Geometry.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\engine\BatchQuads.cpp">
+      <Filter>Source Files\engine\primitives</Filter>
     </ClCompile>
-    <ClCompile Include="src\Texture.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\engine\Geometry.cpp">
+      <Filter>Source Files\engine\primitives</Filter>
     </ClCompile>
-    <ClCompile Include="src\TexturedQuad.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\engine\LoopingSound.cpp">
+      <Filter>Source Files\engine\audio</Filter>
     </ClCompile>
-    <ClCompile Include="src\Window.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\engine\Sound.cpp">
+      <Filter>Source Files\engine\audio</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameLogicInterface.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\engine\Camera.cpp">
+      <Filter>Source Files\engine\raycasting utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\SeeableEntity.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\engine\SeeableCircle.cpp">
+      <Filter>Source Files\engine\raycasting utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\Camera.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\engine\SeeableEntity.cpp">
+      <Filter>Source Files\engine\raycasting utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\SeeableLine.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\engine\SeeableLine.cpp">
+      <Filter>Source Files\engine\raycasting utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\SeeableRectangle.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\engine\SeeableRectangle.cpp">
+      <Filter>Source Files\engine\raycasting utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\SeeableCircle.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\engine\OpenglBufferObjects.cpp">
+      <Filter>Source Files\engine\opengl utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\BatchQuads.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\engine\Shader.cpp">
+      <Filter>Source Files\engine\opengl utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\BatchLines.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\engine\Texture.cpp">
+      <Filter>Source Files\engine\opengl utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\Sound.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\engine\TexturedQuad.cpp">
+      <Filter>Source Files\engine\primitives</Filter>
     </ClCompile>
-    <ClCompile Include="src\LoopingSound.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\engine\Window.cpp">
+      <Filter>Source Files\engine\opengl utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\OpenglBufferObjects.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="src\game\GameLogicInterface.h">
+      <Filter>Source Files\game</Filter>
     </ClInclude>
-    <ClInclude Include="src\Shader.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="src\engine\BatchLines.h">
+      <Filter>Source Files\engine\primitives</Filter>
     </ClInclude>
-    <ClInclude Include="src\Geometry.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="src\engine\BatchQuads.h">
+      <Filter>Source Files\engine\primitives</Filter>
     </ClInclude>
-    <ClInclude Include="src\Texture.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="src\engine\Geometry.h">
+      <Filter>Source Files\engine\primitives</Filter>
     </ClInclude>
-    <ClInclude Include="src\TexturedQuad.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="src\engine\LoopingSound.h">
+      <Filter>Source Files\engine\audio</Filter>
     </ClInclude>
-    <ClInclude Include="src\Window.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="src\engine\Sound.h">
+      <Filter>Source Files\engine\audio</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameLogicInterface.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="src\engine\Camera.h">
+      <Filter>Source Files\engine\raycasting utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\SeeableEntity.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="src\engine\SeeableCircle.h">
+      <Filter>Source Files\engine\raycasting utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\Camera.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="src\engine\SeeableEntity.h">
+      <Filter>Source Files\engine\raycasting utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\SeeableLine.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="src\engine\SeeableLine.h">
+      <Filter>Source Files\engine\raycasting utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\SeeableRectangle.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="src\engine\SeeableRectangle.h">
+      <Filter>Source Files\engine\raycasting utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\SeeableCircle.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="src\engine\OpenglBufferObjects.h">
+      <Filter>Source Files\engine\opengl utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\BatchQuads.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="src\engine\Shader.h">
+      <Filter>Source Files\engine\opengl utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\BatchLines.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="src\engine\Texture.h">
+      <Filter>Source Files\engine\opengl utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\Sound.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="src\engine\TexturedQuad.h">
+      <Filter>Source Files\engine\primitives</Filter>
     </ClInclude>
-    <ClInclude Include="src\LoopingSound.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="src\engine\Window.h">
+      <Filter>Source Files\engine\opengl utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

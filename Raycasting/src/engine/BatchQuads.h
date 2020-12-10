@@ -3,10 +3,10 @@
 #include <vector>
 #include <array>
 
-#include <Texture.h>
+#include <engine/Texture.h>
 
-#include "OpenglBufferObjects.h"
-#include "Shader.h"
+#include "engine/OpenglBufferObjects.h"
+#include "engine/Shader.h"
 
 #include <memory>
 

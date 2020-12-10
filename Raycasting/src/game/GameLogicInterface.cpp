@@ -1,5 +1,5 @@
 
-#include "GameLogicInterface.h"
+#include "game/GameLogicInterface.h"
 
 // this stops the variables declared here from becoming globaly accessable
 namespace {

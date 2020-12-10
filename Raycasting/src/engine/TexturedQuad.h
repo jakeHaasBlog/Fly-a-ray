@@ -3,9 +3,9 @@
 #include <vector>
 #include <vector>
 #include <array>
-#include "Texture.h"
-#include "OpenglBufferObjects.h"
-#include "Shader.h"
+#include "engine/Texture.h"
+#include "engine/OpenglBufferObjects.h"
+#include "engine/Shader.h"
 
 // Represents rectangular area with a subsection of a texture stretched over it
 class TexturedQuad {

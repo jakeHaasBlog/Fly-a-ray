@@ -1,6 +1,6 @@
-#include "BatchQuads.h"
+#include "engine/BatchQuads.h"
 
-#include "Window.h"
+#include "engine/Window.h"
 
 Shader* BatchQuads::defaultShader = nullptr;
 

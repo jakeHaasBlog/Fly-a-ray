@@ -1,4 +1,4 @@
-#include "SeeableRectangle.h"
+#include "engine/SeeableRectangle.h"
 
 SeeableRectangle::SeeableRectangle(float x, float y, float width, float height, Texture * tex)
 {

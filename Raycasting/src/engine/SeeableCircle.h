@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SeeableEntity.h"
+#include "engine/SeeableEntity.h"
 
 class SeeableCircle : public SeeableEntity {
 public:
