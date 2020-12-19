@@ -108,8 +108,7 @@ float LoopingSound::getSoundLength()
 {
 	tryInitialize();
 
-	YSE::System().getDevice(0).getAvailableSampleRate(0);
-	return sound.getLength() / YSE::System().getDevice(0).getAvailableSampleRate(0);
+	return sound.getLength();// / YSE::System().getDevice(0).getAvailableSampleRate(0);
 }
 
 float LoopingSound::getVolume()

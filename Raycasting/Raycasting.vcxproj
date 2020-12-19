@@ -21,7 +21,10 @@
   <ItemGroup>
     <ClCompile Include="src\engine\BatchLines.cpp" />
     <ClCompile Include="src\engine\BatchQuads.cpp" />
+    <ClCompile Include="src\engine\BitmapFont.cpp" />
+    <ClCompile Include="src\engine\BitmapText.cpp" />
     <ClCompile Include="src\engine\Camera.cpp" />
+    <ClCompile Include="src\engine\FontManager.cpp" />
     <ClCompile Include="src\engine\Geometry.cpp" />
     <ClCompile Include="src\engine\LoopingSound.cpp" />
     <ClCompile Include="src\engine\OpenglBufferObjects.cpp" />
@@ -30,17 +33,21 @@
     <ClCompile Include="src\engine\SeeableLine.cpp" />
     <ClCompile Include="src\engine\SeeableRectangle.cpp" />
     <ClCompile Include="src\engine\Shader.cpp" />
-    <ClCompile Include="src\engine\Sound.cpp" />
+    <ClCompile Include="src\engine\SoundBite.cpp" />
     <ClCompile Include="src\engine\Source.cpp" />
     <ClCompile Include="src\engine\Texture.cpp" />
     <ClCompile Include="src\engine\TexturedQuad.cpp" />
+    <ClCompile Include="src\engine\ViewportManager.cpp" />
     <ClCompile Include="src\engine\Window.cpp" />
     <ClCompile Include="src\game\GameLogicInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\BatchLines.h" />
     <ClInclude Include="src\engine\BatchQuads.h" />
+    <ClInclude Include="src\engine\BitmapFont.h" />
+    <ClInclude Include="src\engine\BitmapText.h" />
     <ClInclude Include="src\engine\Camera.h" />
+    <ClInclude Include="src\engine\FontManager.h" />
     <ClInclude Include="src\engine\Geometry.h" />
     <ClInclude Include="src\engine\LoopingSound.h" />
     <ClInclude Include="src\engine\OpenglBufferObjects.h" />
@@ -49,9 +56,10 @@
     <ClInclude Include="src\engine\SeeableLine.h" />
     <ClInclude Include="src\engine\SeeableRectangle.h" />
     <ClInclude Include="src\engine\Shader.h" />
-    <ClInclude Include="src\engine\Sound.h" />
+    <ClInclude Include="src\engine\SoundBite.h" />
     <ClInclude Include="src\engine\Texture.h" />
     <ClInclude Include="src\engine\TexturedQuad.h" />
+    <ClInclude Include="src\engine\ViewportManager.h" />
     <ClInclude Include="src\engine\Window.h" />
     <ClInclude Include="src\game\GameLogicInterface.h" />
   </ItemGroup>

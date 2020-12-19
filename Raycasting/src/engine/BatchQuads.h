@@ -43,6 +43,9 @@ public:
 	void removeQuad(int i);
 	BatchQuad& getQuad(int i); // use this to modify quads, NEVER create a pointer to a quad
 
+	// removes all quads from render queue
+	void clear();
+
 	void setQuad(int i, float x, float y, float width, float height, float r = 1.0f, float g = 1.0f, float b = 1.0f, float a = 1.0f);
 	void setQuad(int i, float x, float y, float width, float height, int texture);
 	void setQuadPos(int i, float x, float y, float width, float height);

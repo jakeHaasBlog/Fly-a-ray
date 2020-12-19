@@ -21,6 +21,13 @@ Shader::Shader(GLuint existingShader) {
 	isInitialized = true;
 }
 
+Shader::~Shader()
+{
+	if (isInitialized) {
+		freeMemory();
+	}
+}
+
 void Shader::setUniform1f(const std::string & uniformName, float value) {
 	bind();
 	glUniform1f(getUniformLocation(uniformName), value);

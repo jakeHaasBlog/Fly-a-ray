@@ -13,35 +13,18 @@ namespace {
 	TexturedQuad testQuad;
 	bool mouseEnabled = false;
 
-	Sound s("assets/Blast.wav");
+	SoundBite explosionSound("assets/Blast.wav");
 	LoopingSound loopingMusic("assets/Mariah Carey.wav");
+	SoundBite typeWriterSound("assets/typewriter-2.wav");
 
 	int noiseMakerWallIndex = 0;
 
-	VertexBuffer vb;
-	IndexBuffer ib;
-	VertexArray va;
-	Shader sh("assets/basicShader.sh");
+	BitmapText text;
+	BitmapText lotsOfText;
+	std::string myText = "This is some sample text...";
 }
 
 void GameLogicInterface::init() {
-
-	float vert[] = {
-		0.0f, 0.0f,
-		0.0f, 1.0f,
-		1.0f, 1.0f,
-		1.0f, 0.0f,
-	};
-	vb.bufferData(vert, 8 * sizeof(float));
-
-	unsigned int ind[] = {
-		0, 1, 2,
-		0, 2, 3,
-	};
-	ib.bufferData(ind, 6 * sizeof(unsigned int));
-
-	va.setAttributes("ff", vb, ib);
-
 
 	glfwSetInputMode(window.getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -120,13 +103,30 @@ void GameLogicInterface::init() {
 		bl.addLine(x / 2 - 1.0f, 0.9f, x / 2 - 1.0f, -0.9f);
 	}
 
-	testQuad.setBounding(-1.0f, -0.5, 0.5, 0.5);
+	testQuad.setBounding(-1.0f, -0.5, 1.5, 1.5);
+	bqTex.setSamplingMode(1);
 	testQuad.setTexture(bqTex);
 
 	loopingMusic.setVolume(0.3f);
 	loopingMusic.setPlaybackSpeed(1.0f);
 
 	loopingMusic.play3D();
+
+
+	text.setText(myText);
+	text.setColor(0, 0, 0);
+	text.setPosition({ 0, 0 });
+	text.setCharHeight(0.15f);
+
+	text.setCharacterRenderCount(8);
+
+	typeWriterSound.addPart(160, 300);
+	typeWriterSound.addPart(390, 650, "click");
+	typeWriterSound.addPart(650, 850);
+	typeWriterSound.addPart(850, 1100);
+	typeWriterSound.set2D(true);
+	typeWriterSound.setVolume(0.2f);
+
 }
 
 // deltaTime is the milliseconds between frames. Use this for calculating movement to avoid slowing down if there is lag 
@@ -144,15 +144,15 @@ void GameLogicInterface::update(float deltaTime) {
 	}
 
 	if (window.keyIsDown(GLFW_KEY_A)) {
-		float deltaX = cos(cam.getDirection() + 3.14159f / 2.0f) * 0.0001f * deltaTime;
-		float deltaY = sin(cam.getDirection() + 3.14159f / 2.0f) * 0.0001f * deltaTime;
+		float deltaX = cos(cam.getDirection() + 3.14159f / 2.0f) * 0.0002f * deltaTime;
+		float deltaY = sin(cam.getDirection() + 3.14159f / 2.0f) * 0.0002f * deltaTime;
 		cam.setX(cam.getX() + deltaX);
 		cam.setY(cam.getY() + deltaY);
 	}
 
 	if (window.keyIsDown(GLFW_KEY_D)) {
-		float deltaX = cos(cam.getDirection() - 3.14159f / 2.0f) * 0.0001f * deltaTime;
-		float deltaY = sin(cam.getDirection() - 3.14159f / 2.0f) * 0.0001f * deltaTime;
+		float deltaX = cos(cam.getDirection() - 3.14159f / 2.0f) * 0.0002f * deltaTime;
+		float deltaY = sin(cam.getDirection() - 3.14159f / 2.0f) * 0.0002f * deltaTime;
 		cam.setX(cam.getX() + deltaX);
 		cam.setY(cam.getY() + deltaY);
 	}
@@ -164,24 +164,31 @@ void GameLogicInterface::update(float deltaTime) {
 		cam.setY(cam.getY() - deltaY);
 	}
 
+	ViewportManager::bindViewportNormalized(-0.4f, -1.0f, 0.8f, 2.0f);
 	cam.renderView(walls);
+	Geo::Circle::fillCircle(ViewportManager::getRightViewportBound(), 0, 0.1f, 1, 0, 0);
+	Geo::Circle::fillCircle(ViewportManager::getLeftViewportBound(), 0, 0.1f, 1, 0, 0);
+	Geo::Circle::fillCircle(0, ViewportManager::getTopViewportBound(), 0.1f, 1, 0, 0);
+	Geo::Circle::fillCircle(0, ViewportManager::getBottomViewportBound(), 0.1f, 1, 0, 0);
+	ViewportManager::unbindViewport();
+	
 
-	static Texture minimapTexture(192, 108);
+	static Texture minimapTexture(750 / 2, 500 / 2);
 	minimapTexture.bindAsRenderTarget();
-	Geo::Rectangle::fillRect(window.getLeftScreenBound(), window.getBottomScreenBound(), window.getRightScreenBound() - window.getLeftScreenBound(), window.getTopScreenBound() - window.getBottomScreenBound(), 0, 0, 0);
+	Geo::Rectangle::fillRect(ViewportManager::getLeftViewportBound(), ViewportManager::getBottomViewportBound(), ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound(), ViewportManager::getTopViewportBound() - ViewportManager::getBottomViewportBound(), 0, 0, 0);
 	cam.renderPrimitiveRays({ -cam.getX(), -cam.getY() }, 1.0f, walls);
 	for (SeeableEntity* e : walls) {
 		e->renderPrimitive({ -cam.getX(), -cam.getY() }, 1.0f);
 	}
 	minimapTexture.unbindAsRenderTarget();
 
+
 	static TexturedQuad minimapQuad;
 	minimapQuad.setTexture(minimapTexture);
-	minimapQuad.setX(window.getRightScreenBound() - 0.65f);
-	minimapQuad.setY(window.getBottomScreenBound());
-	minimapQuad.setWidth(0.65f);
-	minimapQuad.setHeight(0.4f);
-
+	minimapQuad.setX(ViewportManager::getRightViewportBound() - 0.75f);
+	minimapQuad.setY(ViewportManager::getBottomViewportBound());
+	minimapQuad.setWidth(0.75f);
+	minimapQuad.setHeight(0.5f);
 
 	for (int i = 0; i < bq.size(); i++) {
 		int r = rand() % 400;
@@ -202,11 +209,7 @@ void GameLogicInterface::update(float deltaTime) {
 			bq.setQuadTexture(i, 0);
 			bq.setQuadTextureSampleBounds(i, 0.0f, 0.0f, 1.0f, 1.0f);
 			break;
-		case 4:
-		case 5:
-		case 6:
-		case 7:
-		case 8:
+		case 4: case 5: case 6: case 7: case 8:
 			bq.setQuadTexture(i, -1);
 			break;
 		}
@@ -238,8 +241,6 @@ void GameLogicInterface::update(float deltaTime) {
 		bl.setBeginLineColor(i, r1, g1, b1, 1.0f);
 		bl.setEndLineColor(i, r2, g2, b2, 1.0f);
 
-		
-
 		BatchLine& line = bl.getLine(i);
 		line.y1 = (sin(colorRotator) / 2 + 0.5f) * 0.3 + 0.7f;
 
@@ -259,14 +260,30 @@ void GameLogicInterface::update(float deltaTime) {
 	}
 	loopingMusic.setPosition({ cam.getX(), cam.getY() }, cam.getDirection(), { 1.3, 0.3 });
 
-	sh.bind();
-	va.bind();
-	glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr);
-	va.unbind();
-	sh.unbind();
-
 	minimapQuad.render();
-	YSE::System().update();
+
+
+	static int tCount = 0;
+	tCount++;
+
+	static int renderCount = 0;
+	if (renderCount != (tCount / 3) % (text.getText().length() + 50)) {
+		if (renderCount < text.getText().length())
+			if (text.getText()[renderCount] != ' ')
+				typeWriterSound.playRandomPart();
+	}
+	renderCount = (tCount / 3) % (text.getText().length() + 50);
+
+	text.setCharacterRenderCount(renderCount);
+	text.render();
+
+	float colorRotator = (float)tCount / 60;
+	float r1 = sin(colorRotator / 1) / 2 + 0.5f;
+	float g1 = sin(colorRotator / 2) / 2 + 0.5f;
+	float b1 = sin(colorRotator / 4) / 2 + 0.5f;
+	text.setColor(r1, g1, b1);
+	text.setBackgroundColor((1.0f-g1) / 3, (1.0f - b1) / 3, (1.0f - r1) / 3, r1);
+
 }
 
 void GameLogicInterface::cleanup() {
@@ -299,7 +316,13 @@ void GameLogicInterface::keyCallback(int key, int scancode, int action, int mods
 	}
 
 	if (key == GLFW_KEY_E && action == GLFW_PRESS) {
-		s.play3D({ cam.getX(), cam.getY() }, cam.getDirection(), { -0.7f, 0.35f });
+		explosionSound.setPosition({ cam.getX(), cam.getY() }, cam.getDirection(), { -0.7f, 0.35f });
+		explosionSound.set2D(false);
+		explosionSound.playAll();
+	}
+
+	if (key == GLFW_KEY_K && action == GLFW_PRESS) {
+		typeWriterSound.playRandomPart();
 	}
 
 	if (key == GLFW_KEY_R && action == GLFW_PRESS) {
@@ -317,6 +340,7 @@ void GameLogicInterface::keyCallback(int key, int scancode, int action, int mods
 	if (key == GLFW_KEY_K && action == GLFW_PRESS) {
 		loopingMusic.setVolume(loopingMusic.getVolume() - 0.05f);
 	}
+
 }
 
 void GameLogicInterface::characterCallback(unsigned int codepoint)

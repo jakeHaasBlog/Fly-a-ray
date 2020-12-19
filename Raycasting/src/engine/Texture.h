@@ -29,6 +29,8 @@ public:
 	// generates texture then reads pixel data from png or jpg file into it
 	Texture(const std::string& filename);
 
+	~Texture();
+
 	// generate functions will initialize an uninitialized texture or simply overwrite an existing one
 	void generateFromFile(const std::string& filename);
 	// generate functions will initialize an uninitialized texture or simply overwrite an existing one
@@ -48,7 +50,6 @@ public:
 
 	// opengl render calls will now render to the window
 	void unbindAsRenderTarget();
-	void bindWindowAsRenderTarget();
 
 	// 0 = linear  *will make pixels stand out (great for pixel art)*
 	// 1 = nearest *will blemd pixels to make them smoother (great for realism)*
@@ -79,7 +80,9 @@ private:
 
 	GLuint frameBufferID;
 	void generateFrameBuffer();
+	bool frameBufferInitilaized = false;
 
-	static std::stack<std::array<int, 4>> renderTargetBoundings;
-	static std::stack<int> renderTargetIDs;
+	void bindWindowAsRenderTarget();
+
+	static std::stack<GLuint> frameBufferIDhistory;
 };

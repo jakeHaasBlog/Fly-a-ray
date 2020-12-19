@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include "engine/Window.h"
 
+#include "engine/ViewportManager.h"
+
 namespace {
 	bool getRectRectIntersection(const Geo::Rectangle& rect1, const Geo::Rectangle& rect2, std::vector<std::array<float, 2>>* poi = nullptr) {
 
@@ -369,7 +371,7 @@ void Geo::Rectangle::renderFilled(float r, float g, float b, float a)
 
 	static Shader fillShader(vertexShaderString, fragmentShaderString);
 
-	fillShader.setUniform1f("u_aspectRatio", window.getAspectRatio());
+	fillShader.setUniform1f("u_aspectRatio", ViewportManager::getCurrentAspectRatio());
 	fillShader.setUniform2f("u_stretch", width, height);
 	fillShader.setUniform2f("u_translation", x, y);
 	fillShader.setUniform4f("u_color", r, g, b, a);
@@ -416,7 +418,7 @@ void Geo::Rectangle::renderOutline(float r, float g, float b, float a)
 	};
 	static IndexBuffer lineIB = IndexBuffer(lineIndices, 2 * 4 * sizeof(unsigned int));
 
-	lineShader.setUniform1f("u_aspectRatio", window.getAspectRatio());
+	lineShader.setUniform1f("u_aspectRatio", ViewportManager::getCurrentAspectRatio());
 	lineShader.setUniform2f("u_stretch", width, height);
 	lineShader.setUniform2f("u_translation", x, y);
 	lineShader.setUniform4f("u_color", r, g, b, a);
@@ -701,10 +703,10 @@ void Geo::Circle::renderFilled(float r, float g, float b, float a)
 
 	static Shader fillShader(vertexShaderString, fragmentShaderString);
 
-	fillShader.setUniform1f("u_aspectRatio", window.getAspectRatio());
+	fillShader.setUniform1f("u_aspectRatio", ViewportManager::getCurrentAspectRatio());
 	fillShader.setUniform2f("u_stretch", radius * 2, radius * 2);
 	fillShader.setUniform2f("u_translation", x, y);
-	fillShader.setUniform3f("u_color", r, g, b);
+	fillShader.setUniform4f("u_color", r, g, b, a);
 
 	render(fillShader);
 }
@@ -740,7 +742,7 @@ void Geo::Circle::renderOutline(float r, float g, float b, float a)
 
 	static Shader shader(vertexShaderString, fragmentShaderString);
 
-	shader.setUniform1f("u_aspectRatio", window.getAspectRatio());
+	shader.setUniform1f("u_aspectRatio", ViewportManager::getCurrentAspectRatio());
 	shader.setUniform2f("u_stretch", radius * 2, radius * 2);
 	shader.setUniform2f("u_translation", x, y);
 	shader.setUniform4f("u_color", r, g, b, a);
@@ -885,7 +887,7 @@ void Geo::LineSeg::render(float r, float g, float b, float a)
 
 	static Shader shader(vertexShaderString, fragmentShaderString);
 
-	shader.setUniform1f("u_aspectRatio", window.getAspectRatio());
+	shader.setUniform1f("u_aspectRatio", ViewportManager::getCurrentAspectRatio());
 	shader.setUniform3f("u_color", r, g, b);
 	shader.setUniform2f("u_translation", x1, y1);
 	shader.setUniform2f("u_stretch", x2 - x1, y2 - y1);

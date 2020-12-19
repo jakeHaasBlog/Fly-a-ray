@@ -15,8 +15,11 @@
 #include "engine/SeeableCircle.h"
 #include "engine/BatchQuads.h"
 #include "engine/BatchLines.h"
-#include "engine/Sound.h"
+#include "engine/SoundBite.h"
 #include "engine/LoopingSound.h"
+#include "engine/ViewportManager.h"
+#include "engine/BitmapFont.h"
+#include "engine/BitmapText.h"
 
 namespace GameLogicInterface {
 	void init();

@@ -5,6 +5,7 @@
 
 #include <string>
 #include <array>
+#include <stack>
 
 #include "engine/Texture.h"
 
@@ -27,15 +28,13 @@ public:
 	int getHeight();
 	std::string getTitle();
 
+	int getFrameBufferWidth();
+	int getFrameBufferHeight();
+
 	float getAspectRatio();
 
 	// based on the time between actually seeing frames, v-sync caps this to 60FPS
 	double getFrameRate();
-
-	float getLeftScreenBound();
-	float getRightScreenBound();
-	float getTopScreenBound();
-	float getBottomScreenBound();
 
 	bool keyIsDown(int glfwKey);
 
@@ -51,13 +50,10 @@ private:
 	std::string title;
 	GLFWwindow* windowHandle;
 
-	std::array<float, 4> viewportBounds; // left, right, top, bottom
 	float aspectRatio = 1.0f;
 
 	void calculateFPS(); // called every exactly 10 frames 
 	float fps;
-
-	void setViewport(); // scale window, correct aspect ratio
 
 	float mouseX, mouseY;
 	static void keyCallback(GLFWwindow* wind, int key, int scancode, int action, int mods);

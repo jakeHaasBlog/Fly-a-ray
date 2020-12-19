@@ -23,6 +23,9 @@
     <Filter Include="Source Files\engine\opengl utils">
       <UniqueIdentifier>{d566ba02-e57b-411c-aa1c-dc77be1daf54}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\engine\text rendering">
+      <UniqueIdentifier>{ceafa77e-4323-4638-bf5c-d1cf68b26084}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\engine\Source.cpp">
@@ -41,9 +44,6 @@
       <Filter>Source Files\engine\primitives</Filter>
     </ClCompile>
     <ClCompile Include="src\engine\LoopingSound.cpp">
-      <Filter>Source Files\engine\audio</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\Sound.cpp">
       <Filter>Source Files\engine\audio</Filter>
     </ClCompile>
     <ClCompile Include="src\engine\Camera.cpp">
@@ -76,6 +76,21 @@
     <ClCompile Include="src\engine\Window.cpp">
       <Filter>Source Files\engine\opengl utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\BitmapFont.cpp">
+      <Filter>Source Files\engine\text rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\BitmapText.cpp">
+      <Filter>Source Files\engine\text rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\ViewportManager.cpp">
+      <Filter>Source Files\engine\opengl utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\SoundBite.cpp">
+      <Filter>Source Files\engine\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\FontManager.cpp">
+      <Filter>Source Files\engine\text rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\game\GameLogicInterface.h">
@@ -91,9 +106,6 @@
       <Filter>Source Files\engine\primitives</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\LoopingSound.h">
-      <Filter>Source Files\engine\audio</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\Sound.h">
       <Filter>Source Files\engine\audio</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\Camera.h">
@@ -125,6 +137,21 @@
     </ClInclude>
     <ClInclude Include="src\engine\Window.h">
       <Filter>Source Files\engine\opengl utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\BitmapFont.h">
+      <Filter>Source Files\engine\text rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\BitmapText.h">
+      <Filter>Source Files\engine\text rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\ViewportManager.h">
+      <Filter>Source Files\engine\opengl utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\SoundBite.h">
+      <Filter>Source Files\engine\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\FontManager.h">
+      <Filter>Source Files\engine\text rendering</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

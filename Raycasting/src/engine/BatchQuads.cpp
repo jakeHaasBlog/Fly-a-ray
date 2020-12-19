@@ -1,6 +1,7 @@
 #include "engine/BatchQuads.h"
 
 #include "engine/Window.h"
+#include "engine/ViewportManager.h"
 
 Shader* BatchQuads::defaultShader = nullptr;
 
@@ -83,6 +84,12 @@ BatchQuad & BatchQuads::getQuad(int i)
 {
 	buffersReady = false;
 	return vertices[i];
+}
+
+void BatchQuads::clear()
+{
+	vertices.clear();
+	buffersReady = false;
 }
 
 void BatchQuads::setQuad(int i, float x, float y, float width, float height, float r, float g, float b, float a)
@@ -264,21 +271,23 @@ void BatchQuads::useShader(Shader & shader)
 
 void BatchQuads::renderAll(float scale, std::array<float, 2> translation)
 {
-	if (!buffersReady) {
-		updateBuffers();
-		buffersReady = true;
+	if (vertices.size() > 0) {
+		if (!buffersReady) {
+			updateBuffers();
+			buffersReady = true;
+		}
+
+		bindTextures();
+
+		quadShader->setUniform1f("u_aspectRatio", ViewportManager::getCurrentAspectRatio());
+		quadShader->setUniform1f("u_stretch", scale);
+		quadShader->setUniform2f("u_translation", translation[0], translation[1]);
+		quadShader->bind();
+		va->bind();
+		glDrawElements(GL_TRIANGLES, ib->getCount(), GL_UNSIGNED_INT, nullptr);
+		quadShader->unbind();
+		va->unbind();
 	}
-
-	bindTextures();
-
-	quadShader->setUniform1f("u_aspectRatio", window.getAspectRatio());
-	quadShader->setUniform1f("u_stretch", scale);
-	quadShader->setUniform2f("u_translation", translation[0], translation[1]);
-	quadShader->bind();
-	va->bind();
-	glDrawElements(GL_TRIANGLES, ib->getCount(), GL_UNSIGNED_INT, nullptr);
-	quadShader->unbind();
-	va->unbind();
 }
 
 int BatchQuads::size()
@@ -352,8 +361,8 @@ void BatchQuads::updateBuffers()
 	}
 
 	if (buffersInitialized) {
-		vb->bufferSubData(&vertices[0], vertices.size() * sizeof(BatchQuad));
-		ib->bufferSubData(&indices[0], indices.size() * sizeof(unsigned int));
+		vb->bufferData(&vertices[0], vertices.size() * sizeof(BatchQuad));
+		ib->bufferData(&indices[0], indices.size() * sizeof(unsigned int));
 	}
 	else {
 		ib = new IndexBuffer();

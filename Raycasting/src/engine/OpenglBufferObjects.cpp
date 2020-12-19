@@ -3,6 +3,13 @@
 VertexBuffer::VertexBuffer() {
 }
 
+VertexBuffer::~VertexBuffer()
+{
+	if (isInitialized) {
+		freeMemory();
+	}
+}
+
 VertexBuffer::VertexBuffer(GLuint existingBuffer) {
 	id = existingBuffer;
 }
@@ -48,6 +55,13 @@ void VertexBuffer::freeMemory() {
 
 
 IndexBuffer::IndexBuffer() {
+}
+
+IndexBuffer::~IndexBuffer()
+{
+	if (isInitialized) {
+		freeMemory();
+	}
 }
 
 IndexBuffer::IndexBuffer(GLuint existingBuffer) {
@@ -134,6 +148,13 @@ VertexArray::VertexArray(GLuint exisingBufferID) {
 }
 
 VertexArray::VertexArray() {
+}
+
+VertexArray::~VertexArray()
+{
+	if (isInitialized) {
+		freeMemory();
+	}
 }
 
 // ** note: to-do, add support for integer attributes
