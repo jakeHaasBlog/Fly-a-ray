@@ -4,6 +4,8 @@
 #include "game/GameLogicInterface.h"
 #include "yse.hpp"
 
+#include "engine/ViewportManager.h"
+#include "engine/SoundBite.h"
 
 Window & Window::getWindowInstance() {
 	static Window w;
@@ -35,40 +37,43 @@ void Window::mainUpdateLoop() {
 	float updateTime = 0.0f;
 	float deltaTime = 0.0f;
 	while (!glfwWindowShouldClose(windowHandle)) {
-		setViewport();
 		glfwSwapInterval(1);
 		glfwSwapBuffers(windowHandle);
+
+		startUpdateTIme = clock.now();
+
 		glfwPollEvents();
 
 		end = clock.now();
-		deltaTime = (float)((end - start).count() / 1000000);
+		deltaTime = (float)((float)(end - start).count() / 1000000.0f);
 		start = clock.now();
 
-		startUpdateTIme = clock.now();
 		framebuffer.bindAsRenderTarget();
 		GameLogicInterface::update(deltaTime);
 		framebuffer.unbindAsRenderTarget();
 
 		static TexturedQuad q(0, 0, 0, 0, framebuffer);
 		q.setTexture(framebuffer);
-		q.setBounding(getLeftScreenBound(), getBottomScreenBound(), getRightScreenBound() - getLeftScreenBound(), getTopScreenBound() - getBottomScreenBound());
+		q.setBounding(ViewportManager::getLeftViewportBound(), ViewportManager::getBottomViewportBound(), ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound(), ViewportManager::getTopViewportBound() - ViewportManager::getBottomViewportBound());
 		q.setTexture(framebuffer);
 		q.render();
 
-		updateTime = (float)(((double)(clock.now() - startUpdateTIme).count()) / 1000000);
+		updateTime = (float)(((double)(clock.now() - startUpdateTIme).count()) / 1000000.0f);
+
+		ViewportManager::update();
+		YSE::System().update();
+		SoundBite::update();
+		glfwMakeContextCurrent(windowHandle);
 
 		static uint64_t frame = 0;
 		frame++;
 		if (frame % 10 == 0) {
 			calculateFPS();
 
-			char t[50];
-			sprintf_s(t, "FPS: %.1f - update time ~= %fms", getFrameRate(), updateTime);
+			char t[256];
+			sprintf_s(t, "FPS: %.1f - delta time(%.2fms) - update time(%fms)", (float)getFrameRate(), deltaTime, updateTime);
 			setTitle(t);
 		}
-
-		YSE::System().update();
-		glfwMakeContextCurrent(windowHandle);
 	}
 
 }
@@ -98,28 +103,22 @@ std::string Window::getTitle() {
 	return title;
 }
 
+int Window::getFrameBufferWidth()
+{
+	return framebuffer.getWidth();
+}
+
+int Window::getFrameBufferHeight()
+{
+	return framebuffer.getHeight();
+}
+
 float Window::getAspectRatio() {
 	return aspectRatio;
 }
 
 double Window::getFrameRate(){
 	return fps;
-}
-
-float Window::getLeftScreenBound() {
-	return viewportBounds[0];
-}
-
-float Window::getRightScreenBound(){
-	return viewportBounds[1];
-}
-
-float Window::getTopScreenBound() {
-	return viewportBounds[2];
-}
-
-float Window::getBottomScreenBound() {
-	return viewportBounds[3];
 }
 
 bool Window::keyIsDown(int glfwKey) {
@@ -154,16 +153,6 @@ void Window::calculateFPS() {
 	timeB = clock.now().time_since_epoch().count();
 
 	fps =  1.0f / ((double)(deltaTime / 10) / 1000000000);
-}
-
-void Window::setViewport() {
-	int width, height;
-	glfwGetWindowSize(windowHandle, &width, &height);
-
-	aspectRatio = (float)width / height;
-	glViewport(0, 0, width, height);
-
-	viewportBounds = { -1 * aspectRatio,  1 * aspectRatio, 1.0f, -1.0f};
 }
 
 void Window::setResolution(int width, int height)

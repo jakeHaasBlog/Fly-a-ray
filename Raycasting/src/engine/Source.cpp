@@ -3,13 +3,19 @@
 #include "GLFW/glfw3.h"
 
 #include "engine/Window.h"
+#include "engine/ViewportManager.h"
+#include "engine/FontManager.h"
 #include "game/GameLogicInterface.h"
+
 
 int main(int argc, char** argv) {
 	if (!glfwInit()) printf("GLFW did not initialize properly\n");
-	window; // calls the constructor of window and loadis it into static memory
+	window; // calls the constructor of window and loads it into static memory
 	if (glewInit() != GLEW_OK) printf("GLEW did not initialize properly\n");
 	YSE::System().init();
+
+	FontManager::init();
+	ViewportManager::init();
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -18,6 +24,7 @@ int main(int argc, char** argv) {
 	GameLogicInterface::init();
 	window.mainUpdateLoop();
 	GameLogicInterface::cleanup();
+	FontManager::cleanup();
 
 	YSE::System().close();
 	glfwDestroyWindow(window.getHandle());

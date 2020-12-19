@@ -1,6 +1,8 @@
 #include "engine/TexturedQuad.h"
 #include "engine/Window.h"
 
+#include "engine/ViewportManager.h"
+
 TexturedQuad::TexturedQuad(float x, float y, float width, float height, Texture & texture) :
 	tex(&texture),
 	x(x),
@@ -116,7 +118,7 @@ void TexturedQuad::render() {
 
 	static Shader sh = Shader(vertexShaderString, fragmentShaderString);
 
-	sh.setUniform1f("u_aspectRatio", window.getAspectRatio());
+	sh.setUniform1f("u_aspectRatio", ViewportManager::getCurrentAspectRatio());
 	sh.setUniform1i("u_texture", 0);
 	sh.setUniform2f("u_stretch", width, height);
 	sh.setUniform2f("u_translation", x, y);

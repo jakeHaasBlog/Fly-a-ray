@@ -2,6 +2,7 @@
 
 #include "engine/TexturedQuad.h"
 #include "engine/Window.h"
+#include "engine/ViewportManager.h"
 #include <math.h>
 
 Camera::Camera(float x, float y, float direction, float fov, int rayCount) {
@@ -76,9 +77,9 @@ void Camera::renderView(std::vector<SeeableEntity*>& seeableEntities) {
 		float dirX = cos(a);
 		float dirY = sin(a);
 
-		float renderAreaX = ((float)(rayCount - i) / rayCount) * (window.getRightScreenBound() - window.getLeftScreenBound()) + window.getLeftScreenBound();
+		float renderAreaX = ((float)(rayCount - i) / rayCount) * (ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound()) + ViewportManager::getLeftViewportBound();
 		float renderAreaY = 0.0f;
-		float renderAreaWidth = (window.getRightScreenBound() - window.getLeftScreenBound()) / rayCount;
+		float renderAreaWidth = (ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound()) / rayCount;
 
 		Geo::LineSeg ray = Geo::LineSeg(x, y, x + dirX * 10, y + dirY * 10);
 

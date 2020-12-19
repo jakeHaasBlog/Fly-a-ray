@@ -56,6 +56,8 @@ private:
 
 	YSE::sound sound;
 
+	const static int samplerate;
+
 	void tryInitialize();
 
 };

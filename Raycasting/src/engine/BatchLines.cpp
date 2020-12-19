@@ -1,6 +1,8 @@
 #include "engine/BatchLines.h"
 
-#include "Window.h"
+#include "engine/Window.h"
+
+#include "engine/ViewportManager.h"
 
 Shader* BatchLines::defaultShader = nullptr;
 
@@ -139,7 +141,7 @@ void BatchLines::renderAll(float scale, std::array<float, 2> translation)
 		buffersReady = true;
 	}
 
-	lineShader->setUniform1f("u_aspectRatio", window.getAspectRatio());
+	lineShader->setUniform1f("u_aspectRatio", ViewportManager::getCurrentAspectRatio());
 	lineShader->setUniform1f("u_stretch", scale);
 	lineShader->setUniform2f("u_translation", translation[0], translation[1]);
 	lineShader->bind();
@@ -202,8 +204,8 @@ void BatchLines::updateBuffers()
 	}
 
 	if (buffersInitialized) {
-		vb->bufferSubData(&vertices[0], vertices.size() * sizeof(BatchLine));
-		ib->bufferSubData(&indices[0], indices.size() * sizeof(unsigned int));
+		vb->bufferData(&vertices[0], vertices.size() * sizeof(BatchLine));
+		ib->bufferData(&indices[0], indices.size() * sizeof(unsigned int));
 	}
 	else {
 		ib = new IndexBuffer();

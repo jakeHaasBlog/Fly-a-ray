@@ -3,6 +3,11 @@
 VertexBuffer::VertexBuffer() {
 }
 
+VertexBuffer::~VertexBuffer()
+{
+	freeMemory();
+}
+
 VertexBuffer::VertexBuffer(GLuint existingBuffer) {
 	id = existingBuffer;
 }
@@ -12,6 +17,11 @@ VertexBuffer::VertexBuffer(void * data, size_t dataSizeInBytes) : VertexBuffer()
 }
 
 void VertexBuffer::bufferData(void * data, size_t dataSizeInBytes) {
+	if (!isInitialized) {
+		glGenBuffers(1, &id);
+		isInitialized = true;
+	}
+
 	bind();
 	glBufferData(GL_ARRAY_BUFFER, dataSizeInBytes, data, GL_STATIC_DRAW);
 	unbind();
@@ -36,11 +46,18 @@ void VertexBuffer::unbind() {
 }
 
 GLuint VertexBuffer::getID() {
+	if (!isInitialized) {
+		glGenBuffers(1, &id);
+		isInitialized = true;
+	}
+
 	return id;
 }
 
 void VertexBuffer::freeMemory() {
-	glDeleteBuffers(GL_ARRAY_BUFFER, &id);
+	if (isInitialized) {
+		glDeleteBuffers(GL_ARRAY_BUFFER, &id);
+	}
 	unbind();
 }
 
@@ -48,6 +65,10 @@ void VertexBuffer::freeMemory() {
 
 
 IndexBuffer::IndexBuffer() {
+}
+
+IndexBuffer::~IndexBuffer() {
+	freeMemory();
 }
 
 IndexBuffer::IndexBuffer(GLuint existingBuffer) {
@@ -136,7 +157,13 @@ VertexArray::VertexArray(GLuint exisingBufferID) {
 VertexArray::VertexArray() {
 }
 
-// ** note: to-do, add support for integer attributes
+VertexArray::~VertexArray()
+{
+	if (isInitialized) {
+		freeMemory();
+	}
+}
+
 void VertexArray::setAttributes(const std::string & vertexDataFormat, VertexBuffer & vb, IndexBuffer & ib) {
 
 	if (!isInitialized) {
