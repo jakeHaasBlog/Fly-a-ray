@@ -55,10 +55,10 @@ std::array<float, 4> ViewportManager::getViewportNormalized()
 	int pW = viewportHistory.top()[2];
 	int pH = viewportHistory.top()[3];
 
-	float left = left = (2 * pX - window.getWidth()) / window.getWidth();
-	float bottom = (2 * pY - window.getHeight()) / window.getHeight();
-	float right = (pW / window.getWidth()) * 2;
-	float top = (pH / window.getHeight()) * 2;
+	float left = left = (2 * pX - window.getFrameBufferWidth()) / window.getFrameBufferWidth();
+	float bottom = (2 * pY - window.getFrameBufferHeight()) / window.getFrameBufferHeight();
+	float right = (pW / window.getFrameBufferWidth()) * 2;
+	float top = (pH / window.getFrameBufferHeight()) * 2;
 
 	//float left = x / aspectRatio;                -----> x = left * aspectRatio
 	//float right = (x + width) / aspectRatio;     -----> width = right * aspectRatio - x

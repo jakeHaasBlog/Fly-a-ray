@@ -1,5 +1,7 @@
 #include "engine/LoopingSound.h"
 
+const int LoopingSound::samplerate = 52080;
+
 LoopingSound::LoopingSound(const std::string filepath) :
 	filepath(filepath)
 {
@@ -108,7 +110,7 @@ float LoopingSound::getSoundLength()
 {
 	tryInitialize();
 
-	return sound.getLength();// / YSE::System().getDevice(0).getAvailableSampleRate(0);
+	return ((float)sound.getLength() / samplerate) * 1000.0f;
 }
 
 float LoopingSound::getVolume()

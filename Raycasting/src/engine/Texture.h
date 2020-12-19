@@ -19,7 +19,7 @@ public:
 	// hold a pre-initialized texture
 	Texture(GLuint id);
 
-	// generates a default texture with float rbg encoding 
+	// generates a default texture with float rbga encoding 
 	Texture(int width, int height);
 
 	// generates a texture with given data in float rgba encoding
@@ -28,6 +28,8 @@ public:
 
 	// generates texture then reads pixel data from png or jpg file into it
 	Texture(const std::string& filename);
+
+	Texture(const Texture& texture) = delete;
 
 	~Texture();
 
@@ -70,19 +72,24 @@ public:
 	int getWidth();
 	int getHeight();
 
-	// deletes the texture from VRAM
-	void freeMemory();
-
 private:
 	GLuint id;
 	int width, height;
-	bool isInitilized = false;
 
 	GLuint frameBufferID;
 	void generateFrameBuffer();
 	bool frameBufferInitilaized = false;
 
-	void bindWindowAsRenderTarget();
+	bool isInitilized = false;
+	int initType = 0; // 0 = none,  1 = byID,  2 = default,  3 = byData,   4 = byFile
+	int initPixWide, initPixHigh;
+	float* initData = nullptr;
+	size_t initPixCount;
+	std::string initFilepath;
+
+	void tryInitialize();
+
+	void freeMemory();
 
 	static std::stack<GLuint> frameBufferIDhistory;
 };

@@ -22,6 +22,22 @@ namespace {
 	BitmapText text;
 	BitmapText lotsOfText;
 	std::string myText = "This is some sample text...";
+
+	float pData[] = {
+		0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,
+		1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,
+		0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,
+		1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,
+		0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,
+		1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,
+		0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,
+		1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,
+	};
+
+	Texture checkerTex = Texture("assets/poin.jpg");
+
+
+
 }
 
 void GameLogicInterface::init() {
@@ -283,6 +299,11 @@ void GameLogicInterface::update(float deltaTime) {
 	float b1 = sin(colorRotator / 4) / 2 + 0.5f;
 	text.setColor(r1, g1, b1);
 	text.setBackgroundColor((1.0f-g1) / 3, (1.0f - b1) / 3, (1.0f - r1) / 3, r1);
+
+
+	static TexturedQuad phone = TexturedQuad(0, 0, 1, 1, checkerTex);
+	phone.render();
+
 
 }
 
