@@ -20,6 +20,7 @@
 #include "engine/ViewportManager.h"
 #include "engine/BitmapFont.h"
 #include "engine/BitmapText.h"
+#include "engine/AnimatedSprite.h"
 
 namespace GameLogicInterface {
 	void init();

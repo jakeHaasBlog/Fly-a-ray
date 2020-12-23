@@ -91,6 +91,12 @@
     <ClCompile Include="src\engine\FontManager.cpp">
       <Filter>Source Files\engine\text rendering</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\AnimatedSprite.cpp">
+      <Filter>Source Files\engine\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\TextureManager.cpp">
+      <Filter>Source Files\engine\opengl utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\game\GameLogicInterface.h">
@@ -152,6 +158,12 @@
     </ClInclude>
     <ClInclude Include="src\engine\FontManager.h">
       <Filter>Source Files\engine\text rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\AnimatedSprite.h">
+      <Filter>Source Files\engine\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\TextureManager.h">
+      <Filter>Source Files\engine\opengl utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

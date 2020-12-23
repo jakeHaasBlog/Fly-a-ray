@@ -48,15 +48,63 @@ void Window::mainUpdateLoop() {
 		deltaTime = (float)((float)(end - start).count() / 1000000.0f);
 		start = clock.now();
 
-		framebuffer.bindAsRenderTarget();
+		//framebuffer.bindAsRenderTarget();
 		GameLogicInterface::update(deltaTime);
-		framebuffer.unbindAsRenderTarget();
+		//framebuffer.unbindAsRenderTarget();
 
-		static TexturedQuad q(0, 0, 0, 0, framebuffer);
-		q.setTexture(framebuffer);
-		q.setBounding(ViewportManager::getLeftViewportBound(), ViewportManager::getBottomViewportBound(), ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound(), ViewportManager::getTopViewportBound() - ViewportManager::getBottomViewportBound());
-		q.setTexture(framebuffer);
-		q.render();
+
+		//static float vertices[] = {
+		//	-1.0f, -1.0f, 0.0f, 0.0f,
+		//	-1.0f, 1.0f, 0.0f, 1.0f,
+		//	1.0f, 1.0f, 1.0f, 1.0f,
+		//	1.0f, -1.0f, 1.0f, 0.0f
+		//};
+		//static VertexBuffer vb = VertexBuffer(vertices, 4 * 4 * sizeof(float));
+		//
+		//static unsigned int indices[] = {
+		//	0, 1, 2,
+		//	0, 2, 3
+		//};
+		//static IndexBuffer ib = IndexBuffer(indices, 6 * sizeof(unsigned int));
+		//
+		//static VertexArray va = VertexArray("ff ff", vb, ib);
+		//
+		//static std::string vertexShaderString =
+		//	"#version 330 core\n"
+		//	"\n"
+		//	"layout(location = 0) in vec2 position;\n"
+		//	"layout(location = 1) in vec2 uvCoord;\n"
+		//	"\n"
+		//	"out vec2 v_uvCoord;"
+		//	"\n"
+		//	"void main()\n"
+		//	"{\n"
+		//	"	gl_Position = vec4(position, 0, 1);\n"
+		//	"	v_uvCoord = uvCoord;\n"
+		//	"};\n";
+		//static std::string fragmentShaderString =
+		//	"#version 330 core\n"
+		//	"\n"
+		//	"layout(location = 0) out vec4 color;\n"
+		//	"\n"
+		//	"in vec2 v_uvCoord;"
+		//	"uniform sampler2D u_texture;"
+		//	"\n"
+		//	"void main()\n"
+		//	"{\n"
+		//	"	color = texture(u_texture, v_uvCoord);"
+		//	"};\n";
+		//static Shader sh = Shader(vertexShaderString, fragmentShaderString);
+		//framebuffer.bind(1);
+		//sh.setUniform1i("u_texture", 1);
+		
+		//ViewportManager::bindViewportPixels(0, 0, getWidth(), getHeight());
+		//sh.bind();
+		//va.bind();
+		//glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr); // draws the framebuffer stretched over the whole screen
+		//va.unbind();
+		//sh.unbind();
+		//ViewportManager::unbindViewport();
 
 		updateTime = (float)(((double)(clock.now() - startUpdateTIme).count()) / 1000000.0f);
 
@@ -114,7 +162,9 @@ int Window::getFrameBufferHeight()
 }
 
 float Window::getAspectRatio() {
-	return aspectRatio;
+	int width, height;
+	glfwGetWindowSize(windowHandle, &width, &height);
+	return (float)width / height;
 }
 
 double Window::getFrameRate(){
@@ -177,7 +227,7 @@ void Window::mouseButtonCallback(GLFWwindow * wind, int button, int action, int 
 void Window::mouseMoveCallback(GLFWwindow * wind, double xPos, double yPos) {
 	int width, height;
 	glfwGetWindowSize(window.windowHandle, &width, &height);
-	window.mouseX = ((float)(xPos - width / 2) / (width / 2)) * window.aspectRatio;
+	window.mouseX = ((float)(xPos - width / 2) / (width / 2)) * window.getAspectRatio();
 	window.mouseY = (float)(-yPos + height / 2) / (height / 2);
 	GameLogicInterface::mouseMoveCallback(xPos, yPos);
 }

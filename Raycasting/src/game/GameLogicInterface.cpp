@@ -10,7 +10,6 @@ namespace {
 	Texture bqTex;
 	Texture bqTex2;
 	Texture bqTex3;
-	TexturedQuad testQuad;
 	bool mouseEnabled = false;
 
 	SoundBite explosionSound("assets/Blast.wav");
@@ -23,20 +22,7 @@ namespace {
 	BitmapText lotsOfText;
 	std::string myText = "This is some sample text...";
 
-	float pData[] = {
-		0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,
-		1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,
-		0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,
-		1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,
-		0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,
-		1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,
-		0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,
-		1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,     0, 0, 0, 1,     1, 1, 1, 1,
-	};
-
-	Texture checkerTex = Texture("assets/poin.jpg");
-
-
+	AnimatedSprite spriteAnim = AnimatedSprite("assets/spritestrip.png");
 
 }
 
@@ -119,9 +105,7 @@ void GameLogicInterface::init() {
 		bl.addLine(x / 2 - 1.0f, 0.9f, x / 2 - 1.0f, -0.9f);
 	}
 
-	testQuad.setBounding(-1.0f, -0.5, 1.5, 1.5);
 	bqTex.setSamplingMode(1);
-	testQuad.setTexture(bqTex);
 
 	loopingMusic.setVolume(0.3f);
 	loopingMusic.setPlaybackSpeed(1.0f);
@@ -142,6 +126,18 @@ void GameLogicInterface::init() {
 	typeWriterSound.addPart(850, 1100);
 	typeWriterSound.set2D(true);
 	typeWriterSound.setVolume(0.2f);
+
+
+	// initialize AnimatedSprite instance
+	spriteAnim.addAnimation("walking");
+	spriteAnim.bindAnimation("walking");
+
+	spriteAnim.addFrame(80, 0, 0, 256, 256);
+	spriteAnim.addFrame(80, 256, 0, 256, 256);
+	spriteAnim.addFrame(80, 512, 0, 256, 256);
+	spriteAnim.addFrame(80, 768, 0, 256, 256);
+	spriteAnim.addFrame(80, 1024, 0, 256, 256);
+	spriteAnim.addFrame(80, 1280, 0, 256, 256);
 
 }
 
@@ -180,14 +176,13 @@ void GameLogicInterface::update(float deltaTime) {
 		cam.setY(cam.getY() - deltaY);
 	}
 
-	ViewportManager::bindViewportNormalized(-0.4f, -1.0f, 0.8f, 2.0f);
+	ViewportManager::bindViewportNormalized(-1.0f, -1.0f, 2.0f, 2.0f);
 	cam.renderView(walls);
 	Geo::Circle::fillCircle(ViewportManager::getRightViewportBound(), 0, 0.1f, 1, 0, 0);
 	Geo::Circle::fillCircle(ViewportManager::getLeftViewportBound(), 0, 0.1f, 1, 0, 0);
 	Geo::Circle::fillCircle(0, ViewportManager::getTopViewportBound(), 0.1f, 1, 0, 0);
 	Geo::Circle::fillCircle(0, ViewportManager::getBottomViewportBound(), 0.1f, 1, 0, 0);
 	ViewportManager::unbindViewport();
-	
 
 	static Texture minimapTexture(750 / 2, 500 / 2);
 	minimapTexture.bindAsRenderTarget();
@@ -264,7 +259,6 @@ void GameLogicInterface::update(float deltaTime) {
 
 	bq.renderAll(sin(s) / 3 + 1.0f, { sin(x)/4, sin(y)/4 });
 	bl.renderAll();
-	testQuad.render();
 
 	static int tick = 0;
 	tick++;
@@ -301,9 +295,29 @@ void GameLogicInterface::update(float deltaTime) {
 	text.setBackgroundColor((1.0f-g1) / 3, (1.0f - b1) / 3, (1.0f - r1) / 3, r1);
 
 
-	static TexturedQuad phone = TexturedQuad(0, 0, 1, 1, checkerTex);
-	phone.render();
+	static float time = 0.0f;
+	time += deltaTime;
 
+	bool runningLeft = false;
+	float runningX = (fmod(time, 6000.0f) - 1500.0f);
+	if (runningX > 1500) {
+		runningX = 3000.0f -runningX;
+		runningLeft = true;
+	}
+	runningX /= 1000.0f;
+
+	spriteAnim.setFlipsHorozontal(runningLeft);
+
+	spriteAnim.setX(runningX);
+	spriteAnim.setWidth(0.3f);
+	spriteAnim.setHeight(0.3f);
+	spriteAnim.render(fmod(time, spriteAnim.getAnimationLength()));
+
+	static AnimatedSprite s2 = spriteAnim;
+	s2.setFlipsHorozontal(!runningLeft);
+	s2.setX(-runningX);
+	s2.setY(-0.3f);
+	s2.render(fmod(time, spriteAnim.getAnimationLength()));
 
 }
 

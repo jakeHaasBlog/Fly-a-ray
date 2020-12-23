@@ -50,8 +50,6 @@ private:
 	std::string title;
 	GLFWwindow* windowHandle;
 
-	float aspectRatio = 1.0f;
-
 	void calculateFPS(); // called every exactly 10 frames 
 	float fps;
 

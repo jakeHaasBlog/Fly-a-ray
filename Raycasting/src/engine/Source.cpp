@@ -5,6 +5,7 @@
 #include "engine/Window.h"
 #include "engine/ViewportManager.h"
 #include "engine/FontManager.h"
+#include "engine/TextureManager.h"
 #include "game/GameLogicInterface.h"
 
 
@@ -15,16 +16,17 @@ int main(int argc, char** argv) {
 	YSE::System().init();
 
 	FontManager::init();
-	ViewportManager::init();
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	window.setResolution(1920, 1080);
+	ViewportManager::init();
 	GameLogicInterface::init();
 	window.mainUpdateLoop();
 	GameLogicInterface::cleanup();
 	FontManager::cleanup();
+	TextureManager::cleanup();
 
 	YSE::System().close();
 	glfwDestroyWindow(window.getHandle());

@@ -15,10 +15,10 @@ void ViewportManager::bindViewportNormalized(float x, float y, float width, floa
 	float top = y + height;
 	float bottom = y;
 
-	int pX = (left * window.getFrameBufferWidth()) / 2 + window.getFrameBufferWidth() / 2;
-	int pY = (bottom * window.getFrameBufferHeight()) / 2 + window.getFrameBufferHeight() / 2;
-	int pW = ((right - left) / 2) * window.getFrameBufferWidth();
-	int pH = ((top - bottom) / 2) * window.getFrameBufferHeight();
+	int pX = (left * window.getWidth()) / 2 + window.getWidth() / 2;
+	int pY = (bottom * window.getHeight()) / 2 + window.getHeight() / 2;
+	int pW = ((right - left) / 2) * window.getWidth();
+	int pH = ((top - bottom) / 2) * window.getHeight();
 
 	glViewport(pX, pY, pW, pH);
 	viewportHistory.push({ pX, pY, pW, pH });
@@ -55,10 +55,10 @@ std::array<float, 4> ViewportManager::getViewportNormalized()
 	int pW = viewportHistory.top()[2];
 	int pH = viewportHistory.top()[3];
 
-	float left = left = (2 * pX - window.getFrameBufferWidth()) / window.getFrameBufferWidth();
-	float bottom = (2 * pY - window.getFrameBufferHeight()) / window.getFrameBufferHeight();
-	float right = (pW / window.getFrameBufferWidth()) * 2;
-	float top = (pH / window.getFrameBufferHeight()) * 2;
+	float left = left = (2 * pX - window.getWidth()) / window.getWidth();
+	float bottom = (2 * pY - window.getHeight()) / window.getHeight();
+	float right = (pW / window.getWidth()) * 2;
+	float top = (pH / window.getHeight()) * 2;
 
 	//float left = x / aspectRatio;                -----> x = left * aspectRatio
 	//float right = (x + width) / aspectRatio;     -----> width = right * aspectRatio - x
@@ -82,7 +82,11 @@ std::array<int, 4> ViewportManager::getViewportPixels()
 
 float ViewportManager::getCurrentAspectRatio()
 {
-	return (float)viewportHistory.top()[2] / viewportHistory.top()[3];
+	if (viewportHistory.size() <= 1) {
+		return window.getAspectRatio();
+	}
+
+	return (float)viewportHistory.top()[2] / (float)viewportHistory.top()[3];
 }
 
 float ViewportManager::getLeftViewportBound()
@@ -123,6 +127,7 @@ void ViewportManager::update()
 	}
 
 	viewportHistory.top() = { 0, 0, window.getWidth(), window.getHeight() };
+	glViewport(viewportHistory.top()[0], viewportHistory.top()[1], viewportHistory.top()[2], viewportHistory.top()[3]);
 }
 
 void ViewportManager::calculateViewportBound()
