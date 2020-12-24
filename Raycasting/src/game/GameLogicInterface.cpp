@@ -3,7 +3,7 @@
 
 // this stops the variables declared here from becoming globaly accessable
 namespace {
-	Camera cam = Camera(0, 0, 0, 1.152, 100);
+	Camera cam = Camera(0, 0, 0, 1.152 * 1.6f, 100);
 	std::vector<SeeableEntity*> walls = {};
 	BatchQuads bq;
 	BatchLines bl;
@@ -24,6 +24,8 @@ namespace {
 
 	AnimatedSprite spriteAnim = AnimatedSprite("assets/spritestrip.png");
 
+	Texture brickTexture("assets/bricks.jfif");
+
 }
 
 void GameLogicInterface::init() {
@@ -39,21 +41,21 @@ void GameLogicInterface::init() {
 	walls.push_back(new SeeableLine(-1.5f, -0.9f, 1.5f, -0.9f));
 	(*(walls.end() - 1))->setColor(1.0f, 0.8f, 0.6f);
 					
-	walls.push_back(new SeeableLine(-1.5f, 0.0f, -0.75f, 0.0f));
-	walls.push_back(new SeeableLine(-0.75f, -0.9f, -0.75f, -0.2f));
+	walls.push_back(new SeeableLine(-1.5f, 0.0f, -0.75f, 0.0f, &brickTexture));
+	walls.push_back(new SeeableLine(-0.75f, -0.9f, -0.75f, -0.2f, &brickTexture));
 
-	walls.push_back(new SeeableLine(-0.55f, 0.0f, -0.15f, 0.0f));
-	walls.push_back(new SeeableLine(-0.15f, 0.0f, -0.15f, 0.5f));
-	walls.push_back(new SeeableLine(-0.15f, 0.5f, -0.25f, 0.5f));
-	walls.push_back(new SeeableLine(-0.25f, 0.5f, -0.25, 0.9f));
+	walls.push_back(new SeeableLine(-0.55f, 0.0f, -0.15f, 0.0f, &brickTexture));
+	walls.push_back(new SeeableLine(-0.15f, 0.0f, -0.15f, 0.5f, &brickTexture));
+	walls.push_back(new SeeableLine(-0.15f, 0.5f, -0.25f, 0.5f, &brickTexture));
+	walls.push_back(new SeeableLine(-0.25f, 0.5f, -0.25, 0.9f, &brickTexture));
 
-	walls.push_back(new SeeableLine(0.2f, 0.9f, 0.2f, 0.2f));
-	walls.push_back(new SeeableLine(0.2f, 0.0f, 1.5f, 0.0f));
-	walls.push_back(new SeeableLine(1.0f, 0.0f, 1.0f, 0.5f));
+	walls.push_back(new SeeableLine(0.2f, 0.9f, 0.2f, 0.2f, &brickTexture));
+	walls.push_back(new SeeableLine(0.2f, 0.0f, 1.5f, 0.0f, &brickTexture));
+	walls.push_back(new SeeableLine(1.0f, 0.0f, 1.0f, 0.5f, &brickTexture));
 
-	walls.push_back(new SeeableLine(0.75f, 0.0f, 0.75f, -0.7f));
-	walls.push_back(new SeeableLine(0.75f, -0.5f, 1.0f, -0.5f));
-	walls.push_back(new SeeableLine(0.75f, -0.7f, 1.3f, -0.7f));
+	walls.push_back(new SeeableLine(0.75f, 0.0f, 0.75f, -0.7f, &brickTexture));
+	walls.push_back(new SeeableLine(0.75f, -0.5f, 1.0f, -0.5f, &brickTexture));
+	walls.push_back(new SeeableLine(0.75f, -0.7f, 1.3f, -0.7f, &brickTexture));
 
 	walls.push_back(new SeeableRectangle(0, -0.35, 0.1, 0.1));
 	(*(walls.end() - 1))->setColor(1.0f, 0.0f, 0.0f);
@@ -176,7 +178,7 @@ void GameLogicInterface::update(float deltaTime) {
 		cam.setY(cam.getY() - deltaY);
 	}
 
-	ViewportManager::bindViewportNormalized(-1.0f, -1.0f, 2.0f, 2.0f);
+	ViewportManager::bindViewportNormalized(ViewportManager::getLeftViewportBound(), -1.0f, ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound(), 2.0f);
 	cam.renderView(walls);
 	Geo::Circle::fillCircle(ViewportManager::getRightViewportBound(), 0, 0.1f, 1, 0, 0);
 	Geo::Circle::fillCircle(ViewportManager::getLeftViewportBound(), 0, 0.1f, 1, 0, 0);
@@ -257,8 +259,8 @@ void GameLogicInterface::update(float deltaTime) {
 
 	}
 
-	bq.renderAll(sin(s) / 3 + 1.0f, { sin(x)/4, sin(y)/4 });
-	bl.renderAll();
+	//bq.renderAll(sin(s) / 3 + 1.0f, { sin(x)/4, sin(y)/4 });
+	//bl.renderAll();
 
 	static int tick = 0;
 	tick++;

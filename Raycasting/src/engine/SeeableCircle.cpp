@@ -2,12 +2,13 @@
 
 SeeableCircle::SeeableCircle(float x, float y, float radius)
 {
+	this->tex = tex;
 	circle.x = x;
 	circle.y = y;
 	circle.radius = radius;
 }
 
-bool SeeableCircle::seenBy(Geo::LineSeg & ray, float & dist, float & intersectedAt, std::array<float, 2>* pointOfIntersection)
+bool SeeableCircle::seenBy(Geo::LineSeg & ray, float & dist, float & intersectedAt, float& intersectedAtReal, std::array<float, 2>* pointOfIntersection)
 {
 	std::vector<std::array<float, 2>> poi;
 	if (!circle.getIntersection(ray, &poi)) {

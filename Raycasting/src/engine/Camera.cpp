@@ -40,12 +40,13 @@ void Camera::renderPrimitiveRays(std::array<float, 2> translation, float scale, 
 			std::array<float, 2> closestIntersect;
 			float closest;
 			float dist;
-			bool isIntersecting = seeableEntities[0]->seenBy(ray, dist, tmp, &intersect);
+			float intersectedAtReal;
+			bool isIntersecting = seeableEntities[0]->seenBy(ray, dist, tmp, intersectedAtReal, &intersect);
 			closest = dist;
 			closestIntersect = intersect;
 
 			for (SeeableEntity* e : seeableEntities) {
-				if (e->seenBy(ray, dist, tmp, &intersect)) {
+				if (e->seenBy(ray, dist, tmp, intersectedAtReal, &intersect)) {
 					if (dist < closest || !isIntersecting) {
 						closest = dist;
 						closestIntersect = intersect;
@@ -84,23 +85,29 @@ void Camera::renderView(std::vector<SeeableEntity*>& seeableEntities) {
 		Geo::LineSeg ray = Geo::LineSeg(x, y, x + dirX * 10, y + dirY * 10);
 
 		if (seeableEntities.size() > 0) {
-			float tmp;
+			float texAcross;
+			float texTmp;
 			std::array<float, 2> intersect;
 			std::array<float, 2> closestIntersect;
 			float closest;
 			float dist;
+			float intersectedAtRealTmp;
+			float intersectedAtReal;
 			SeeableEntity* entity = nullptr;
-			bool isIntersecting = seeableEntities[0]->seenBy(ray, dist, tmp, &intersect);
+			bool isIntersecting = seeableEntities[0]->seenBy(ray, dist, texAcross, intersectedAtRealTmp, &intersect);
 			if (isIntersecting) entity = seeableEntities[0];
 			closest = dist;
 			closestIntersect = intersect;
+			intersectedAtReal = intersectedAtRealTmp;
 
 			for (SeeableEntity* e : seeableEntities) {
-				if (e->seenBy(ray, dist, tmp, &intersect)) {
+				if (e->seenBy(ray, dist, texTmp, intersectedAtReal, &intersect)) {
 					if (dist < closest || !isIntersecting) {
 						closest = dist;
 						closestIntersect = intersect;
 						entity = e;
+						texAcross = texTmp;
+						intersectedAtReal = intersectedAtRealTmp;
 					}
 					isIntersecting = true;
 				}
@@ -109,10 +116,23 @@ void Camera::renderView(std::vector<SeeableEntity*>& seeableEntities) {
 			if (isIntersecting) {
 				float dFacing = abs(a - direction);
 				float rayDist = closest * cos(dFacing);
-				float height = 2.0f - rayDist / 2.0f;
+				float height = 2.0f - log(rayDist * 3.0f);
 				float colorFade = (height / 3.0f);
 				if (height < 0) height = 0;
-				Geo::Rectangle::fillRect(renderAreaX, renderAreaY - height / 2, renderAreaWidth, height, colorFade * entity->getR(), colorFade * entity->getG(), colorFade * entity->getB());
+
+				if (entity->getTexture() != nullptr) {
+
+					static TexturedQuad tq;
+					tq.setBounding(renderAreaX, renderAreaY - height / 2, renderAreaWidth, height);
+					tq.setTexture(*entity->getTexture());
+					tq.setTextureSampleArea(texAcross * 2, -1.0f, renderAreaWidth, 2.0f);
+
+					tq.render();
+				}
+				else {
+					Geo::Rectangle::fillRect(renderAreaX, renderAreaY - height / 2, renderAreaWidth, height, colorFade * entity->getR(), colorFade * entity->getG(), colorFade * entity->getB());
+				}
+			
 			}
 		}
 
