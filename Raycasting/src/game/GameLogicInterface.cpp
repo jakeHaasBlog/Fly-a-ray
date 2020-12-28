@@ -3,7 +3,7 @@
 
 // this stops the variables declared here from becoming globaly accessable
 namespace {
-	Camera cam = Camera(0, 0, 0, 1.152 * 1.6f, 300);
+	Camera cam = Camera(0, 0, 0, 1.2, 300);
 	std::vector<SeeableEntity*> walls = {};
 	BatchQuads bq;
 	BatchLines bl;
