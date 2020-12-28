@@ -114,10 +114,11 @@ void Camera::renderView(std::vector<SeeableEntity*>& seeableEntities) {
 			}
 
 			if (isIntersecting) {
-				float dFacing = abs(a - direction);
+				float dFacing = abs(direction - a);
 				float rayDist = closest * cos(dFacing);
-				float height = 2.0f - log(rayDist * 3.0f);
-				float colorFade = (height / 3.0f);
+				//float height = 2.0f - log(closest * 3.0f);
+				float height = (1.0f / (rayDist + 0.1f));
+				float colorFade = 1.0f;
 				if (height < 0) height = 0;
 
 				if (entity->getTexture() != nullptr) {

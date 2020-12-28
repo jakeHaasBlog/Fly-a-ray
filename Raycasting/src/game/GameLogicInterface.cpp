@@ -3,7 +3,7 @@
 
 // this stops the variables declared here from becoming globaly accessable
 namespace {
-	Camera cam = Camera(0, 0, 0, 1.152 * 1.6f, 100);
+	Camera cam = Camera(0, 0, 0, 1.152 * 1.6f, 300);
 	std::vector<SeeableEntity*> walls = {};
 	BatchQuads bq;
 	BatchLines bl;
@@ -12,9 +12,9 @@ namespace {
 	Texture bqTex3;
 	bool mouseEnabled = false;
 
-	SoundBite explosionSound("assets/Blast.wav");
-	LoopingSound loopingMusic("assets/Mariah Carey.wav");
-	SoundBite typeWriterSound("assets/typewriter-2.wav");
+	//SoundBite explosionSound("assets/Blast.wav");
+	//LoopingSound loopingMusic("assets/Mariah Carey.wav");
+	//SoundBite typeWriterSound("assets/typewriter-2.wav");
 
 	int noiseMakerWallIndex = 0;
 
@@ -109,10 +109,10 @@ void GameLogicInterface::init() {
 
 	bqTex.setSamplingMode(1);
 
-	loopingMusic.setVolume(0.3f);
-	loopingMusic.setPlaybackSpeed(1.0f);
+	//loopingMusic.setVolume(0.3f);
+	//loopingMusic.setPlaybackSpeed(1.0f);
 
-	loopingMusic.play3D();
+	//loopingMusic.play3D();
 
 
 	text.setText(myText);
@@ -122,12 +122,12 @@ void GameLogicInterface::init() {
 
 	text.setCharacterRenderCount(8);
 
-	typeWriterSound.addPart(160, 300);
-	typeWriterSound.addPart(390, 650, "click");
-	typeWriterSound.addPart(650, 850);
-	typeWriterSound.addPart(850, 1100);
-	typeWriterSound.set2D(true);
-	typeWriterSound.setVolume(0.2f);
+	//typeWriterSound.addPart(160, 300);
+	//typeWriterSound.addPart(390, 650, "click");
+	//typeWriterSound.addPart(650, 850);
+	//typeWriterSound.addPart(850, 1100);
+	//typeWriterSound.set2D(true);
+	//typeWriterSound.setVolume(0.2f);
 
 
 	// initialize AnimatedSprite instance
@@ -150,33 +150,63 @@ void GameLogicInterface::update(float deltaTime) {
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	if (window.keyIsDown(GLFW_KEY_W)) {
-		float deltaX = cos(cam.getDirection()) * 0.0003f * deltaTime;
-		float deltaY = sin(cam.getDirection()) * 0.0003f * deltaTime;
-		cam.setX(cam.getX() + deltaX);
-		cam.setY(cam.getY() + deltaY);
+	if (!glfwJoystickPresent(GLFW_JOYSTICK_1) || !glfwJoystickIsGamepad(GLFW_JOYSTICK_1)) {
+		if (window.keyIsDown(GLFW_KEY_W)) {
+			float deltaX = cos(cam.getDirection()) * 0.0003f * deltaTime;
+			float deltaY = sin(cam.getDirection()) * 0.0003f * deltaTime;
+			cam.setX(cam.getX() + deltaX);
+			cam.setY(cam.getY() + deltaY);
+		}
+
+		if (window.keyIsDown(GLFW_KEY_A)) {
+			float deltaX = cos(cam.getDirection() + 3.14159f / 2.0f) * 0.0002f * deltaTime;
+			float deltaY = sin(cam.getDirection() + 3.14159f / 2.0f) * 0.0002f * deltaTime;
+			cam.setX(cam.getX() + deltaX);
+			cam.setY(cam.getY() + deltaY);
+		}
+
+		if (window.keyIsDown(GLFW_KEY_D)) {
+			float deltaX = cos(cam.getDirection() - 3.14159f / 2.0f) * 0.0002f * deltaTime;
+			float deltaY = sin(cam.getDirection() - 3.14159f / 2.0f) * 0.0002f * deltaTime;
+			cam.setX(cam.getX() + deltaX);
+			cam.setY(cam.getY() + deltaY);
+		}
+
+		if (window.keyIsDown(GLFW_KEY_S)) {
+			float deltaX = cos(cam.getDirection()) * 0.0002f * deltaTime;
+			float deltaY = sin(cam.getDirection()) * 0.0002f * deltaTime;
+			cam.setX(cam.getX() - deltaX);
+			cam.setY(cam.getY() - deltaY);
+		}
 	}
 
-	if (window.keyIsDown(GLFW_KEY_A)) {
-		float deltaX = cos(cam.getDirection() + 3.14159f / 2.0f) * 0.0002f * deltaTime;
-		float deltaY = sin(cam.getDirection() + 3.14159f / 2.0f) * 0.0002f * deltaTime;
-		cam.setX(cam.getX() + deltaX);
-		cam.setY(cam.getY() + deltaY);
+	if (glfwJoystickPresent(GLFW_JOYSTICK_1)) {
+		if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1)) {
+	
+			GLFWgamepadstate state;
+			glfwGetGamepadState(GLFW_JOYSTICK_1, &state);
+
+			float dir = (-state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] / 20.0f) * (deltaTime / 16.0f);
+			if (abs(dir) > 0.01f) {
+				cam.setDirection(dir + cam.getDirection());
+			}
+
+			float sy = (-state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y] / 70.0f) * (deltaTime / 16.0f);
+			if (abs(sy) > 0.004f) {
+				cam.setX(cos(cam.getDirection()) * sy + cam.getX());
+				cam.setY(sin(cam.getDirection()) * sy + cam.getY());
+			}
+
+			float sx = (-state.axes[GLFW_GAMEPAD_AXIS_LEFT_X] / 100.0f) * (deltaTime / 16.0f);
+			if (abs(sx) > 0.004f) {
+				cam.setX(cos(cam.getDirection() + (3.14159f / 2.0f)) * sx + cam.getX());
+				cam.setY(sin(cam.getDirection() + (3.14159f / 2.0f)) * sx + cam.getY());
+			}
+
+		}
 	}
 
-	if (window.keyIsDown(GLFW_KEY_D)) {
-		float deltaX = cos(cam.getDirection() - 3.14159f / 2.0f) * 0.0002f * deltaTime;
-		float deltaY = sin(cam.getDirection() - 3.14159f / 2.0f) * 0.0002f * deltaTime;
-		cam.setX(cam.getX() + deltaX);
-		cam.setY(cam.getY() + deltaY);
-	}
 
-	if (window.keyIsDown(GLFW_KEY_S)) {
-		float deltaX = cos(cam.getDirection()) * 0.0002f * deltaTime;
-		float deltaY = sin(cam.getDirection()) * 0.0002f * deltaTime;
-		cam.setX(cam.getX() - deltaX);
-		cam.setY(cam.getY() - deltaY);
-	}
 
 	ViewportManager::bindViewportNormalized(ViewportManager::getLeftViewportBound(), -1.0f, ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound(), 2.0f);
 	cam.renderView(walls);
@@ -270,7 +300,7 @@ void GameLogicInterface::update(float deltaTime) {
 	else {
 		walls[noiseMakerWallIndex]->setColor(0, 1, 0);
 	}
-	loopingMusic.setPosition({ cam.getX(), cam.getY() }, cam.getDirection(), { 1.3, 0.3 });
+	//loopingMusic.setPosition({ cam.getX(), cam.getY() }, cam.getDirection(), { 1.3, 0.3 });
 
 	minimapQuad.render();
 
@@ -281,8 +311,9 @@ void GameLogicInterface::update(float deltaTime) {
 	static int renderCount = 0;
 	if (renderCount != (tCount / 3) % (text.getText().length() + 50)) {
 		if (renderCount < text.getText().length())
-			if (text.getText()[renderCount] != ' ')
-				typeWriterSound.playRandomPart();
+			if (text.getText()[renderCount] != ' ') {
+				//typeWriterSound.playRandomPart();
+			}
 	}
 	renderCount = (tCount / 3) % (text.getText().length() + 50);
 
@@ -353,29 +384,29 @@ void GameLogicInterface::keyCallback(int key, int scancode, int action, int mods
 	}
 
 	if (key == GLFW_KEY_E && action == GLFW_PRESS) {
-		explosionSound.setPosition({ cam.getX(), cam.getY() }, cam.getDirection(), { -0.7f, 0.35f });
-		explosionSound.set2D(false);
-		explosionSound.playAll();
+		//explosionSound.setPosition({ cam.getX(), cam.getY() }, cam.getDirection(), { -0.7f, 0.35f });
+		//explosionSound.set2D(false);
+		//explosionSound.playAll();
 	}
 
 	if (key == GLFW_KEY_K && action == GLFW_PRESS) {
-		typeWriterSound.playRandomPart();
+		//typeWriterSound.playRandomPart();
 	}
 
 	if (key == GLFW_KEY_R && action == GLFW_PRESS) {
-		if (loopingMusic.isPlaying()) {
-			loopingMusic.pause();
-		}
-		else {
-			loopingMusic.resume();
-		}
+		//if (loopingMusic.isPlaying()) {
+		//	loopingMusic.pause();
+		//}
+		//else {
+		//	loopingMusic.resume();
+		//}
 	}
 
 	if (key == GLFW_KEY_L && action == GLFW_PRESS) {
-		loopingMusic.setVolume(loopingMusic.getVolume() + 0.05f);
+		//loopingMusic.setVolume(loopingMusic.getVolume() + 0.05f);
 	}
 	if (key == GLFW_KEY_K && action == GLFW_PRESS) {
-		loopingMusic.setVolume(loopingMusic.getVolume() - 0.05f);
+		//loopingMusic.setVolume(loopingMusic.getVolume() - 0.05f);
 	}
 
 }
