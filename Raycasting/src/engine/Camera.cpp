@@ -32,8 +32,7 @@ void Camera::renderPrimitiveRays(std::array<float, 2> translation, float scale) 
 
 }
 
-void Camera::renderPrimitiveRays(std::array<float, 2> translation, float scale, std::vector<SeeableEntity*>& seeableEntities) {
-
+void Camera::renderPrimitiveRays(std::array<float, 2> translation, float scale, std::vector<SeeableEntity*>& seeableEntities, std::vector<Prop*>& props) {
 	for (int i = 0; i < rayCount; i++) {
 		float a = direction - fov / 2 + (fov / rayCount) * i;
 		float dirX = cos(a);
@@ -74,6 +73,14 @@ void Camera::renderPrimitiveRays(std::array<float, 2> translation, float scale, 
 			Geo::LineSeg::renderLine(x * scale + translation[0], y * scale + translation[1], (x + dirX * 10) * scale + translation[0], (y + dirY * 10) * scale + translation[1], 1, 1, 1);
 		}
 
+	}
+
+	float propRotator = ((float)clock() / CLOCKS_PER_SEC) * 3.0f;
+	float r = sin(propRotator / 1) / 2.0f + 0.5f;
+	float g = sin(propRotator / 2) / 2.0f + 0.5f;
+	float b = sin(propRotator / 4) / 2.0f + 0.5f;
+	for (Prop* p : props) {
+		Geo::Circle::outlineCircle(p->getX() * scale + translation[0], p->getY() * scale + translation[1], p->getWidth() / 2.0f, r, g, b);
 	}
 
 }

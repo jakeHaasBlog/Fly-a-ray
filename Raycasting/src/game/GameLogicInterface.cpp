@@ -225,7 +225,7 @@ void GameLogicInterface::update(float deltaTime) {
 	static Texture minimapTexture(750 / 2, 500 / 2);
 	minimapTexture.bindAsRenderTarget();
 	Geo::Rectangle::fillRect(ViewportManager::getLeftViewportBound(), ViewportManager::getBottomViewportBound(), ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound(), ViewportManager::getTopViewportBound() - ViewportManager::getBottomViewportBound(), 0, 0, 0);
-	cam.renderPrimitiveRays({ -cam.getX(), -cam.getY() }, 1.0f, walls);
+	cam.renderPrimitiveRays({ -cam.getX(), -cam.getY() }, 1.0f, walls, props);
 	for (SeeableEntity* e : walls) {
 		e->renderPrimitive({ -cam.getX(), -cam.getY() }, 1.0f);
 	}
