@@ -58,3 +58,43 @@ void SeeableLine::renderPrimitive(std::array<float, 2> translation, float scale)
 	lineCopy.y2 += translation[1];
 	lineCopy.render(color[0], color[1], color[2]);
 }
+
+void SeeableLine::setX1(float x)
+{
+	line.x1 = x;
+}
+
+void SeeableLine::setY1(float y)
+{
+	line.y1 = y;
+}
+
+float SeeableLine::getX1()
+{
+	return line.x1;
+}
+
+float SeeableLine::getY1()
+{
+	return line.y1;
+}
+
+void SeeableLine::setX2(float x)
+{
+	line.x2 = x;
+}
+
+void SeeableLine::setY2(float y)
+{
+	line.y2 = y;
+}
+
+float SeeableLine::getX2()
+{
+	return line.x2;
+}
+
+float SeeableLine::getY2()
+{
+	return line.y2;
+}

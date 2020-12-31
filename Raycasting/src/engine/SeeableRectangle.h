@@ -11,6 +11,16 @@ public:
 	virtual void renderPrimitive() override;
 	virtual void renderPrimitive(std::array<float, 2> translation, float scale) override;
 
+	void setX(float x);
+	void setY(float y);
+	void setWidth(float width);
+	void setHeight(float height);
+
+	float getX();
+	float getY();
+	float getWidth();
+	float getHeight();
+
 private:
 	Geo::Rectangle rect;
 

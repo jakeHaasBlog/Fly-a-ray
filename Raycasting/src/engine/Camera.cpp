@@ -3,8 +3,14 @@
 #include "engine/TexturedQuad.h"
 #include "engine/Window.h"
 #include "engine/ViewportManager.h"
+#include "engine/Prop.h"
+#include "engine/SeeableLine.h"
 #include <math.h>
+#include "engine/TextureManager.h"
 
+#include <time.h>
+
+#include <algorithm> 
 
 Camera::Camera(float x, float y, float direction, float fov, int rayCount) {
 	this->x = x;
@@ -72,7 +78,7 @@ void Camera::renderPrimitiveRays(std::array<float, 2> translation, float scale, 
 
 }
 
-void Camera::renderView(std::vector<SeeableEntity*>& seeableEntities) {
+void Camera::renderView(std::vector<SeeableEntity*>& seeableEntities, std::vector<Prop*>& props) {
 	if (seeableEntities.size() == 0) return; // if there are no walls given then exit the function
 
 	static TexturedQuad renderArea; // tool for drawing the strip every ray creates
@@ -94,6 +100,11 @@ void Camera::renderView(std::vector<SeeableEntity*>& seeableEntities) {
 
 		// render the strip
 		renderRayStrip(closestIntersection, rayDirection, renderArea);
+
+		std::vector<impl::RayIntersectInfo> propIntersectionsSorted = getPropIntersectionsSorted(ray, props);
+
+		renderProps(propIntersectionsSorted, closestIntersection, rayDirection, renderArea);
+
 
 	}
 }
@@ -186,4 +197,65 @@ void Camera::renderRayStrip(impl::RayIntersectInfo intersectionInfo, float rayDi
 		Geo::Rectangle::fillRect(renderArea.getX(), renderArea.getY(), renderArea.getWidth(), renderArea.getHeight(), r, g, b);
 	}
 
+}
+
+std::vector<impl::RayIntersectInfo> Camera::getPropIntersectionsSorted(Geo::LineSeg& ray, std::vector<Prop*>& props)
+{
+	std::vector<impl::RayIntersectInfo> intersections = std::vector<impl::RayIntersectInfo>();
+
+	impl::RayIntersectInfo info;
+	SeeableLine line = SeeableLine(0, 0, 0, 0);
+	for (Prop* p : props) {
+		line.setX1(p->getX() + cos(direction - 3.14159f / 2.0f) * (p->getWidth() / 2.0f));
+		line.setY1(p->getY() + sin(direction - 3.14159f / 2.0f) * (p->getWidth() / 2.0f));
+
+		line.setX2(p->getX() + cos(direction + 3.14159f / 2.0f) * (p->getWidth() / 2.0f));
+		line.setY2(p->getY() + sin(direction + 3.14159f / 2.0f) * (p->getWidth() / 2.0f));
+
+		info.origin = { ray.x1, ray.y1 };
+		if (line.seenBy(ray, info.intersectDistance, info.intersectedAt, info.intersectedAtReal, &info.end)) {
+			info.hasIntersection = true;
+			info.prop = p;
+			intersections.push_back(info);
+		}
+	}
+
+	std::sort(intersections.begin(), intersections.end(), [](const impl::RayIntersectInfo& a, const impl::RayIntersectInfo& b) {
+		return a.intersectDistance > b.intersectDistance;
+	});
+
+	return intersections;
+}
+
+void Camera::renderProps(std::vector<impl::RayIntersectInfo>& sortedPropIntersections, impl::RayIntersectInfo& closestWallIntersection, float rayDirection, TexturedQuad& renderArea)
+{
+	for (impl::RayIntersectInfo& propIntersection : sortedPropIntersections) {
+		if (propIntersection.intersectDistance < closestWallIntersection.intersectDistance) {
+	
+			float adjustedDist = propIntersection.intersectDistance * cos(abs(direction - rayDirection));
+
+			// calculating percieved height based on adjusted distance
+			float percievedHeight = (1.0f / (adjustedDist + 0.1f)); // <---- this used to be 2.0f - log(3.0f * adjustedDist)
+
+			// put the strip in the middle of the screen vertically and stretch it to percievedHeight
+			renderArea.setY(-percievedHeight / 2);
+			renderArea.setHeight(percievedHeight);
+
+			if (propIntersection.prop->getTexture()) {
+				renderArea.setTexture(*propIntersection.prop->getTexture());
+				renderArea.setTextureSampleArea(propIntersection.intersectedAt * 2, -1.0f, 0.03f, 2.0f);
+				renderArea.render();
+			}
+			else if (propIntersection.prop->getAnimatedSprite()) {
+				renderArea.setTexture(*(propIntersection.prop->getAnimatedSprite()->getTexture()));
+				std::array<float, 4> sampleArea = propIntersection.prop->getAnimatedSprite()->getSampleBoundsAtTime(((float)clock() / CLOCKS_PER_SEC) * 1000.0f);
+				renderArea.setTextureSampleArea((int)(sampleArea[0] + propIntersection.intersectedAt * sampleArea[2]), (int)sampleArea[1], (int)sampleArea[2] / 200, (int)sampleArea[3]);
+				renderArea.render();
+			}
+			else {
+				Geo::Rectangle::fillRect(renderArea.getX(), renderArea.getY(), renderArea.getWidth(), renderArea.getHeight(), propIntersection.prop->getColor()->at(0), propIntersection.prop->getColor()->at(1), propIntersection.prop->getColor()->at(2));
+			}
+
+		}
+	}
 }

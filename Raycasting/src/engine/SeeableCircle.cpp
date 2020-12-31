@@ -50,3 +50,33 @@ void SeeableCircle::renderPrimitive(std::array<float, 2> translation, float scal
 	circleCopy.y += translation[1];
 	circleCopy.renderOutline(color[0], color[1], color[2]);
 }
+
+void SeeableCircle::setX(float x)
+{
+	circle.x = x;
+}
+
+void SeeableCircle::setY(float y)
+{
+	circle.y = y;
+}
+
+void SeeableCircle::setRadius(float radius)
+{
+	circle.radius = radius;
+}
+
+float SeeableCircle::getX()
+{
+	return circle.x;
+}
+
+float SeeableCircle::getY()
+{
+	return circle.y;
+}
+
+float SeeableCircle::getRadius()
+{
+	return circle.radius;
+}

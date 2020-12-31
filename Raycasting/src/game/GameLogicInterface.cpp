@@ -3,7 +3,7 @@
 
 // this stops the variables declared here from becoming globaly accessable
 namespace {
-	Camera cam = Camera(0, 0, 0, 1.2, 300);
+	Camera cam = Camera(0, 0, 0, 1.2, 300); // 1.2
 	std::vector<SeeableEntity*> walls = {};
 	BatchQuads bq;
 	BatchLines bl;
@@ -26,6 +26,12 @@ namespace {
 
 	Texture brickTexture("assets/bricks.jfif");
 
+	static std::array<float, 4> green = { 0.3f, 1.0f, 0.3f, 0.7f };
+	static std::vector<Prop*> props = {
+		new Prop(0.0f, 0.0f, 0.15f, 1.0f, *TextureManager::getTexture("assets/test.png")),
+		new Prop(0.0f, 0.7f, 0.15f, 1.0f, green),
+		new Prop(0.7f, 0.7f, 0.15f, 1.0f, spriteAnim)
+	};
 }
 
 void GameLogicInterface::init() {
@@ -209,7 +215,7 @@ void GameLogicInterface::update(float deltaTime) {
 
 
 	ViewportManager::bindViewportNormalized(ViewportManager::getLeftViewportBound(), -1.0f, ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound(), 2.0f);
-	cam.renderView(walls);
+	cam.renderView(walls, props);
 	Geo::Circle::fillCircle(ViewportManager::getRightViewportBound(), 0, 0.1f, 1, 0, 0);
 	Geo::Circle::fillCircle(ViewportManager::getLeftViewportBound(), 0, 0.1f, 1, 0, 0);
 	Geo::Circle::fillCircle(0, ViewportManager::getTopViewportBound(), 0.1f, 1, 0, 0);

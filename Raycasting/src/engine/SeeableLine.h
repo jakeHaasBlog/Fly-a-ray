@@ -11,6 +11,16 @@ public:
 	virtual void renderPrimitive() override;
 	virtual void renderPrimitive(std::array<float, 2> translation, float scale) override;
 
+	void setX1(float x);
+	void setY1(float y);
+	float getX1();
+	float getY1();
+
+	void setX2(float x);
+	void setY2(float y);
+	float getX2();
+	float getY2();
+
 private:
 	Geo::LineSeg line;
 

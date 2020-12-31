@@ -94,3 +94,43 @@ void SeeableRectangle::renderPrimitive(std::array<float, 2> translation, float s
 	rectCopy.y += translation[1];
 	rectCopy.renderOutline(color[0], color[1], color[2]);
 }
+
+void SeeableRectangle::setX(float x)
+{
+	rect.x = x;
+}
+
+void SeeableRectangle::setY(float y)
+{
+	rect.y = y;
+}
+
+void SeeableRectangle::setWidth(float width)
+{
+	rect.width = width;
+}
+
+void SeeableRectangle::setHeight(float height)
+{
+	rect.height = height;
+}
+
+float SeeableRectangle::getX()
+{
+	return rect.x;
+}
+
+float SeeableRectangle::getY()
+{
+	return rect.y;
+}
+
+float SeeableRectangle::getWidth()
+{
+	return rect.width;
+}
+
+float SeeableRectangle::getHeight()
+{
+	return rect.height;
+}
