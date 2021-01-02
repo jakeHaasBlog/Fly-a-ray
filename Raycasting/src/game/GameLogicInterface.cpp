@@ -44,7 +44,7 @@ void GameLogicInterface::init() {
 	(*(walls.end() - 1))->setColor(1.0f, 0.8f, 0.6f);
 	walls.push_back(new SeeableLine(-1.5f, 0.9f, 1.5f, 0.9f));
 	(*(walls.end() - 1))->setColor(1.0f, 0.8f, 0.6f);
-	walls.push_back(new SeeableLine(-1.5f, -0.9f, 1.5f, -0.9f));
+	walls.push_back(new SeeableLine(-1.5f, -0.9f, 1.5f, -0.9f, &brickTexture));
 	(*(walls.end() - 1))->setColor(1.0f, 0.8f, 0.6f);
 					
 	walls.push_back(new SeeableLine(-1.5f, 0.0f, -0.75f, 0.0f, &brickTexture));
@@ -333,7 +333,6 @@ void GameLogicInterface::update(float deltaTime) {
 	text.setColor(r1, g1, b1);
 	text.setBackgroundColor((1.0f-g1) / 3, (1.0f - b1) / 3, (1.0f - r1) / 3, r1);
 
-
 	static float time = 0.0f;
 	time += deltaTime;
 
@@ -358,11 +357,17 @@ void GameLogicInterface::update(float deltaTime) {
 	s2.setY(-0.3f);
 	s2.render(fmod(time, spriteAnim.getAnimationLength()));
 
+	props[props.size() - 1]->setZ(sin(time / 500.0f) / 2.0f + 0.5f);
+
 }
 
 void GameLogicInterface::cleanup() {
 	for (SeeableEntity* entity : walls) {
 		delete entity;
+	}
+	
+	for (Prop* p : props) {
+		delete p;
 	}
 }
 

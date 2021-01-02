@@ -192,8 +192,11 @@ void Camera::renderRayStrip(impl::RayIntersectInfo intersectionInfo, float rayDi
 
 	if (intersectionInfo.entity->getTexture() != nullptr) {
 		// the wall has a texture
+		float texAspectRatio = (float)intersectionInfo.entity->getTexture()->getWidth() / intersectionInfo.entity->getTexture()->getHeight();
+		float texX = intersectionInfo.intersectedAt * intersectionInfo.intersectedAtReal * texAspectRatio;
+		float texW = (ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound()) / rayCount;
 		renderArea.setTexture(*intersectionInfo.entity->getTexture());
-		renderArea.setTextureSampleArea(intersectionInfo.intersectedAt * 2, -1.0f, 0.03f, 2.0f);
+		renderArea.setTextureSampleArea(texX, -1.0f, texW, 1.0f);
 		renderArea.render();
 	}
 	else {
@@ -251,14 +254,20 @@ void Camera::renderProps(std::vector<impl::RayIntersectInfo>& sortedPropIntersec
 			renderArea.setHeight(percievedHeight);
 
 			if (propIntersection.prop->getTexture()) {
+
+				float texW = (ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound()) / rayCount;
+
 				renderArea.setTexture(*propIntersection.prop->getTexture());
-				renderArea.setTextureSampleArea(propIntersection.intersectedAt * 2, -1.0f, 0.03f, 2.0f);
+				renderArea.setTextureSampleArea(propIntersection.intersectedAt, -1.0f, texW, 1.0f);
 				renderArea.render();
 			}
 			else if (propIntersection.prop->getAnimatedSprite()) {
+
+				float texW = (ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound()) / rayCount;
+
 				renderArea.setTexture(*(propIntersection.prop->getAnimatedSprite()->getTexture()));
 				std::array<float, 4> sampleArea = propIntersection.prop->getAnimatedSprite()->getSampleBoundsAtTime(((float)clock() / CLOCKS_PER_SEC) * 1000.0f);
-				renderArea.setTextureSampleArea((int)(sampleArea[0] + propIntersection.intersectedAt * sampleArea[2]), (int)sampleArea[1], (int)sampleArea[2] / 200, (int)sampleArea[3]);
+				renderArea.setTextureSampleArea((int)(sampleArea[0] + propIntersection.intersectedAt * sampleArea[2]), (int)sampleArea[1], (int)(sampleArea[2] / rayCount), (int)sampleArea[3]);
 				renderArea.render();
 			}
 			else if (propIntersection.prop->getColor()) {

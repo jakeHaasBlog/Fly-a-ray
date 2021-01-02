@@ -9,7 +9,7 @@ SeeableLine::SeeableLine(float x1, float y1, float x2, float y2, Texture * tex)
 	line.y2 = y2;
 }
 
-bool SeeableLine::seenBy(Geo::LineSeg & ray, float & dist, float & intersectedAt, float& intersectedAtReal, std::array<float, 2>* pointOfIntersection)
+bool SeeableLine::seenBy(Geo::LineSeg & ray, float & dist, float & intersectedAt, float& length, std::array<float, 2>* pointOfIntersection)
 {
 	std::vector<std::array<float, 2>> poi;
 	if (line.getIntersection(ray, &poi)) {
@@ -31,7 +31,7 @@ bool SeeableLine::seenBy(Geo::LineSeg & ray, float & dist, float & intersectedAt
 			intersectedAt = (poi[0][1] - line.y1) / dy;
 		}
 
-		intersectedAtReal = intersectedAt * sqrt(pow(dx, 2) + pow(dy, 2));
+		length = sqrt(dx * dx + dy * dy);
 
 		return true;
 	}

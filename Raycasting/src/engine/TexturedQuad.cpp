@@ -69,6 +69,11 @@ float TexturedQuad::getHeight()
 	return height;
 }
 
+Texture* TexturedQuad::getTexture()
+{
+	return tex;
+}
+
 void TexturedQuad::setTextureSampleArea(float x, float y, float width, float height) {
 	texX = x;
 	texY = y;
