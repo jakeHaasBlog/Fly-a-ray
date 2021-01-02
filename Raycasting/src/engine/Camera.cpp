@@ -238,7 +238,9 @@ void Camera::renderProps(std::vector<impl::RayIntersectInfo>& sortedPropIntersec
 			float percievedHeight = (1.0f / (adjustedDist + 0.1f)); // <---- this used to be 2.0f - log(3.0f * adjustedDist)
 
 			// put the strip in the middle of the screen vertically and stretch it to percievedHeight
-			renderArea.setY(-percievedHeight / 2);
+			renderArea.setY((-percievedHeight / 2) + propIntersection.prop->getZ() * percievedHeight);
+
+			percievedHeight *= propIntersection.prop->getHeight();
 			renderArea.setHeight(percievedHeight);
 
 			if (propIntersection.prop->getTexture()) {
@@ -252,8 +254,11 @@ void Camera::renderProps(std::vector<impl::RayIntersectInfo>& sortedPropIntersec
 				renderArea.setTextureSampleArea((int)(sampleArea[0] + propIntersection.intersectedAt * sampleArea[2]), (int)sampleArea[1], (int)sampleArea[2] / 200, (int)sampleArea[3]);
 				renderArea.render();
 			}
-			else {
+			else if (propIntersection.prop->getColor()) {
 				Geo::Rectangle::fillRect(renderArea.getX(), renderArea.getY(), renderArea.getWidth(), renderArea.getHeight(), propIntersection.prop->getColor()->at(0), propIntersection.prop->getColor()->at(1), propIntersection.prop->getColor()->at(2));
+			}
+			else {
+				__debugbreak(); // the prop is not initialized with a color, texture, or animated sprite. This problem is in Prop, it should not be possible.
 			}
 
 		}
