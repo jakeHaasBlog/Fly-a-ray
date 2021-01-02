@@ -194,7 +194,7 @@ void Camera::renderRayStrip(impl::RayIntersectInfo intersectionInfo, float rayDi
 		// the wall has a texture
 		float texAspectRatio = (float)intersectionInfo.entity->getTexture()->getWidth() / intersectionInfo.entity->getTexture()->getHeight();
 		float texX = intersectionInfo.intersectedAt * intersectionInfo.intersectedAtReal * texAspectRatio;
-		float texW = (ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound()) / rayCount;
+		float texW = ((ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound()) / rayCount) / (percievedHeight * texAspectRatio);
 		renderArea.setTexture(*intersectionInfo.entity->getTexture());
 		renderArea.setTextureSampleArea(texX, -1.0f, texW, 1.0f);
 		renderArea.render();
@@ -255,15 +255,17 @@ void Camera::renderProps(std::vector<impl::RayIntersectInfo>& sortedPropIntersec
 
 			if (propIntersection.prop->getTexture()) {
 
-				float texW = (ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound()) / rayCount;
-
+				float texAspectRatio = (float)propIntersection.prop->getTexture()->getWidth() / propIntersection.prop->getTexture()->getHeight();
+				float texW = ((ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound()) / rayCount) / (percievedHeight * texAspectRatio);
+				
 				renderArea.setTexture(*propIntersection.prop->getTexture());
 				renderArea.setTextureSampleArea(propIntersection.intersectedAt, -1.0f, texW, 1.0f);
 				renderArea.render();
 			}
 			else if (propIntersection.prop->getAnimatedSprite()) {
 
-				float texW = (ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound()) / rayCount;
+				float texAspectRatio = (float)propIntersection.prop->getAnimatedSprite()->getSampleBoundsAtTime(((float)clock() / CLOCKS_PER_SEC) * 1000.0f)[2] / propIntersection.prop->getAnimatedSprite()->getSampleBoundsAtTime(((float)clock() / CLOCKS_PER_SEC) * 1000.0f)[3];
+				float texW = ((ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound()) / rayCount) * (percievedHeight * texAspectRatio);
 
 				renderArea.setTexture(*(propIntersection.prop->getAnimatedSprite()->getTexture()));
 				std::array<float, 4> sampleArea = propIntersection.prop->getAnimatedSprite()->getSampleBoundsAtTime(((float)clock() / CLOCKS_PER_SEC) * 1000.0f);
