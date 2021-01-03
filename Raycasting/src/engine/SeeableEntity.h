@@ -6,7 +6,7 @@
 class SeeableEntity {
 public:
 
-	virtual bool seenBy(Geo::LineSeg& ray, float& dist, float& intersectedAt, std::array<float, 2>* poi = nullptr) = 0;
+	virtual bool seenBy(Geo::LineSeg& ray, float& dist, float& intersectedAt, float& length, std::array<float, 2>* poi = nullptr) = 0;
 
 	virtual void renderPrimitive() = 0;
 	virtual void renderPrimitive(std::array<float, 2> translation, float scale) = 0;

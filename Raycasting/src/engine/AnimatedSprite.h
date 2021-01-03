@@ -52,6 +52,11 @@ public:
 	float getWidth();
 	float getHeight();
 
+	Texture* getTexture();
+	void setTexture(Texture& texture);
+
+	std::array<float, 4> getSampleBoundsAtTime(float timeInMilliseconds);
+
 	void render(float timeInMilliseconds);
 
 private:

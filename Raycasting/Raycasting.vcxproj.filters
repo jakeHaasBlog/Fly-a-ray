@@ -97,6 +97,9 @@
     <ClCompile Include="src\engine\TextureManager.cpp">
       <Filter>Source Files\engine\opengl utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\Prop.cpp">
+      <Filter>Source Files\engine\raycasting utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\game\GameLogicInterface.h">
@@ -164,6 +167,9 @@
     </ClInclude>
     <ClInclude Include="src\engine\TextureManager.h">
       <Filter>Source Files\engine\opengl utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\Prop.h">
+      <Filter>Source Files\engine\raycasting utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

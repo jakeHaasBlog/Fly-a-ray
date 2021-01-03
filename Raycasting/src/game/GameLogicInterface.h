@@ -21,6 +21,7 @@
 #include "engine/BitmapFont.h"
 #include "engine/BitmapText.h"
 #include "engine/AnimatedSprite.h"
+#include "engine/TextureManager.h"
 
 namespace GameLogicInterface {
 	void init();

@@ -22,6 +22,12 @@ public:
 	void setBounding(float x, float y, float width, float height);
 	void setTexture(Texture& texture);
 
+	float getX();
+	float getY();
+	float getWidth();
+	float getHeight();
+	Texture* getTexture();
+
 	// specify what part of the texture will be rendered over the quad
 	// bottom left of texture is (0, 0), top right is (1, 1)
 	void setTextureSampleArea(float x, float y, float width, float height);

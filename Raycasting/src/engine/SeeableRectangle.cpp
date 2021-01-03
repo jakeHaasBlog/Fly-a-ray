@@ -2,13 +2,14 @@
 
 SeeableRectangle::SeeableRectangle(float x, float y, float width, float height, Texture * tex)
 {
+	this->tex = tex;
 	rect.x = x;
 	rect.y = y;
 	rect.width = width;
 	rect.height = height;
 }
 
-bool SeeableRectangle::seenBy(Geo::LineSeg & ray, float & dist, float & intersectedAt, std::array<float, 2>* pointOfIntersection)
+bool SeeableRectangle::seenBy(Geo::LineSeg & ray, float & dist, float & intersectedAt, float& intersectedAtReal, std::array<float, 2>* pointOfIntersection)
 {
 	Geo::LineSeg l1(rect.x              , rect.y               , rect.x + rect.width , rect.y              );
 	Geo::LineSeg l2(rect.x + rect.width , rect.y               , rect.x + rect.width , rect.y + rect.height);
@@ -70,6 +71,8 @@ bool SeeableRectangle::seenBy(Geo::LineSeg & ray, float & dist, float & intersec
 		if (abs(dx) > 0.0f) intersectedAt = (closestPOI[0] - closestLine->x1) / dx;
 		else intersectedAt = (closestPOI[1] - closestLine->y1) / dy;
 
+		intersectedAtReal = intersectedAt * sqrt(pow(dx, 2) + pow(dy, 2));
+
 		return true;
 	}
 	else {
@@ -90,4 +93,44 @@ void SeeableRectangle::renderPrimitive(std::array<float, 2> translation, float s
 	rectCopy.x += translation[0];
 	rectCopy.y += translation[1];
 	rectCopy.renderOutline(color[0], color[1], color[2]);
+}
+
+void SeeableRectangle::setX(float x)
+{
+	rect.x = x;
+}
+
+void SeeableRectangle::setY(float y)
+{
+	rect.y = y;
+}
+
+void SeeableRectangle::setWidth(float width)
+{
+	rect.width = width;
+}
+
+void SeeableRectangle::setHeight(float height)
+{
+	rect.height = height;
+}
+
+float SeeableRectangle::getX()
+{
+	return rect.x;
+}
+
+float SeeableRectangle::getY()
+{
+	return rect.y;
+}
+
+float SeeableRectangle::getWidth()
+{
+	return rect.width;
+}
+
+float SeeableRectangle::getHeight()
+{
+	return rect.height;
 }

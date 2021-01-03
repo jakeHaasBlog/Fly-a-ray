@@ -7,9 +7,17 @@ public:
 
 	SeeableCircle(float x, float y, float radius);
 
-	virtual bool seenBy(Geo::LineSeg & ray, float & dist, float & intersectedAt, std::array<float, 2>* poi = nullptr) override;
+	virtual bool seenBy(Geo::LineSeg & ray, float & dist, float & intersectedAt, float& intersectedAtReal, std::array<float, 2>* poi = nullptr) override;
 	virtual void renderPrimitive() override;
 	virtual void renderPrimitive(std::array<float, 2> translation, float scale) override;
+
+	void setX(float x);
+	void setY(float y);
+	void setRadius(float radius);
+
+	float getX();
+	float getY();
+	float getRadius();
 
 private:
 	Geo::Circle circle;

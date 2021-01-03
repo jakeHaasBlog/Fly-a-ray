@@ -104,6 +104,96 @@ float AnimatedSprite::getHeight()
 	return height;
 }
 
+Texture* AnimatedSprite::getTexture()
+{
+	return texture;
+}
+
+void AnimatedSprite::setTexture(Texture& texture)
+{
+	this->texture = &texture;
+}
+
+std::array<float, 4> AnimatedSprite::getSampleBoundsAtTime(float timeInMilliseconds)
+{
+	timeInMilliseconds = fmod(timeInMilliseconds, getAnimationLength());
+
+	float timeLeft = timeInMilliseconds;
+	int i;
+	for (i = 0; i < animations[currentAnimation].size(); i++) {
+		timeLeft -= animations[currentAnimation][i][0];
+		if (timeLeft <= 0) {
+			break;
+		}
+	}
+
+	std::array<float, 5>& currentFrame = animations[currentAnimation][i];
+	float currentFrameX = currentFrame[1];
+	float currentFrameY = currentFrame[2];
+	float currentFrameWidth = currentFrame[3];
+	float currentFrameHeight = currentFrame[4];
+
+	float renderWidth, renderHeight;
+	if (scalesUniformly) {
+		if (scalesByWidth) {
+			renderWidth = width;
+			renderHeight = (currentFrameHeight / currentFrameWidth) * width;
+		}
+		else {
+			renderHeight = height;
+			renderWidth = (currentFrameWidth / currentFrameHeight) * height;
+		}
+	}
+	else {
+		renderWidth = width;
+		renderHeight = height;
+	}
+
+	float renderX, renderY;
+
+	// 0 = topLeft,  1 = topRight,   2 = bottomLeft,   3 = bottomRight,   4 = Middle
+	switch (scaleOrigin) {
+	case 0:
+		renderX = x;
+		renderY = y - renderHeight;
+		break;
+	case 1:
+		renderX = x - renderWidth;
+		renderY = y - renderHeight;
+		break;
+	case 2:
+		renderX = x;
+		renderY = y;
+		break;
+	case 3:
+		renderX = x - renderWidth;
+		renderY = y;
+		break;
+	case 4:
+		renderX = x - renderWidth / 2;
+		renderY = y - renderHeight / 2;
+		break;
+	default:
+		__debugbreak(); // this is a problem
+		break;
+	}
+
+
+	int sampleX = (int)currentFrame[1], sampleY = (int)currentFrame[2], sampleWidth = (int)currentFrame[3], sampleHeight = (int)currentFrame[4];
+	if (flipHorozontal) {
+		sampleX += sampleWidth;
+		sampleWidth *= -1;
+	}
+	if (flipVertical) {
+		sampleY += sampleHeight;
+		sampleHeight *= -1;
+	}
+
+	return { (float)sampleX, (float)sampleY, (float)sampleWidth, (float)sampleHeight };
+}
+
+
+
 void AnimatedSprite::render(float timeInMilliseconds)
 {
 	timeInMilliseconds = fmod(timeInMilliseconds, getAnimationLength());

@@ -3,7 +3,7 @@
 
 // this stops the variables declared here from becoming globaly accessable
 namespace {
-	Camera cam = Camera(0, 0, 0, 1.152, 100);
+	Camera cam = Camera(0, 0, 0, 1.2, 300);
 	std::vector<SeeableEntity*> walls = {};
 	BatchQuads bq;
 	BatchLines bl;
@@ -12,9 +12,9 @@ namespace {
 	Texture bqTex3;
 	bool mouseEnabled = false;
 
-	SoundBite explosionSound("assets/Blast.wav");
-	LoopingSound loopingMusic("assets/Mariah Carey.wav");
-	SoundBite typeWriterSound("assets/typewriter-2.wav");
+	//SoundBite explosionSound("assets/Blast.wav");
+	//LoopingSound loopingMusic("assets/Mariah Carey.wav");
+	//SoundBite typeWriterSound("assets/typewriter-2.wav");
 
 	int noiseMakerWallIndex = 0;
 
@@ -24,6 +24,14 @@ namespace {
 
 	AnimatedSprite spriteAnim = AnimatedSprite("assets/spritestrip.png");
 
+	Texture brickTexture("assets/bricks.jfif");
+
+	static std::array<float, 4> green = { 0.3f, 1.0f, 0.3f, 0.7f };
+	static std::vector<Prop*> props = {
+		new Prop(0.0f, 0.0f, 0.3f, 1.0f, *TextureManager::getTexture("assets/test.png")),
+		new Prop(0.0f, 0.7f, 0.15f, 1.0f, green),
+		new Prop(0.7f, 0.7f, 0.15f / 5.0f, 0.2f, spriteAnim, "running person collectible", 0.0f)
+	};
 }
 
 void GameLogicInterface::init() {
@@ -36,24 +44,24 @@ void GameLogicInterface::init() {
 	(*(walls.end() - 1))->setColor(1.0f, 0.8f, 0.6f);
 	walls.push_back(new SeeableLine(-1.5f, 0.9f, 1.5f, 0.9f));
 	(*(walls.end() - 1))->setColor(1.0f, 0.8f, 0.6f);
-	walls.push_back(new SeeableLine(-1.5f, -0.9f, 1.5f, -0.9f));
+	walls.push_back(new SeeableLine(-1.5f, -0.9f, 1.5f, -0.9f, &brickTexture));
 	(*(walls.end() - 1))->setColor(1.0f, 0.8f, 0.6f);
 					
-	walls.push_back(new SeeableLine(-1.5f, 0.0f, -0.75f, 0.0f));
-	walls.push_back(new SeeableLine(-0.75f, -0.9f, -0.75f, -0.2f));
+	walls.push_back(new SeeableLine(-1.5f, 0.0f, -0.75f, 0.0f, &brickTexture));
+	walls.push_back(new SeeableLine(-0.75f, -0.9f, -0.75f, -0.2f, &brickTexture));
 
-	walls.push_back(new SeeableLine(-0.55f, 0.0f, -0.15f, 0.0f));
-	walls.push_back(new SeeableLine(-0.15f, 0.0f, -0.15f, 0.5f));
-	walls.push_back(new SeeableLine(-0.15f, 0.5f, -0.25f, 0.5f));
-	walls.push_back(new SeeableLine(-0.25f, 0.5f, -0.25, 0.9f));
+	walls.push_back(new SeeableLine(-0.55f, 0.0f, -0.15f, 0.0f, &brickTexture));
+	walls.push_back(new SeeableLine(-0.15f, 0.0f, -0.15f, 0.5f, &brickTexture));
+	walls.push_back(new SeeableLine(-0.15f, 0.5f, -0.25f, 0.5f, &brickTexture));
+	walls.push_back(new SeeableLine(-0.25f, 0.5f, -0.25, 0.9f, &brickTexture));
 
-	walls.push_back(new SeeableLine(0.2f, 0.9f, 0.2f, 0.2f));
-	walls.push_back(new SeeableLine(0.2f, 0.0f, 1.5f, 0.0f));
-	walls.push_back(new SeeableLine(1.0f, 0.0f, 1.0f, 0.5f));
+	walls.push_back(new SeeableLine(0.2f, 0.9f, 0.2f, 0.2f, &brickTexture));
+	walls.push_back(new SeeableLine(0.2f, 0.0f, 1.5f, 0.0f, &brickTexture));
+	walls.push_back(new SeeableLine(1.0f, 0.0f, 1.0f, 0.5f, &brickTexture));
 
-	walls.push_back(new SeeableLine(0.75f, 0.0f, 0.75f, -0.7f));
-	walls.push_back(new SeeableLine(0.75f, -0.5f, 1.0f, -0.5f));
-	walls.push_back(new SeeableLine(0.75f, -0.7f, 1.3f, -0.7f));
+	walls.push_back(new SeeableLine(0.75f, 0.0f, 0.75f, -0.7f, &brickTexture));
+	walls.push_back(new SeeableLine(0.75f, -0.5f, 1.0f, -0.5f, &brickTexture));
+	walls.push_back(new SeeableLine(0.75f, -0.7f, 1.3f, -0.7f, &brickTexture));
 
 	walls.push_back(new SeeableRectangle(0, -0.35, 0.1, 0.1));
 	(*(walls.end() - 1))->setColor(1.0f, 0.0f, 0.0f);
@@ -107,10 +115,10 @@ void GameLogicInterface::init() {
 
 	bqTex.setSamplingMode(1);
 
-	loopingMusic.setVolume(0.3f);
-	loopingMusic.setPlaybackSpeed(1.0f);
+	//loopingMusic.setVolume(0.3f);
+	//loopingMusic.setPlaybackSpeed(1.0f);
 
-	loopingMusic.play3D();
+	//loopingMusic.play3D();
 
 
 	text.setText(myText);
@@ -120,12 +128,12 @@ void GameLogicInterface::init() {
 
 	text.setCharacterRenderCount(8);
 
-	typeWriterSound.addPart(160, 300);
-	typeWriterSound.addPart(390, 650, "click");
-	typeWriterSound.addPart(650, 850);
-	typeWriterSound.addPart(850, 1100);
-	typeWriterSound.set2D(true);
-	typeWriterSound.setVolume(0.2f);
+	//typeWriterSound.addPart(160, 300);
+	//typeWriterSound.addPart(390, 650, "click");
+	//typeWriterSound.addPart(650, 850);
+	//typeWriterSound.addPart(850, 1100);
+	//typeWriterSound.set2D(true);
+	//typeWriterSound.setVolume(0.2f);
 
 
 	// initialize AnimatedSprite instance
@@ -148,36 +156,66 @@ void GameLogicInterface::update(float deltaTime) {
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	if (window.keyIsDown(GLFW_KEY_W)) {
-		float deltaX = cos(cam.getDirection()) * 0.0003f * deltaTime;
-		float deltaY = sin(cam.getDirection()) * 0.0003f * deltaTime;
-		cam.setX(cam.getX() + deltaX);
-		cam.setY(cam.getY() + deltaY);
+	if (!glfwJoystickPresent(GLFW_JOYSTICK_1) || !glfwJoystickIsGamepad(GLFW_JOYSTICK_1)) {
+		if (window.keyIsDown(GLFW_KEY_W)) {
+			float deltaX = cos(cam.getDirection()) * 0.0003f * deltaTime;
+			float deltaY = sin(cam.getDirection()) * 0.0003f * deltaTime;
+			cam.setX(cam.getX() + deltaX);
+			cam.setY(cam.getY() + deltaY);
+		}
+
+		if (window.keyIsDown(GLFW_KEY_A)) {
+			float deltaX = cos(cam.getDirection() + 3.14159f / 2.0f) * 0.0002f * deltaTime;
+			float deltaY = sin(cam.getDirection() + 3.14159f / 2.0f) * 0.0002f * deltaTime;
+			cam.setX(cam.getX() + deltaX);
+			cam.setY(cam.getY() + deltaY);
+		}
+
+		if (window.keyIsDown(GLFW_KEY_D)) {
+			float deltaX = cos(cam.getDirection() - 3.14159f / 2.0f) * 0.0002f * deltaTime;
+			float deltaY = sin(cam.getDirection() - 3.14159f / 2.0f) * 0.0002f * deltaTime;
+			cam.setX(cam.getX() + deltaX);
+			cam.setY(cam.getY() + deltaY);
+		}
+
+		if (window.keyIsDown(GLFW_KEY_S)) {
+			float deltaX = cos(cam.getDirection()) * 0.0002f * deltaTime;
+			float deltaY = sin(cam.getDirection()) * 0.0002f * deltaTime;
+			cam.setX(cam.getX() - deltaX);
+			cam.setY(cam.getY() - deltaY);
+		}
 	}
 
-	if (window.keyIsDown(GLFW_KEY_A)) {
-		float deltaX = cos(cam.getDirection() + 3.14159f / 2.0f) * 0.0002f * deltaTime;
-		float deltaY = sin(cam.getDirection() + 3.14159f / 2.0f) * 0.0002f * deltaTime;
-		cam.setX(cam.getX() + deltaX);
-		cam.setY(cam.getY() + deltaY);
+	if (glfwJoystickPresent(GLFW_JOYSTICK_1)) {
+		if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1)) {
+	
+			GLFWgamepadstate state;
+			glfwGetGamepadState(GLFW_JOYSTICK_1, &state);
+
+			float dir = (-state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] / 20.0f) * (deltaTime / 16.0f);
+			if (abs(dir) > 0.01f) {
+				cam.setDirection(dir + cam.getDirection());
+			}
+
+			float sy = (-state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y] / 70.0f) * (deltaTime / 16.0f);
+			if (abs(sy) > 0.004f) {
+				cam.setX(cos(cam.getDirection()) * sy + cam.getX());
+				cam.setY(sin(cam.getDirection()) * sy + cam.getY());
+			}
+
+			float sx = (-state.axes[GLFW_GAMEPAD_AXIS_LEFT_X] / 100.0f) * (deltaTime / 16.0f);
+			if (abs(sx) > 0.004f) {
+				cam.setX(cos(cam.getDirection() + (3.14159f / 2.0f)) * sx + cam.getX());
+				cam.setY(sin(cam.getDirection() + (3.14159f / 2.0f)) * sx + cam.getY());
+			}
+
+		}
 	}
 
-	if (window.keyIsDown(GLFW_KEY_D)) {
-		float deltaX = cos(cam.getDirection() - 3.14159f / 2.0f) * 0.0002f * deltaTime;
-		float deltaY = sin(cam.getDirection() - 3.14159f / 2.0f) * 0.0002f * deltaTime;
-		cam.setX(cam.getX() + deltaX);
-		cam.setY(cam.getY() + deltaY);
-	}
 
-	if (window.keyIsDown(GLFW_KEY_S)) {
-		float deltaX = cos(cam.getDirection()) * 0.0002f * deltaTime;
-		float deltaY = sin(cam.getDirection()) * 0.0002f * deltaTime;
-		cam.setX(cam.getX() - deltaX);
-		cam.setY(cam.getY() - deltaY);
-	}
 
-	ViewportManager::bindViewportNormalized(-1.0f, -1.0f, 2.0f, 2.0f);
-	cam.renderView(walls);
+	ViewportManager::bindViewportNormalized(ViewportManager::getLeftViewportBound(), -1.0f, ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound(), 2.0f);
+	cam.renderView(walls, props);
 	Geo::Circle::fillCircle(ViewportManager::getRightViewportBound(), 0, 0.1f, 1, 0, 0);
 	Geo::Circle::fillCircle(ViewportManager::getLeftViewportBound(), 0, 0.1f, 1, 0, 0);
 	Geo::Circle::fillCircle(0, ViewportManager::getTopViewportBound(), 0.1f, 1, 0, 0);
@@ -187,7 +225,7 @@ void GameLogicInterface::update(float deltaTime) {
 	static Texture minimapTexture(750 / 2, 500 / 2);
 	minimapTexture.bindAsRenderTarget();
 	Geo::Rectangle::fillRect(ViewportManager::getLeftViewportBound(), ViewportManager::getBottomViewportBound(), ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound(), ViewportManager::getTopViewportBound() - ViewportManager::getBottomViewportBound(), 0, 0, 0);
-	cam.renderPrimitiveRays({ -cam.getX(), -cam.getY() }, 1.0f, walls);
+	cam.renderPrimitiveRays({ -cam.getX(), -cam.getY() }, 1.0f, walls, props);
 	for (SeeableEntity* e : walls) {
 		e->renderPrimitive({ -cam.getX(), -cam.getY() }, 1.0f);
 	}
@@ -257,8 +295,8 @@ void GameLogicInterface::update(float deltaTime) {
 
 	}
 
-	bq.renderAll(sin(s) / 3 + 1.0f, { sin(x)/4, sin(y)/4 });
-	bl.renderAll();
+	//bq.renderAll(sin(s) / 3 + 1.0f, { sin(x)/4, sin(y)/4 });
+	//bl.renderAll();
 
 	static int tick = 0;
 	tick++;
@@ -268,7 +306,7 @@ void GameLogicInterface::update(float deltaTime) {
 	else {
 		walls[noiseMakerWallIndex]->setColor(0, 1, 0);
 	}
-	loopingMusic.setPosition({ cam.getX(), cam.getY() }, cam.getDirection(), { 1.3, 0.3 });
+	//loopingMusic.setPosition({ cam.getX(), cam.getY() }, cam.getDirection(), { 1.3, 0.3 });
 
 	minimapQuad.render();
 
@@ -279,8 +317,9 @@ void GameLogicInterface::update(float deltaTime) {
 	static int renderCount = 0;
 	if (renderCount != (tCount / 3) % (text.getText().length() + 50)) {
 		if (renderCount < text.getText().length())
-			if (text.getText()[renderCount] != ' ')
-				typeWriterSound.playRandomPart();
+			if (text.getText()[renderCount] != ' ') {
+				//typeWriterSound.playRandomPart();
+			}
 	}
 	renderCount = (tCount / 3) % (text.getText().length() + 50);
 
@@ -293,7 +332,6 @@ void GameLogicInterface::update(float deltaTime) {
 	float b1 = sin(colorRotator / 4) / 2 + 0.5f;
 	text.setColor(r1, g1, b1);
 	text.setBackgroundColor((1.0f-g1) / 3, (1.0f - b1) / 3, (1.0f - r1) / 3, r1);
-
 
 	static float time = 0.0f;
 	time += deltaTime;
@@ -319,11 +357,17 @@ void GameLogicInterface::update(float deltaTime) {
 	s2.setY(-0.3f);
 	s2.render(fmod(time, spriteAnim.getAnimationLength()));
 
+	props[props.size() - 1]->setZ(sin(time / 500.0f) / 2.0f + 0.5f);
+
 }
 
 void GameLogicInterface::cleanup() {
 	for (SeeableEntity* entity : walls) {
 		delete entity;
+	}
+	
+	for (Prop* p : props) {
+		delete p;
 	}
 }
 
@@ -351,29 +395,29 @@ void GameLogicInterface::keyCallback(int key, int scancode, int action, int mods
 	}
 
 	if (key == GLFW_KEY_E && action == GLFW_PRESS) {
-		explosionSound.setPosition({ cam.getX(), cam.getY() }, cam.getDirection(), { -0.7f, 0.35f });
-		explosionSound.set2D(false);
-		explosionSound.playAll();
+		//explosionSound.setPosition({ cam.getX(), cam.getY() }, cam.getDirection(), { -0.7f, 0.35f });
+		//explosionSound.set2D(false);
+		//explosionSound.playAll();
 	}
 
 	if (key == GLFW_KEY_K && action == GLFW_PRESS) {
-		typeWriterSound.playRandomPart();
+		//typeWriterSound.playRandomPart();
 	}
 
 	if (key == GLFW_KEY_R && action == GLFW_PRESS) {
-		if (loopingMusic.isPlaying()) {
-			loopingMusic.pause();
-		}
-		else {
-			loopingMusic.resume();
-		}
+		//if (loopingMusic.isPlaying()) {
+		//	loopingMusic.pause();
+		//}
+		//else {
+		//	loopingMusic.resume();
+		//}
 	}
 
 	if (key == GLFW_KEY_L && action == GLFW_PRESS) {
-		loopingMusic.setVolume(loopingMusic.getVolume() + 0.05f);
+		//loopingMusic.setVolume(loopingMusic.getVolume() + 0.05f);
 	}
 	if (key == GLFW_KEY_K && action == GLFW_PRESS) {
-		loopingMusic.setVolume(loopingMusic.getVolume() - 0.05f);
+		//loopingMusic.setVolume(loopingMusic.getVolume() - 0.05f);
 	}
 
 }
