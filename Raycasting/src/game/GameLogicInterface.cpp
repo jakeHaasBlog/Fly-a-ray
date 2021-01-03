@@ -28,7 +28,7 @@ namespace {
 
 	static std::array<float, 4> green = { 0.3f, 1.0f, 0.3f, 0.7f };
 	static std::vector<Prop*> props = {
-		new Prop(0.0f, 0.0f, 0.15f, 1.0f, *TextureManager::getTexture("assets/test.png")),
+		new Prop(0.0f, 0.0f, 0.3f, 1.0f, *TextureManager::getTexture("assets/test.png")),
 		new Prop(0.0f, 0.7f, 0.15f, 1.0f, green),
 		new Prop(0.7f, 0.7f, 0.15f / 5.0f, 0.2f, spriteAnim, "running person collectible", 0.0f)
 	};

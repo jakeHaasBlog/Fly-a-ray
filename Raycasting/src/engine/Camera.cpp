@@ -256,16 +256,28 @@ void Camera::renderProps(std::vector<impl::RayIntersectInfo>& sortedPropIntersec
 			if (propIntersection.prop->getTexture()) {
 
 				float texAspectRatio = (float)propIntersection.prop->getTexture()->getWidth() / propIntersection.prop->getTexture()->getHeight();
-				float texW = ((ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound()) / rayCount) / (percievedHeight * texAspectRatio);
-				
+				float stripW = renderArea.getWidth();
+				float rW = propIntersection.prop->getWidth();
+				float pH = percievedHeight;
+				float rH = propIntersection.prop->getHeight();
+				float pW = (rW * pH) / rH;
+
+				float texW = 1.0f / (pW / stripW);
+
 				renderArea.setTexture(*propIntersection.prop->getTexture());
 				renderArea.setTextureSampleArea(propIntersection.intersectedAt, -1.0f, texW, 1.0f);
 				renderArea.render();
 			}
 			else if (propIntersection.prop->getAnimatedSprite()) {
 
-				float texAspectRatio = (float)propIntersection.prop->getAnimatedSprite()->getSampleBoundsAtTime(((float)clock() / CLOCKS_PER_SEC) * 1000.0f)[2] / propIntersection.prop->getAnimatedSprite()->getSampleBoundsAtTime(((float)clock() / CLOCKS_PER_SEC) * 1000.0f)[3];
-				float texW = ((ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound()) / rayCount) * (percievedHeight * texAspectRatio);
+				float texAspectRatio = (float)propIntersection.prop->getAnimatedSprite()->getTexture()->getWidth() / propIntersection.prop->getAnimatedSprite()->getTexture()->getHeight();
+				float stripW = renderArea.getWidth();
+				float rW = propIntersection.prop->getWidth();
+				float pH = percievedHeight;
+				float rH = propIntersection.prop->getHeight();
+				float pW = (rW * pH) / rH;
+
+				float texW = 1.0f / (pW / stripW);
 
 				renderArea.setTexture(*(propIntersection.prop->getAnimatedSprite()->getTexture()));
 				std::array<float, 4> sampleArea = propIntersection.prop->getAnimatedSprite()->getSampleBoundsAtTime(((float)clock() / CLOCKS_PER_SEC) * 1000.0f);
