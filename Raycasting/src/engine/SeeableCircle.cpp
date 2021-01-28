@@ -1,11 +1,20 @@
 #include "engine/SeeableCircle.h"
 
-SeeableCircle::SeeableCircle(float x, float y, float radius)
+SeeableCircle::SeeableCircle(float x, float y, float radius, Texture* tex)
 {
 	this->tex = tex;
 	circle.x = x;
 	circle.y = y;
 	circle.radius = radius;
+}
+
+SeeableCircle::SeeableCircle(float x, float y, float radius, float r, float g, float b)
+{
+	this->tex = nullptr;
+	circle.x = x;
+	circle.y = y;
+	circle.radius = radius;
+	color = { r, g, b };
 }
 
 bool SeeableCircle::seenBy(Geo::LineSeg & ray, float & dist, float & intersectedAt, float& intersectedAtReal, std::array<float, 2>* pointOfIntersection)

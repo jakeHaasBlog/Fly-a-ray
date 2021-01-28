@@ -38,14 +38,10 @@ void GameLogicInterface::init() {
 
 	glfwSetInputMode(window.getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	walls.push_back(new SeeableLine(1.5f, 0.9f, 1.5f, -0.9f));
-	(*(walls.end() - 1))->setColor(1.0f, 0.8f, 0.6f);
-	walls.push_back(new SeeableLine(-1.5f, 0.9f, -1.5f, -0.9f));
-	(*(walls.end() - 1))->setColor(1.0f, 0.8f, 0.6f);
-	walls.push_back(new SeeableLine(-1.5f, 0.9f, 1.5f, 0.9f));
-	(*(walls.end() - 1))->setColor(1.0f, 0.8f, 0.6f);
+	walls.push_back(new SeeableLine(1.5f, 0.9f, 1.5f, -0.9f, 1.0f, 0.8f, 0.6f));
+	walls.push_back(new SeeableLine(-1.5f, 0.9f, -1.5f, -0.9f, 1.0f, 0.8f, 0.6f));
+	walls.push_back(new SeeableLine(-1.5f, 0.9f, 1.5f, 0.9f, 1.0f, 0.8f, 0.6f));
 	walls.push_back(new SeeableLine(-1.5f, -0.9f, 1.5f, -0.9f, &brickTexture));
-	(*(walls.end() - 1))->setColor(1.0f, 0.8f, 0.6f);
 					
 	walls.push_back(new SeeableLine(-1.5f, 0.0f, -0.75f, 0.0f, &brickTexture));
 	walls.push_back(new SeeableLine(-0.75f, -0.9f, -0.75f, -0.2f, &brickTexture));
@@ -63,19 +59,14 @@ void GameLogicInterface::init() {
 	walls.push_back(new SeeableLine(0.75f, -0.5f, 1.0f, -0.5f, &brickTexture));
 	walls.push_back(new SeeableLine(0.75f, -0.7f, 1.3f, -0.7f, &brickTexture));
 
-	walls.push_back(new SeeableRectangle(0, -0.35, 0.1, 0.1));
-	(*(walls.end() - 1))->setColor(1.0f, 0.0f, 0.0f);
-	walls.push_back(new SeeableRectangle(-0.225f, -0.35, 0.1, 0.1));
-	(*(walls.end() - 1))->setColor(0.0f, 1.0f, 0.0f);
-	walls.push_back(new SeeableRectangle(-0.45f, -0.35, 0.1, 0.1));
-	(*(walls.end() - 1))->setColor(0.0f, 0.0f, 1.0f);
+	walls.push_back(new SeeableRectangle(0, -0.35, 0.1, 0.1, 1.0f, 0.0f, 0.0f));
+	walls.push_back(new SeeableRectangle(-0.225f, -0.35, 0.1, 0.1, 0.0f, 1.0f, 0.0f));
+	walls.push_back(new SeeableRectangle(-0.45f, -0.35, 0.1, 0.1, 0.0f, 0.0f, 1.0f));
 
-	walls.push_back(new SeeableCircle(-0.7f, 0.35f, 0.1f));
-	(*(walls.end() - 1))->setColor(1.0f, 0.0f, 0.0f);
+	walls.push_back(new SeeableCircle(-0.7f, 0.35f, 0.1f, 1.0f, 0.0f, 0.0f));
 
-	walls.push_back(new SeeableCircle(1.3, 0.3, 0.02f));
+	walls.push_back(new SeeableCircle(1.3, 0.3, 0.02f, 1.0f, 0.0f, 1.0f));
 	noiseMakerWallIndex = walls.size() - 1;
-	(*(walls.end() - 1))->setColor(1.0f, 0.0f, 1.0f);
 
 	window.setResolution(1920, 1080);
 

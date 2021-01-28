@@ -9,6 +9,17 @@ SeeableRectangle::SeeableRectangle(float x, float y, float width, float height, 
 	rect.height = height;
 }
 
+SeeableRectangle::SeeableRectangle(float x, float y, float width, float height, float r, float g, float b)
+{
+	this->tex = nullptr;
+	rect.x = x;
+	rect.y = y;
+	rect.width = width;
+	rect.height = height;
+	color = { r, g, b };
+}
+
+
 bool SeeableRectangle::seenBy(Geo::LineSeg & ray, float & dist, float & intersectedAt, float& intersectedAtReal, std::array<float, 2>* pointOfIntersection)
 {
 	Geo::LineSeg l1(rect.x              , rect.y               , rect.x + rect.width , rect.y              );
