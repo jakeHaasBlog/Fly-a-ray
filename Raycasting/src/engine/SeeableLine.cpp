@@ -9,6 +9,16 @@ SeeableLine::SeeableLine(float x1, float y1, float x2, float y2, Texture * tex)
 	line.y2 = y2;
 }
 
+SeeableLine::SeeableLine(float x1, float y1, float x2, float y2, float r, float g, float b)
+{
+	this->tex = nullptr;
+	line.x1 = x1;
+	line.y1 = y1;
+	line.x2 = x2;
+	line.y2 = y2;
+	color = { r, g, b };
+}
+
 bool SeeableLine::seenBy(Geo::LineSeg & ray, float & dist, float & intersectedAt, float& length, std::array<float, 2>* pointOfIntersection)
 {
 	std::vector<std::array<float, 2>> poi;

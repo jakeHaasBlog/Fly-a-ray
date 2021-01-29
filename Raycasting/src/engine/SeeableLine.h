@@ -5,6 +5,7 @@
 class SeeableLine : public SeeableEntity {
 public:
 	SeeableLine(float x1, float y1, float x2, float y2, Texture* tex = nullptr);
+	SeeableLine(float x1, float y1, float x2, float y2, float r, float g, float b);
 
 	bool seenBy(Geo::LineSeg& ray, float& dist, float& intersectedAt, float& length, std::array<float, 2>* poi = nullptr) override;
 

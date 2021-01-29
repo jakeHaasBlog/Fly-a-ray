@@ -26,6 +26,7 @@ namespace {
 void GameLogicInterface::init() {
 
 	glfwSetInputMode(window.getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 	window.setResolution(1920, 1080);
 
 

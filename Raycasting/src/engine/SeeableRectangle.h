@@ -5,6 +5,7 @@
 class SeeableRectangle : public SeeableEntity {
 public:
 	SeeableRectangle(float x, float y, float width, float height, Texture* tex = nullptr);
+	SeeableRectangle(float x, float y, float width, float height, float r, float g, float b);
 
 	bool seenBy(Geo::LineSeg& ray, float& dist, float& intersectedAt, float& intersectedAtReal, std::array<float, 2>* poi = nullptr) override;
 

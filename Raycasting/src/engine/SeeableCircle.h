@@ -5,7 +5,8 @@
 class SeeableCircle : public SeeableEntity {
 public:
 
-	SeeableCircle(float x, float y, float radius);
+	SeeableCircle(float x, float y, float radius, Texture* tex = nullptr);
+	SeeableCircle(float x, float y, float radius, float r, float g, float b);
 
 	virtual bool seenBy(Geo::LineSeg & ray, float & dist, float & intersectedAt, float& intersectedAtReal, std::array<float, 2>* poi = nullptr) override;
 	virtual void renderPrimitive() override;
