@@ -17,10 +17,10 @@ namespace {
 	std::string myText = "This is some sample text...";
 
 	Texture brickTexture("assets/bricks.jfif");
+	Texture cat("assets/02 cat.png");
 
 	static std::array<float, 4> green = { 0.3f, 1.0f, 0.3f, 0.7f };
-	static std::vector<Prop*> props = {
-	};
+	static std::vector<Prop*> props = {};
 }
 
 void GameLogicInterface::init() {
@@ -31,21 +31,13 @@ void GameLogicInterface::init() {
 
 
 	//outer walls
-	walls.push_back(new SeeableLine(1.5f, 1.5f, -1.5f, 1.5f));
-	(*(walls.end() - 1))->setColor(0, 0, 1);
-
-	walls.push_back(new SeeableLine(-1.5f, 1.5f, -1.5f, -1.5f));
-	(*(walls.end() - 1))->setColor(0, 0, 1);
-
-	walls.push_back(new SeeableLine(-1.5f, -1.5f, 1.5f, -1.5f));
-	(*(walls.end() - 1))->setColor(0, 0, 1);
-
-	walls.push_back(new SeeableLine(1.5f, -1.5f, 1.5f, 1.5f));
-	(*(walls.end() - 1))->setColor(0, 0, 1);
+	walls.push_back(new SeeableLine(1.5f, 1.5f, -1.5f, 1.5f, 0, 0, 1));
+	walls.push_back(new SeeableLine(-1.5f, 1.5f, -1.5f, -1.5f, 0, 0, 1));
+	walls.push_back(new SeeableLine(-1.5f, -1.5f, 1.5f, -1.5f, 0, 0, 1));
+	walls.push_back(new SeeableLine(1.5f, -1.5f, 1.5f, 1.5f, 0, 0, 1));
 
 
-	walls.push_back(new SeeableRectangle(0, 0, .3, .3));
-	(*(walls.end() - 1))->setColor(1, 0, 0);
+	props.push_back(new Prop(1.f, 0.f, .25, .5, cat, "cat", .1));
 
 
 	int numLines = 120;
