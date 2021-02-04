@@ -1,7 +1,7 @@
 # Fly a-ray
 A minimal old-school ray casting game
 
-Built with Visual Studio 2017
+Built with Visual Studio 2019
 
 libraries:
 - GLEW            interface for OpenGL functions
