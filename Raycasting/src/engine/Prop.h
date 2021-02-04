@@ -22,13 +22,15 @@ public:
 	// constructor for animated variant
 	Prop(float x, float y, float width, float height, AnimatedSprite& animatedSprite, const std::string& typeName = "default", float z = 0.0f);
 
-	void setTypeName(const std::string& typeName); // optional: descripe what this thing is, for debugging or referencing i.e. if (getTypeName() == "powerup") { collect(); }
+	// optional: descripe what this thing is, for debugging or referencing i.e. if (getTypeName() == "powerup") { collect(); }
+	void setTypeName(const std::string& typeName);
 	const std::string& getTypeName();
 
 	void setWidth(float width);
 	float getWidth();
 
-	void setHeight(float height); // 1 is wall height
+	// walls have height 1.0f
+	void setHeight(float height);
 	float getHeight();
 		
 	void setX(float x);
@@ -37,17 +39,21 @@ public:
 	void setY(float y);
 	float getY();
 
-	void setZ(float z); // 0 is floor level, 1 is wall height
+	// 0.0f is floor level, 1.0f is wall height
+	void setZ(float z);
 	float getZ();
 
+	// will return nullptr if not a texture variant
+	Texture* getTexture();
 	void bindTexture(Texture& tex);
-	Texture* getTexture(); // will return null if not a texture variant
 
+	// will return nullptr if not a texture variant
+	std::array<float, 4>* getColor();
 	void bindColor(std::array<float, 4>& color);
-	std::array<float, 4>* getColor(); // will return null if not a texture variant
 
+	// will return nullptr if not an animated variant
+	AnimatedSprite* getAnimatedSprite();
 	void bindAnimatedSprite(AnimatedSprite& sprite);
-	AnimatedSprite* getAnimatedSprite(); // will return null if not an animated variant
 
 private:
 	std::string typeName;

@@ -10,6 +10,7 @@
 
 
 int main(int argc, char** argv) {
+
 	if (!glfwInit()) printf("GLFW did not initialize properly\n");
 	window; // calls the constructor of window and loads it into static memory
 	if (glewInit() != GLEW_OK) printf("GLEW did not initialize properly\n");

@@ -120,10 +120,6 @@ void GameLogicInterface::update(float deltaTime) {
 	}
 
 
-
-
-
-
 	//world rendering
 	ViewportManager::bindViewportNormalized(ViewportManager::getLeftViewportBound(), -1.0f, ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound(), 2.0f);
 	cam.renderView(walls, props);
@@ -207,13 +203,13 @@ void GameLogicInterface::mouseButtonCallback(int button, int action, int mods)
 void GameLogicInterface::keyCallback(int key, int scancode, int action, int mods)
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+		// takes a screenshot
 		mouseEnabled = !mouseEnabled;
 		glfwSetInputMode(window.getHandle(), GLFW_CURSOR, mouseEnabled ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
 	}
 
 	if (key == GLFW_KEY_S && (mods & GLFW_MOD_CONTROL)) {
-		Texture myTex = Texture(500, 400);
-		myTex.saveToFile("assets/savedImage.png");
+		window.getFramebufferTexture().saveToFile("assets/savedImage.png");
 	}
 
 	if (key == GLFW_KEY_E && action == GLFW_PRESS) {
