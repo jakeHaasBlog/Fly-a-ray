@@ -211,6 +211,11 @@ void GameLogicInterface::keyCallback(int key, int scancode, int action, int mods
 		glfwSetInputMode(window.getHandle(), GLFW_CURSOR, mouseEnabled ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
 	}
 
+	if (key == GLFW_KEY_S && (mods & GLFW_MOD_CONTROL)) {
+		Texture myTex = Texture(500, 400);
+		myTex.saveToFile("assets/savedImage.png");
+	}
+
 	if (key == GLFW_KEY_E && action == GLFW_PRESS) {
 		//explosionSound.setPosition({ cam.getX(), cam.getY() }, cam.getDirection(), { -0.7f, 0.35f });
 		//explosionSound.set2D(false);

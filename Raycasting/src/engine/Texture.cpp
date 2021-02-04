@@ -6,8 +6,14 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+#define STBI_MSC_SECURE_CRT
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
+
 #include "engine/Window.h"
 #include <iostream>
+
+#include <algorithm>
 
 #include "ViewportManager.h"
 
@@ -246,6 +252,42 @@ std::vector<std::array<float, 4>> Texture::getPixels(int mipmapLevel) {
 	unbind();
 
 	return pixels;
+}
+
+void Texture::saveToFile(const std::string& filepath)
+{
+
+	std::vector<std::array<float, 4>> pixels(width * height);
+	glBindTexture(GL_TEXTURE_2D, id);
+	glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT, &pixels[0]);
+	unbind();
+
+
+	uint8_t* pixels_int = new uint8_t[width * height * 4];
+	int i = 0;
+	for (std::array<float, 4>&p : pixels) {
+		p[0] = std::clamp(p[0], 0.0f, 1.0f);
+		p[1] = std::clamp(p[1], 0.0f, 1.0f);
+		p[2] = std::clamp(p[2], 0.0f, 1.0f);
+		p[3] = std::clamp(p[3], 0.0f, 1.0f);
+
+		uint8_t r = (uint8_t)(p[0] * 254.0f);
+		uint8_t g = (uint8_t)(p[1] * 254.0f);
+		uint8_t b = (uint8_t)(p[2] * 254.0f);
+		uint8_t a = (uint8_t)(p[3] * 254.0f);
+
+		pixels_int[i + 0] = r;
+		pixels_int[i + 1] = g;
+		pixels_int[i + 2] = b;
+		pixels_int[i + 3] = a;
+
+		i += 4;
+	}
+
+	stbi_flip_vertically_on_write(true);
+	stbi_write_png(filepath.c_str(), width, height, 4, pixels_int, 4 * width);
+	delete[] pixels_int;
+
 }
 
 GLuint Texture::getID() {
