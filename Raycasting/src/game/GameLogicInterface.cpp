@@ -1,4 +1,5 @@
 
+
 #include "game/GameLogicInterface.h"
 
 // this stops the variables declared here from becoming globaly accessable
@@ -16,34 +17,31 @@ namespace {
 	std::string myText = "This is some sample text...";
 
 	Texture brickTexture("assets/bricks.jfif");
+	Texture cat("assets/02 cat.png");
 
 	static std::array<float, 4> green = { 0.3f, 1.0f, 0.3f, 0.7f };
-	static std::vector<Prop*> props = {
-	};
+
+	static std::vector<Prop*> props = {};
+
 }
 
 void GameLogicInterface::init() {
 
 	glfwSetInputMode(window.getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 	window.setResolution(1920, 1080);
 
 
 	//outer walls
-	walls.push_back(new SeeableLine(1.5f, 1.5f, -1.5f, 1.5f));
-	(*(walls.end() - 1))->setColor(0, 0, 1);
 
-	walls.push_back(new SeeableLine(-1.5f, 1.5f, -1.5f, -1.5f));
-	(*(walls.end() - 1))->setColor(0, 0, 1);
+	walls.push_back(new SeeableLine(1.5f, 1.5f, -1.5f, 1.5f, 0, 0, 1));
+	walls.push_back(new SeeableLine(-1.5f, 1.5f, -1.5f, -1.5f, 0, 0, 1));
+	walls.push_back(new SeeableLine(-1.5f, -1.5f, 1.5f, -1.5f, 0, 0, 1));
+	walls.push_back(new SeeableLine(1.5f, -1.5f, 1.5f, 1.5f, 0, 0, 1));
 
-	walls.push_back(new SeeableLine(-1.5f, -1.5f, 1.5f, -1.5f));
-	(*(walls.end() - 1))->setColor(0, 0, 1);
 
-	walls.push_back(new SeeableLine(1.5f, -1.5f, 1.5f, 1.5f));
-	(*(walls.end() - 1))->setColor(0, 0, 1);
-			
+	props.push_back(new Prop(1.f, 0.f, .25, .5, cat, "cat", .1));
 
-	walls.push_back(new SeeableRectangle(0, 0, .3, .3));
-	(*(walls.end() - 1))->setColor(1, 0, 0);
 
 
 	int numLines = 120;
@@ -51,6 +49,7 @@ void GameLogicInterface::init() {
 		float x = ((float)i / numLines) * 4 - 2.0f;
 		primativeFOV.addLine(x / 2 - 1.0f, 0.9f, x / 2 - 1.0f, -0.9f);
 	}
+
 
 
 	Prop* luis = new Prop(-0.3f, 1.0f, 0.3f, 0.9f, *TextureManager::getTexture("assets/testSprite.png"));
@@ -69,6 +68,7 @@ void GameLogicInterface::init() {
 	Prop* maProp = new Prop(-1.4f, 0.0f, 0.3f, 0.6f, runner);
 
 	props.push_back(maProp);
+
 
 }
 
@@ -112,7 +112,7 @@ void GameLogicInterface::update(float deltaTime) {
 
 	if (glfwJoystickPresent(GLFW_JOYSTICK_1)) {
 		if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1)) {
-	
+
 			GLFWgamepadstate state;
 			glfwGetGamepadState(GLFW_JOYSTICK_1, &state);
 
@@ -135,6 +135,7 @@ void GameLogicInterface::update(float deltaTime) {
 
 		}
 	}
+
 
 
 	//world rendering
@@ -188,7 +189,7 @@ void GameLogicInterface::update(float deltaTime) {
 	}
 
 	minimapQuad.render();
-	
+
 }
 
 void GameLogicInterface::cleanup() {
@@ -196,7 +197,7 @@ void GameLogicInterface::cleanup() {
 		delete entity;
 		entity = nullptr;
 	}
-	
+
 	for (Prop* p : props) {
 		delete p;
 		p = nullptr;
