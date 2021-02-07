@@ -201,9 +201,9 @@ void Camera::renderRayStrip(impl::RayIntersectInfo intersectionInfo, float rayDi
 	}
 	else {
 		// the wall does not have a texture
-		float r = intersectionInfo.entity->getR();
-		float g = intersectionInfo.entity->getG();
-		float b = intersectionInfo.entity->getB();
+		float r = intersectionInfo.entity->getR() * (1.0f / (intersectionInfo.intersectDistance + 0.01f));
+		float g = intersectionInfo.entity->getG() * (1.0f / (intersectionInfo.intersectDistance + 0.01f));
+		float b = intersectionInfo.entity->getB() * (1.0f / (intersectionInfo.intersectDistance + 0.01f));
 		Geo::Rectangle::fillRect(renderArea.getX(), renderArea.getY(), renderArea.getWidth(), renderArea.getHeight(), r, g, b);
 	}
 
@@ -255,14 +255,8 @@ void Camera::renderProps(std::vector<impl::RayIntersectInfo>& sortedPropIntersec
 
 			if (propIntersection.prop->getTexture()) {
 
-				float texAspectRatio = (float)propIntersection.prop->getTexture()->getWidth() / propIntersection.prop->getTexture()->getHeight();
-				float stripW = renderArea.getWidth();
-				float rW = propIntersection.prop->getWidth();
-				float pH = percievedHeight;
-				float rH = propIntersection.prop->getHeight();
-				float pW = (rW * pH) / rH;
-
-				float texW = 1.0f / (pW / stripW);
+				float deltaA = fov / rayCount;
+				float texW = tan(deltaA) * propIntersection.intersectDistance;
 
 				renderArea.setTexture(*propIntersection.prop->getTexture());
 				renderArea.setTextureSampleArea(propIntersection.intersectedAt, -1.0f, texW, 1.0f);
@@ -270,14 +264,8 @@ void Camera::renderProps(std::vector<impl::RayIntersectInfo>& sortedPropIntersec
 			}
 			else if (propIntersection.prop->getAnimatedSprite()) {
 
-				float texAspectRatio = (float)propIntersection.prop->getAnimatedSprite()->getTexture()->getWidth() / propIntersection.prop->getAnimatedSprite()->getTexture()->getHeight();
-				float stripW = renderArea.getWidth();
-				float rW = propIntersection.prop->getWidth();
-				float pH = percievedHeight;
-				float rH = propIntersection.prop->getHeight();
-				float pW = (rW * pH) / rH;
-
-				float texW = 1.0f / (pW / stripW);
+				float deltaA = fov / rayCount;
+				float texW = tan(deltaA) * propIntersection.intersectDistance;
 
 				renderArea.setTexture(*(propIntersection.prop->getAnimatedSprite()->getTexture()));
 				std::array<float, 4> sampleArea = propIntersection.prop->getAnimatedSprite()->getSampleBoundsAtTime(((float)clock() / CLOCKS_PER_SEC) * 1000.0f);

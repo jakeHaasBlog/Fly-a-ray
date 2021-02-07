@@ -67,6 +67,9 @@ public:
 	// mipmap level will return the pixels of that level of the mipmap, level 0 is the original size, each level of mipmap is half the size of previous one
 	std::vector<std::array<float, 4>> getPixels(int mipmapLevel = 0);
 
+	// saves this texture to the given location as a png file in 8-bit RGBA format
+	void saveToFile(const std::string& filepath);
+
 	GLuint getID();
 
 	int getWidth();

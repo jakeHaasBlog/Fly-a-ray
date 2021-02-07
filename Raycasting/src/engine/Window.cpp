@@ -7,6 +7,12 @@
 #include "engine/ViewportManager.h"
 #include "engine/SoundBite.h"
 
+bool Window::framebufferResizeFlag = false;
+int Window::newFramebufferWidth;
+int Window::newFramebufferHeight;
+
+int Window::preferedFramebufferWidth = 1920;
+
 Window & Window::getWindowInstance() {
 	static Window w;
 	return w;
@@ -17,7 +23,8 @@ Window::Window() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	//glfwWindowHint(GLFW_MAXIMIZED, true);
-	windowHandle = glfwCreateWindow(1920, 1080, "Ray Casting Project", NULL, NULL);
+	title = "Ray Casting Project";
+	windowHandle = glfwCreateWindow(1920, 1080, title.c_str(), NULL, NULL);
 	glfwMakeContextCurrent(windowHandle);
 	glfwSwapInterval(1);
 
@@ -25,6 +32,7 @@ Window::Window() {
 	glfwSetCharCallback(windowHandle, charCallback);
 	glfwSetMouseButtonCallback(windowHandle, mouseButtonCallback);
 	glfwSetCursorPosCallback(windowHandle, mouseMoveCallback);
+	glfwSetFramebufferSizeCallback(windowHandle, windowResizeCallback);
 }
 
 void Window::mainUpdateLoop() {
@@ -36,6 +44,7 @@ void Window::mainUpdateLoop() {
 	std::chrono::time_point<std::chrono::steady_clock> startUpdateTIme = clock.now();
 	float updateTime = 0.0f;
 	float deltaTime = 0.0f;
+	framebuffer.generateDefaultTexture(1920, 1080);
 	while (!glfwWindowShouldClose(windowHandle)) {
 		glfwSwapInterval(1);
 		glfwSwapBuffers(windowHandle);
@@ -48,63 +57,56 @@ void Window::mainUpdateLoop() {
 		deltaTime = (float)((float)(end - start).count() / 1000000.0f);
 		start = clock.now();
 
-		//framebuffer.bindAsRenderTarget();
-		GameLogicInterface::update(deltaTime);
-		//framebuffer.unbindAsRenderTarget();
+		if (framebufferResizeFlag) {
+			framebuffer.generateDefaultTexture(newFramebufferWidth, newFramebufferHeight);
+			framebufferResizeFlag = false;
+		}
+
+		framebuffer.bindAsRenderTarget();
+		GameLogicInterface::update(deltaTime); // renders the whole game onto the framebuffer
+		framebuffer.unbindAsRenderTarget();
 
 
-		//static float vertices[] = {
-		//	-1.0f, -1.0f, 0.0f, 0.0f,
-		//	-1.0f, 1.0f, 0.0f, 1.0f,
-		//	1.0f, 1.0f, 1.0f, 1.0f,
-		//	1.0f, -1.0f, 1.0f, 0.0f
-		//};
-		//static VertexBuffer vb = VertexBuffer(vertices, 4 * 4 * sizeof(float));
-		//
-		//static unsigned int indices[] = {
-		//	0, 1, 2,
-		//	0, 2, 3
-		//};
-		//static IndexBuffer ib = IndexBuffer(indices, 6 * sizeof(unsigned int));
-		//
-		//static VertexArray va = VertexArray("ff ff", vb, ib);
-		//
-		//static std::string vertexShaderString =
-		//	"#version 330 core\n"
-		//	"\n"
-		//	"layout(location = 0) in vec2 position;\n"
-		//	"layout(location = 1) in vec2 uvCoord;\n"
-		//	"\n"
-		//	"out vec2 v_uvCoord;"
-		//	"\n"
-		//	"void main()\n"
-		//	"{\n"
-		//	"	gl_Position = vec4(position, 0, 1);\n"
-		//	"	v_uvCoord = uvCoord;\n"
-		//	"};\n";
-		//static std::string fragmentShaderString =
-		//	"#version 330 core\n"
-		//	"\n"
-		//	"layout(location = 0) out vec4 color;\n"
-		//	"\n"
-		//	"in vec2 v_uvCoord;"
-		//	"uniform sampler2D u_texture;"
-		//	"\n"
-		//	"void main()\n"
-		//	"{\n"
-		//	"	color = texture(u_texture, v_uvCoord);"
-		//	"};\n";
-		//static Shader sh = Shader(vertexShaderString, fragmentShaderString);
-		//framebuffer.bind(1);
-		//sh.setUniform1i("u_texture", 1);
+		static float vertices[] = {
+			-1.0f, -1.0f, 0.0f, 0.0f,
+			-1.0f, 1.0f, 0.0f, 1.0f,
+			1.0f, 1.0f, 1.0f, 1.0f,
+			1.0f, -1.0f, 1.0f, 0.0f
+		};
+		static VertexBuffer vb = VertexBuffer(vertices, 4 * 4 * sizeof(float));
 		
-		//ViewportManager::bindViewportPixels(0, 0, getWidth(), getHeight());
-		//sh.bind();
-		//va.bind();
-		//glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr); // draws the framebuffer stretched over the whole screen
-		//va.unbind();
-		//sh.unbind();
-		//ViewportManager::unbindViewport();
+		static unsigned int indices[] = {
+			0, 1, 2,
+			0, 2, 3
+		};
+		static IndexBuffer ib = IndexBuffer(indices, 6 * sizeof(unsigned int));
+		
+		static VertexArray va = VertexArray("ff ff", vb, ib);
+		
+		if (!postProcessingShader) {
+			framebuffer.bind(1);
+			defaultPostProcessingShader.setUniform1i("u_texture", 1);
+
+			ViewportManager::bindViewportPixels(0, 0, getWidth(), getHeight());
+			defaultPostProcessingShader.bind();
+			va.bind();
+			glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr); // draws the framebuffer stretched over the whole screen
+			va.unbind();
+			defaultPostProcessingShader.unbind();
+			ViewportManager::unbindViewport();
+		}
+		else {
+			framebuffer.bind(1);
+			postProcessingShader->setUniform1i("u_texture", 1);
+
+			ViewportManager::bindViewportPixels(0, 0, getWidth(), getHeight());
+			postProcessingShader->bind();
+			va.bind();
+			glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr); // draws the framebuffer stretched over the whole screen
+			va.unbind();
+			postProcessingShader->unbind();
+			ViewportManager::unbindViewport();
+		}
 
 		updateTime = (float)(((double)(clock.now() - startUpdateTIme).count()) / 1000000.0f);
 
@@ -119,8 +121,8 @@ void Window::mainUpdateLoop() {
 			calculateFPS();
 
 			char t[256];
-			sprintf_s(t, "FPS: %.1f - delta time(%.2fms) - update time(%fms)", (float)getFrameRate(), deltaTime, updateTime);
-			setTitle(t);
+			sprintf_s(t, "%s - FPS: %.1f - delta time(%.2fms) - update time(%fms)", title.c_str(), (float)getFrameRate(), deltaTime, updateTime);
+			glfwSetWindowTitle(windowHandle, t);
 		}
 	}
 
@@ -132,7 +134,6 @@ void Window::setSize(int width, int height) {
 
 void Window::setTitle(const std::string & title) {
 	this->title = title;
-	glfwSetWindowTitle(windowHandle, this->title.c_str());
 }
 
 int Window::getWidth() {
@@ -192,6 +193,21 @@ GLFWwindow * Window::getHandle() {
 	return windowHandle;
 }
 
+Texture& Window::getFramebufferTexture()
+{
+	return framebuffer;
+}
+
+void Window::setPostProcessingShaderDefault()
+{
+	postProcessingShader = &defaultPostProcessingShader;
+}
+
+void Window::setPostProcessingShader(Shader& shader)
+{
+	postProcessingShader = &shader;
+}
+
 void Window::calculateFPS() {
 	static std::chrono::high_resolution_clock clock;
 	static long long timeA;
@@ -205,11 +221,13 @@ void Window::calculateFPS() {
 	fps =  1.0f / ((double)(deltaTime / 10) / 1000000000);
 }
 
-void Window::setResolution(int width, int height)
+void Window::setResolution(int width, int height) 
 {
-	float* data = new float[width * height * 4];
-	framebuffer.generateFromData(width, height, data, width * height);
-	delete[] data;
+	preferedFramebufferWidth = width;
+
+	framebufferResizeFlag = true;
+	newFramebufferWidth = preferedFramebufferWidth;
+	newFramebufferHeight = (preferedFramebufferWidth * getHeight()) / getWidth();
 }
 
 void Window::keyCallback(GLFWwindow * wind, int key, int scancode, int action, int mods) {
@@ -230,4 +248,14 @@ void Window::mouseMoveCallback(GLFWwindow * wind, double xPos, double yPos) {
 	window.mouseX = ((float)(xPos - width / 2) / (width / 2)) * window.getAspectRatio();
 	window.mouseY = (float)(-yPos + height / 2) / (height / 2);
 	GameLogicInterface::mouseMoveCallback(xPos, yPos);
+}
+
+void Window::windowResizeCallback(GLFWwindow* wind, int width, int height)
+{
+	framebufferResizeFlag = true;
+	//newFramebufferWidth = preferedFramebufferWidth;
+	//newFramebufferHeight = (preferedFramebufferWidth * height) / width;
+
+	newFramebufferWidth = width;
+	newFramebufferHeight = height;
 }
