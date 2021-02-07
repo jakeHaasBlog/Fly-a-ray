@@ -53,6 +53,23 @@ void GameLogicInterface::init() {
 	}
 
 
+	Prop* luis = new Prop(-0.3f, 1.0f, 0.3f, 0.9f, *TextureManager::getTexture("assets/testSprite.png"));
+	luis->setZ(-0.6f);
+	props.push_back(luis);
+
+
+	static AnimatedSprite runner("assets/spritestrip.png");
+	runner.addFrame(80, 0, 0, 255, 255);
+	runner.addFrame(80, 255, 0, 255, 255);
+	runner.addFrame(80, 255 * 2, 0, 255, 255);
+	runner.addFrame(80, 255 * 3, 0, 255, 255);
+	runner.addFrame(80, 255 * 4, 0, 255, 255);
+	runner.addFrame(80, 255 * 5, 0, 255, 255);
+
+	Prop* maProp = new Prop(-1.4f, 0.0f, 0.3f, 0.6f, runner);
+
+	props.push_back(maProp);
+
 }
 
 // deltaTime is the milliseconds between frames. Use this for calculating movement to avoid slowing down if there is lag 
@@ -177,10 +194,12 @@ void GameLogicInterface::update(float deltaTime) {
 void GameLogicInterface::cleanup() {
 	for (SeeableEntity* entity : walls) {
 		delete entity;
+		entity = nullptr;
 	}
 	
 	for (Prop* p : props) {
 		delete p;
+		p = nullptr;
 	}
 }
 
@@ -238,6 +257,110 @@ void GameLogicInterface::keyCallback(int key, int scancode, int action, int mods
 		//loopingMusic.setVolume(loopingMusic.getVolume() - 0.05f);
 	}
 
+
+	static Shader shader1 = Shader(
+		"#version 330 core\n"
+		"\n"
+		"layout(location = 0) in vec2 position;\n"
+		"layout(location = 1) in vec2 uvCoord;\n"
+		"\n"
+		"out vec2 v_uvCoord;"
+		"\n"
+		"void main()\n"
+		"{\n"
+		"	gl_Position = vec4(position, 0, 1);\n"
+		"	v_uvCoord = uvCoord;\n"
+		"};\n"
+		,
+		"#version 330 core\n"
+		"\n"
+		"layout(location = 0) out vec4 color;\n"
+		"\n"
+		"in vec2 v_uvCoord;"
+		"uniform sampler2D u_texture;"
+		"\n"
+		"void main()\n"
+		"{\n"
+		"	vec4 c = texture(u_texture, v_uvCoord);\n"
+		"   color = vec4(c[2], c[1], c[0], c[3]);\n"
+		"};\n"
+	);
+
+	static Shader shader2 = Shader(
+		"#version 330 core\n"
+		"\n"
+		"layout(location = 0) in vec2 position;\n"
+		"layout(location = 1) in vec2 uvCoord;\n"
+		"\n"
+		"out vec2 v_uvCoord;"
+		"\n"
+		"void main()\n"
+		"{\n"
+		"	gl_Position = vec4(position, 0, 1);\n"
+		"	v_uvCoord = uvCoord;\n"
+		"};\n"
+		,
+		"#version 330 core\n"
+		"\n"
+		"layout(location = 0) out vec4 color;\n"
+		"\n"
+		"in vec2 v_uvCoord;"
+		"uniform sampler2D u_texture;"
+		"\n"
+		"void main()\n"
+		"{\n"
+		"	color = texture(u_texture, v_uvCoord);\n"
+		"   color[0] = 1.0f - color[0];\n"
+		"   color[1] = 1.0f - color[1];\n"
+		"   color[2] = 1.0f - color[2];\n"
+		"};\n"
+	);
+
+	static Shader shader3 = Shader(
+		"#version 330 core\n"
+		"\n"
+		"layout(location = 0) in vec2 position;\n"
+		"layout(location = 1) in vec2 uvCoord;\n"
+		"\n"
+		"out vec2 v_uvCoord;"
+		"\n"
+		"void main()\n"
+		"{\n"
+		"	gl_Position = vec4(position, 0, 1);\n"
+		"	v_uvCoord = uvCoord;\n"
+		"};\n"
+		,
+		"#version 330 core\n"
+		"\n"
+		"layout(location = 0) out vec4 color;\n"
+		"\n"
+		"in vec2 v_uvCoord;"
+		"uniform sampler2D u_texture;"
+		"\n"
+		"void main()\n"
+		"{\n"
+		"	color = texture(u_texture, v_uvCoord);\n"
+		"   float intensity = (color[0] + color[1] + color[2]) / 3;\n"
+		"   color = vec4(0.0f, intensity * 1 + 0.2, 0.0f, color[3]);\n"
+		"};\n"
+	);
+
+	if (action == GLFW_PRESS) {
+		switch (key) {
+		case GLFW_KEY_0:
+			window.setPostProcessingShaderDefault();
+			break;
+		case GLFW_KEY_1:
+			window.setPostProcessingShader(shader1);
+			break;
+		case GLFW_KEY_2:
+			window.setPostProcessingShader(shader2);
+			break;
+		case GLFW_KEY_3:
+			window.setPostProcessingShader(shader3);
+			break;
+		}
+	}
 }
 
 void GameLogicInterface::characterCallback(unsigned int codepoint)

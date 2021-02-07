@@ -83,42 +83,30 @@ void Window::mainUpdateLoop() {
 		
 		static VertexArray va = VertexArray("ff ff", vb, ib);
 		
-		static std::string vertexShaderString =
-			"#version 330 core\n"
-			"\n"
-			"layout(location = 0) in vec2 position;\n"
-			"layout(location = 1) in vec2 uvCoord;\n"
-			"\n"
-			"out vec2 v_uvCoord;"
-			"\n"
-			"void main()\n"
-			"{\n"
-			"	gl_Position = vec4(position, 0, 1);\n"
-			"	v_uvCoord = uvCoord;\n"
-			"};\n";
-		static std::string fragmentShaderString =
-			"#version 330 core\n"
-			"\n"
-			"layout(location = 0) out vec4 color;\n"
-			"\n"
-			"in vec2 v_uvCoord;"
-			"uniform sampler2D u_texture;"
-			"\n"
-			"void main()\n"
-			"{\n"
-			"	color = texture(u_texture, v_uvCoord);"
-			"};\n";
-		static Shader sh = Shader(vertexShaderString, fragmentShaderString);
-		framebuffer.bind(1);
-		sh.setUniform1i("u_texture", 1);
-		
-		ViewportManager::bindViewportPixels(0, 0, getWidth(), getHeight());
-		sh.bind();
-		va.bind();
-		glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr); // draws the framebuffer stretched over the whole screen
-		va.unbind();
-		sh.unbind();
-		ViewportManager::unbindViewport();
+		if (!postProcessingShader) {
+			framebuffer.bind(1);
+			defaultPostProcessingShader.setUniform1i("u_texture", 1);
+
+			ViewportManager::bindViewportPixels(0, 0, getWidth(), getHeight());
+			defaultPostProcessingShader.bind();
+			va.bind();
+			glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr); // draws the framebuffer stretched over the whole screen
+			va.unbind();
+			defaultPostProcessingShader.unbind();
+			ViewportManager::unbindViewport();
+		}
+		else {
+			framebuffer.bind(1);
+			postProcessingShader->setUniform1i("u_texture", 1);
+
+			ViewportManager::bindViewportPixels(0, 0, getWidth(), getHeight());
+			postProcessingShader->bind();
+			va.bind();
+			glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr); // draws the framebuffer stretched over the whole screen
+			va.unbind();
+			postProcessingShader->unbind();
+			ViewportManager::unbindViewport();
+		}
 
 		updateTime = (float)(((double)(clock.now() - startUpdateTIme).count()) / 1000000.0f);
 
@@ -208,6 +196,16 @@ GLFWwindow * Window::getHandle() {
 Texture& Window::getFramebufferTexture()
 {
 	return framebuffer;
+}
+
+void Window::setPostProcessingShaderDefault()
+{
+	postProcessingShader = &defaultPostProcessingShader;
+}
+
+void Window::setPostProcessingShader(Shader& shader)
+{
+	postProcessingShader = &shader;
 }
 
 void Window::calculateFPS() {
