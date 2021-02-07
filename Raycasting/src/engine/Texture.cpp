@@ -325,7 +325,6 @@ void Texture::freeMemory() {
 
 void Texture::generateFrameBuffer()
 {
-
 	glGenFramebuffers(1, &frameBufferID);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
 

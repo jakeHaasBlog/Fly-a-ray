@@ -345,6 +345,36 @@ void GameLogicInterface::keyCallback(int key, int scancode, int action, int mods
 		"};\n"
 	);
 
+	static Shader shader4 = Shader(
+		"#version 330 core\n"
+		"\n"
+		"layout(location = 0) in vec2 position;\n"
+		"layout(location = 1) in vec2 uvCoord;\n"
+		"\n"
+		"out vec2 v_uvCoord;"
+		"\n"
+		"void main()\n"
+		"{\n"
+		"	gl_Position = vec4(position, 0, 1);\n"
+		"	v_uvCoord = uvCoord;\n"
+		"};\n"
+		,
+		"#version 330 core\n"
+		"\n"
+		"layout(location = 0) out vec4 color;\n"
+		"\n"
+		"in vec2 v_uvCoord;"
+		"uniform sampler2D u_texture;"
+		"\n"
+		"void main()\n"
+		"{\n"
+		"	color = texture(u_texture, v_uvCoord);\n"
+		"	color[0] = float(int(color[0] * 8)) / 8;\n"
+		"	color[1] = float(int(color[1] * 8)) / 8;\n"
+		"	color[2] = float(int(color[2] * 8)) / 8;\n"
+		"};\n"
+	);
+
 	if (action == GLFW_PRESS) {
 		switch (key) {
 		case GLFW_KEY_0:
@@ -358,6 +388,9 @@ void GameLogicInterface::keyCallback(int key, int scancode, int action, int mods
 			break;
 		case GLFW_KEY_3:
 			window.setPostProcessingShader(shader3);
+			break;
+		case GLFW_KEY_4:
+			window.setPostProcessingShader(shader4);
 			break;
 		}
 	}
