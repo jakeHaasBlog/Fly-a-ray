@@ -1,5 +1,7 @@
 #include "engine/SeeableRectangle.h"
 
+#include "engine/SeeableLine.h"
+
 SeeableRectangle::SeeableRectangle(float x, float y, float width, float height, Texture * tex)
 {
 	this->tex = tex;
@@ -32,6 +34,7 @@ bool SeeableRectangle::seenBy(Geo::LineSeg & ray, float & dist, float & intersec
 	std::array<float, 2> closestPOI;
 	float closestDistSQ = 0.0f;
 	bool isIntersecting = false;
+
 	if (l1.getIntersection(ray, &poi)) {
 		float distSQ = pow(ray.x1 - poi[poi.size() - 1][0], 2) + pow(ray.y1 - poi[poi.size() - 1][1], 2);
 		if (distSQ < closestDistSQ || !isIntersecting) {
@@ -71,18 +74,21 @@ bool SeeableRectangle::seenBy(Geo::LineSeg & ray, float & dist, float & intersec
 
 	if (isIntersecting) {
 
-		if (pointOfIntersection)
-			*pointOfIntersection = closestPOI;
+		//if (pointOfIntersection)
+		//	*pointOfIntersection = closestPOI;
+		//
+		//dist = sqrt(closestDistSQ);
+		//
+		//float dx = closestLine->x2 - closestLine->x1;
+		//float dy = closestLine->y2 - closestLine->y1;
+		//
+		//if (abs(dx) > 0.0f) intersectedAt = (closestPOI[0] - closestLine->x1) / dx;
+		//else intersectedAt = (closestPOI[1] - closestLine->y1) / dy;
+		//
+		//intersectedAtReal = intersectedAt * sqrt(pow(dx, 2) + pow(dy, 2));
 
-		dist = sqrt(closestDistSQ);
-
-		float dx = closestLine->x2 - closestLine->x1;
-		float dy = closestLine->y2 - closestLine->y1;
-
-		if (abs(dx) > 0.0f) intersectedAt = (closestPOI[0] - closestLine->x1) / dx;
-		else intersectedAt = (closestPOI[1] - closestLine->y1) / dy;
-
-		intersectedAtReal = intersectedAt * sqrt(pow(dx, 2) + pow(dy, 2));
+		SeeableLine line = SeeableLine(closestLine->x1, closestLine->y1, closestLine->x2, closestLine->y2, tex);
+		line.seenBy(ray, dist, intersectedAt, intersectedAtReal, pointOfIntersection);
 
 		return true;
 	}
