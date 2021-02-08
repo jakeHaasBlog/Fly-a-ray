@@ -17,7 +17,7 @@ namespace {
 	std::string myText = "This is some sample text...";
 
 	Texture brickTexture("assets/bricks.jfif");
-	Texture cat("assets/02 cat.png");
+	Texture grimeTexture("assets/Grime.png");
 
 	static std::array<float, 4> green = { 0.3f, 1.0f, 0.3f, 0.7f };
 
@@ -34,13 +34,13 @@ void GameLogicInterface::init() {
 
 	//outer walls
 
-	walls.push_back(new SeeableLine(1.5f, 1.5f, -1.5f, 1.5f, 0, 0, 1));
-	walls.push_back(new SeeableLine(-1.5f, 1.5f, -1.5f, -1.5f, 0, 0, 1));
-	walls.push_back(new SeeableLine(-1.5f, -1.5f, 1.5f, -1.5f, 0, 0, 1));
-	walls.push_back(new SeeableLine(1.5f, -1.5f, 1.5f, 1.5f, 0, 0, 1));
+	walls.push_back(new SeeableLine(1.5f, 1.5f, -1.5f, 1.5f, &grimeTexture));
+	walls.push_back(new SeeableLine(-1.5f, 1.5f, -1.5f, -1.5f, &grimeTexture));
+	walls.push_back(new SeeableLine(-1.5f, -1.5f, 1.5f, -1.5f, &grimeTexture));
+	walls.push_back(new SeeableLine(1.5f, -1.5f, 1.5f, 1.5f, &grimeTexture));
 
-
-	props.push_back(new Prop(1.f, 0.f, .25, .5, cat, "cat", .1));
+	walls.push_back(new SeeableRectangle(-.5f,-.5f,1,1,&grimeTexture));
+	
 
 
 
@@ -52,22 +52,17 @@ void GameLogicInterface::init() {
 
 
 
-	Prop* luis = new Prop(-0.3f, 1.0f, 0.3f, 0.9f, *TextureManager::getTexture("assets/testSprite.png"));
-	luis->setZ(-0.6f);
-	props.push_back(luis);
+	//static AnimatedSprite runner("assets/spritestrip.png");
+	//runner.addFrame(80, 0, 0, 255, 255);
+	//runner.addFrame(80, 255, 0, 255, 255);
+	//runner.addFrame(80, 255 * 2, 0, 255, 255);
+	//runner.addFrame(80, 255 * 3, 0, 255, 255);
+	//runner.addFrame(80, 255 * 4, 0, 255, 255);
+	//runner.addFrame(80, 255 * 5, 0, 255, 255);
 
+	//Prop* maProp = new Prop(-1.4f, 0.0f, 0.3f, 0.6f, runner);
 
-	static AnimatedSprite runner("assets/spritestrip.png");
-	runner.addFrame(80, 0, 0, 255, 255);
-	runner.addFrame(80, 255, 0, 255, 255);
-	runner.addFrame(80, 255 * 2, 0, 255, 255);
-	runner.addFrame(80, 255 * 3, 0, 255, 255);
-	runner.addFrame(80, 255 * 4, 0, 255, 255);
-	runner.addFrame(80, 255 * 5, 0, 255, 255);
-
-	Prop* maProp = new Prop(-1.4f, 0.0f, 0.3f, 0.6f, runner);
-
-	props.push_back(maProp);
+	//props.push_back(maProp);
 
 
 }
