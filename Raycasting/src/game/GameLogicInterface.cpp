@@ -18,6 +18,7 @@ namespace {
 
 	Texture brickTexture("assets/bricks.jfif");
 	Texture grimeTexture("assets/Grime.png");
+	Texture Badie("assets/Skull.png");
 
 	static std::array<float, 4> green = { 0.3f, 1.0f, 0.3f, 0.7f };
 
@@ -51,18 +52,20 @@ void GameLogicInterface::init() {
 	}
 
 
+	Prop* BadGuy = new Prop(.75, .75, .25f, .75f, Badie);
+	props.push_back(BadGuy);
 
-	//static AnimatedSprite runner("assets/spritestrip.png");
-	//runner.addFrame(80, 0, 0, 255, 255);
-	//runner.addFrame(80, 255, 0, 255, 255);
-	//runner.addFrame(80, 255 * 2, 0, 255, 255);
-	//runner.addFrame(80, 255 * 3, 0, 255, 255);
-	//runner.addFrame(80, 255 * 4, 0, 255, 255);
-	//runner.addFrame(80, 255 * 5, 0, 255, 255);
-
-	//Prop* maProp = new Prop(-1.4f, 0.0f, 0.3f, 0.6f, runner);
-
-	//props.push_back(maProp);
+	int width = 320;
+	static AnimatedSprite Brazier("assets/Brazier.png");
+	Brazier.addFrame(80, 0 * width, 0 * width, width, width);
+	Brazier.addFrame(80, 1 * width, 0 * width, width, width);
+	Brazier.addFrame(80, 2 * width, 0 * width, width, width);
+	Brazier.addFrame(80, 3 * width, 0 * width, width, width);
+	Brazier.addFrame(80, 4 * width, 0 * width, width, width);
+	Brazier.addFrame(80, 5 * width, 0 * width, width, width);
+	Brazier.addFrame(80, 6 * width, 0 * width, width, width);
+	Prop* BrazierProp = new Prop(-.75, 0, .25, .75, Brazier);
+	props.push_back(BrazierProp);
 
 
 }
@@ -77,29 +80,29 @@ void GameLogicInterface::update(float deltaTime) {
 	// controlls
 	if (!glfwJoystickPresent(GLFW_JOYSTICK_1) || !glfwJoystickIsGamepad(GLFW_JOYSTICK_1)) {
 		if (window.keyIsDown(GLFW_KEY_W)) {
-			float deltaX = cos(cam.getDirection()) * 0.0003f * deltaTime;
-			float deltaY = sin(cam.getDirection()) * 0.0003f * deltaTime;
+			float deltaX = cos(cam.getDirection()) * 0.0006f * deltaTime;
+			float deltaY = sin(cam.getDirection()) * 0.0006f * deltaTime;
 			cam.setX(cam.getX() + deltaX);
 			cam.setY(cam.getY() + deltaY);
 		}
 
 		if (window.keyIsDown(GLFW_KEY_A)) {
-			float deltaX = cos(cam.getDirection() + 3.14159f / 2.0f) * 0.0002f * deltaTime;
-			float deltaY = sin(cam.getDirection() + 3.14159f / 2.0f) * 0.0002f * deltaTime;
+			float deltaX = cos(cam.getDirection() + 3.14159f / 2.0f) * 0.0004f * deltaTime;
+			float deltaY = sin(cam.getDirection() + 3.14159f / 2.0f) * 0.0004f * deltaTime;
 			cam.setX(cam.getX() + deltaX);
 			cam.setY(cam.getY() + deltaY);
 		}
 
 		if (window.keyIsDown(GLFW_KEY_D)) {
-			float deltaX = cos(cam.getDirection() - 3.14159f / 2.0f) * 0.0002f * deltaTime;
-			float deltaY = sin(cam.getDirection() - 3.14159f / 2.0f) * 0.0002f * deltaTime;
+			float deltaX = cos(cam.getDirection() - 3.14159f / 2.0f) * 0.0004f * deltaTime;
+			float deltaY = sin(cam.getDirection() - 3.14159f / 2.0f) * 0.0004f * deltaTime;
 			cam.setX(cam.getX() + deltaX);
 			cam.setY(cam.getY() + deltaY);
 		}
 
 		if (window.keyIsDown(GLFW_KEY_S)) {
-			float deltaX = cos(cam.getDirection()) * 0.0002f * deltaTime;
-			float deltaY = sin(cam.getDirection()) * 0.0002f * deltaTime;
+			float deltaX = cos(cam.getDirection()) * 0.0004f * deltaTime;
+			float deltaY = sin(cam.getDirection()) * 0.0004f * deltaTime;
 			cam.setX(cam.getX() - deltaX);
 			cam.setY(cam.getY() - deltaY);
 		}
