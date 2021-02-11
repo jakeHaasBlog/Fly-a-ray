@@ -1,6 +1,5 @@
-
-
 #include "game/GameLogicInterface.h"
+
 
 // this stops the variables declared here from becoming globaly accessable
 namespace {
@@ -40,7 +39,7 @@ void GameLogicInterface::init() {
 	walls.push_back(new SeeableLine(-1.5f, -1.5f, 1.5f, -1.5f, &grimeTexture));
 	walls.push_back(new SeeableLine(1.5f, -1.5f, 1.5f, 1.5f, &grimeTexture));
 
-	walls.push_back(new SeeableRectangle(-.5f,-.5f,1,1,&grimeTexture));
+	//walls.push_back(new SeeableRectangle(-.5f,-.5f,1,1,&grimeTexture));
 	
 
 

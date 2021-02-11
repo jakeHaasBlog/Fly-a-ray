@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="src\engine\AnimatedSprite.cpp" />
     <ClCompile Include="src\engine\BatchLines.cpp" />
     <ClCompile Include="src\engine\BatchQuads.cpp" />
@@ -45,6 +46,7 @@
     <ClCompile Include="src\game\GameLogicInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="src\engine\AnimatedSprite.h" />
     <ClInclude Include="src\engine\BatchLines.h" />
     <ClInclude Include="src\engine\BatchQuads.h" />
