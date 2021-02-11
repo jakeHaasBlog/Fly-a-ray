@@ -1,5 +1,5 @@
 #include "game/GameLogicInterface.h"
-
+#include "game/Enemy.h";
 
 // this stops the variables declared here from becoming globaly accessable
 namespace {
@@ -13,7 +13,6 @@ namespace {
 
 	BitmapText text;
 	BitmapText lotsOfText;
-	std::string myText = "This is some sample text...";
 
 	Texture brickTexture("assets/bricks.jfif");
 	Texture grimeTexture("assets/Grime.png");
@@ -51,7 +50,7 @@ void GameLogicInterface::init() {
 	}
 
 
-	Prop* BadGuy = new Prop(.75, .75, .25f, .75f, Badie);
+	Enemy* BadGuy = new Enemy(.75f, .75f, .25f, .75f, Badie);
 	props.push_back(BadGuy);
 
 	int width = 320;

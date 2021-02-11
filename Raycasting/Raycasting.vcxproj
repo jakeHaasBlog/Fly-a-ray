@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="src\engine\AnimatedSprite.cpp" />
     <ClCompile Include="src\engine\BatchLines.cpp" />
     <ClCompile Include="src\engine\BatchQuads.cpp" />
@@ -43,10 +42,10 @@
     <ClCompile Include="src\engine\TextureManager.cpp" />
     <ClCompile Include="src\engine\ViewportManager.cpp" />
     <ClCompile Include="src\engine\Window.cpp" />
+    <ClCompile Include="src\game\Enemy.cpp" />
     <ClCompile Include="src\game\GameLogicInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Enemy.h" />
     <ClInclude Include="src\engine\AnimatedSprite.h" />
     <ClInclude Include="src\engine\BatchLines.h" />
     <ClInclude Include="src\engine\BatchQuads.h" />
@@ -69,6 +68,7 @@
     <ClInclude Include="src\engine\TextureManager.h" />
     <ClInclude Include="src\engine\ViewportManager.h" />
     <ClInclude Include="src\engine\Window.h" />
+    <ClInclude Include="src\game\Enemy.h" />
     <ClInclude Include="src\game\GameLogicInterface.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

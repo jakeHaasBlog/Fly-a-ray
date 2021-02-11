@@ -100,7 +100,7 @@
     <ClCompile Include="src\engine\Prop.cpp">
       <Filter>Source Files\engine\raycasting utils</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
+    <ClCompile Include="src\game\Enemy.cpp">
       <Filter>Source Files\game</Filter>
     </ClCompile>
   </ItemGroup>
@@ -174,7 +174,7 @@
     <ClInclude Include="src\engine\Prop.h">
       <Filter>Source Files\engine\raycasting utils</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
+    <ClInclude Include="src\game\Enemy.h">
       <Filter>Source Files\game</Filter>
     </ClInclude>
   </ItemGroup>
