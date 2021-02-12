@@ -103,6 +103,9 @@
     <ClCompile Include="src\game\Enemy.cpp">
       <Filter>Source Files\game</Filter>
     </ClCompile>
+    <ClCompile Include="src\game\Brazier.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\game\GameLogicInterface.h">
@@ -175,6 +178,9 @@
       <Filter>Source Files\engine\raycasting utils</Filter>
     </ClInclude>
     <ClInclude Include="src\game\Enemy.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\Brazier.h">
       <Filter>Source Files\game</Filter>
     </ClInclude>
   </ItemGroup>

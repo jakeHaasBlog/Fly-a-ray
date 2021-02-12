@@ -42,6 +42,7 @@
     <ClCompile Include="src\engine\TextureManager.cpp" />
     <ClCompile Include="src\engine\ViewportManager.cpp" />
     <ClCompile Include="src\engine\Window.cpp" />
+    <ClCompile Include="src\game\Brazier.cpp" />
     <ClCompile Include="src\game\Enemy.cpp" />
     <ClCompile Include="src\game\GameLogicInterface.cpp" />
   </ItemGroup>
@@ -68,6 +69,7 @@
     <ClInclude Include="src\engine\TextureManager.h" />
     <ClInclude Include="src\engine\ViewportManager.h" />
     <ClInclude Include="src\engine\Window.h" />
+    <ClInclude Include="src\game\Brazier.h" />
     <ClInclude Include="src\game\Enemy.h" />
     <ClInclude Include="src\game\GameLogicInterface.h" />
   </ItemGroup>

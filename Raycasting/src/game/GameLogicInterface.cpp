@@ -1,24 +1,20 @@
 #include "game/GameLogicInterface.h"
 #include "game/Enemy.h";
+#include "game/Brazier.h"
 
 // this stops the variables declared here from becoming globaly accessable
 namespace {
-	Camera cam = Camera(0, 0, 0, 1.2, 300);
+	Camera cam = Camera(0, -1, 0, 1.2, 300);
 	std::vector<SeeableEntity*> walls = {};
 	BatchLines primativeFOV;
-	Texture bqTex;
-	Texture bqTex2;
-	Texture bqTex3;
 	bool mouseEnabled = false;
-
-	BitmapText text;
-	BitmapText lotsOfText;
 
 	Texture brickTexture("assets/bricks.jfif");
 	Texture grimeTexture("assets/Grime.png");
 	Texture Badie("assets/Skull.png");
 
-	static std::array<float, 4> green = { 0.3f, 1.0f, 0.3f, 0.7f };
+
+	Enemy BadGuy(.75f, .75f, .25f, .75f, Badie);
 
 	static std::vector<Prop*> props = {};
 
@@ -33,12 +29,7 @@ void GameLogicInterface::init() {
 
 	//outer walls
 
-	walls.push_back(new SeeableLine(1.5f, 1.5f, -1.5f, 1.5f, &grimeTexture));
-	walls.push_back(new SeeableLine(-1.5f, 1.5f, -1.5f, -1.5f, &grimeTexture));
-	walls.push_back(new SeeableLine(-1.5f, -1.5f, 1.5f, -1.5f, &grimeTexture));
-	walls.push_back(new SeeableLine(1.5f, -1.5f, 1.5f, 1.5f, &grimeTexture));
-
-	//walls.push_back(new SeeableRectangle(-.5f,-.5f,1,1,&grimeTexture));
+	walls.push_back(new SeeableRectangle(-1.5,-1.5,3,3,&grimeTexture));
 	
 
 
@@ -50,20 +41,26 @@ void GameLogicInterface::init() {
 	}
 
 
-	Enemy* BadGuy = new Enemy(.75f, .75f, .25f, .75f, Badie);
-	props.push_back(BadGuy);
+	//skull
+	Prop* badPtr = &BadGuy;
+	props.push_back(badPtr);
+
 
 	int width = 320;
-	static AnimatedSprite Brazier("assets/Brazier.png");
-	Brazier.addFrame(80, 0 * width, 0 * width, width, width);
-	Brazier.addFrame(80, 1 * width, 0 * width, width, width);
-	Brazier.addFrame(80, 2 * width, 0 * width, width, width);
-	Brazier.addFrame(80, 3 * width, 0 * width, width, width);
-	Brazier.addFrame(80, 4 * width, 0 * width, width, width);
-	Brazier.addFrame(80, 5 * width, 0 * width, width, width);
-	Brazier.addFrame(80, 6 * width, 0 * width, width, width);
-	Prop* BrazierProp = new Prop(-.75, 0, .25, .75, Brazier);
-	props.push_back(BrazierProp);
+	static AnimatedSprite BrazierAnim("assets/Brazier.png");
+	BrazierAnim.addFrame(80, 0 * width, 0 * width, width, width);
+	BrazierAnim.addFrame(80, 1 * width, 0 * width, width, width);
+	BrazierAnim.addFrame(80, 2 * width, 0 * width, width, width);
+	BrazierAnim.addFrame(80, 3 * width, 0 * width, width, width);
+	BrazierAnim.addFrame(80, 4 * width, 0 * width, width, width);
+	BrazierAnim.addFrame(80, 5 * width, 0 * width, width, width);
+	BrazierAnim.addFrame(80, 6 * width, 0 * width, width, width);
+
+
+
+	Prop* brazierProp = new Brazier(0.f, 0.f, .25f, .75f, BrazierAnim);
+
+	props.push_back(brazierProp);
 
 
 }
@@ -133,13 +130,13 @@ void GameLogicInterface::update(float deltaTime) {
 	}
 
 
+	//updates
+	BadGuy.Update(deltaTime);
 
 	//world rendering
 	ViewportManager::bindViewportNormalized(ViewportManager::getLeftViewportBound(), -1.0f, ViewportManager::getRightViewportBound() - ViewportManager::getLeftViewportBound(), 2.0f);
 	cam.renderView(walls, props);
 	ViewportManager::unbindViewport();
-
-
 	//minimap texture
 	static Texture minimapTexture(750 / 2, 500 / 2);
 	minimapTexture.bindAsRenderTarget();
@@ -149,7 +146,6 @@ void GameLogicInterface::update(float deltaTime) {
 		e->renderPrimitive({ -cam.getX(), -cam.getY() }, 1.0f);
 	}
 	minimapTexture.unbindAsRenderTarget();
-
 	// minimap quad
 	static TexturedQuad minimapQuad;
 	minimapQuad.setTexture(minimapTexture);
@@ -157,10 +153,7 @@ void GameLogicInterface::update(float deltaTime) {
 	minimapQuad.setY(ViewportManager::getBottomViewportBound());
 	minimapQuad.setWidth(0.75f);
 	minimapQuad.setHeight(0.5f);
-
-
-	// primitave rays
-
+	// primitave rays for minimap
 	static float colorShift = 0.0f;
 	colorShift += 0.03f * deltaTime / 16.0f;
 	for (int i = 0; i < primativeFOV.size(); i++) {
