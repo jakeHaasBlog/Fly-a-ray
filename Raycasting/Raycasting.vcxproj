@@ -45,6 +45,7 @@
     <ClCompile Include="src\game\Brazier.cpp" />
     <ClCompile Include="src\game\Enemy.cpp" />
     <ClCompile Include="src\game\GameLogicInterface.cpp" />
+    <ClCompile Include="src\game\MapGen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\AnimatedSprite.h" />
@@ -72,6 +73,7 @@
     <ClInclude Include="src\game\Brazier.h" />
     <ClInclude Include="src\game\Enemy.h" />
     <ClInclude Include="src\game\GameLogicInterface.h" />
+    <ClInclude Include="src\game\MapGen.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

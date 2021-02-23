@@ -1,6 +1,7 @@
 #include "game/GameLogicInterface.h"
 #include "game/Enemy.h";
 #include "game/Brazier.h"
+#include "game/MapGen.h"
 
 // this stops the variables declared here from becoming globaly accessable
 namespace {
@@ -27,10 +28,10 @@ void GameLogicInterface::init() {
 	window.setResolution(1920, 1080);
 
 
-	//outer walls
+	maping::init(&walls);
+	maping::setWalls();
 
-	walls.push_back(new SeeableRectangle(-1.5,-1.5,3,3,&grimeTexture));
-	
+	std::cout << walls.size() << std::endl;
 
 
 
@@ -55,9 +56,7 @@ void GameLogicInterface::init() {
 	BrazierAnim.addFrame(80, 4 * width, 0 * width, width, width);
 	BrazierAnim.addFrame(80, 5 * width, 0 * width, width, width);
 	BrazierAnim.addFrame(80, 6 * width, 0 * width, width, width);
-
-
-
+	
 	Prop* brazierProp = new Brazier(0.f, 0.f, .25f, .75f, BrazierAnim);
 
 	props.push_back(brazierProp);
