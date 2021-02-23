@@ -5,7 +5,7 @@
 
 // this stops the variables declared here from becoming globaly accessable
 namespace {
-	Camera cam = Camera(0, -1, 0, 1.2, 300);
+	Camera cam = Camera(0.3, 0.3, 0, 1.2, 300);
 	std::vector<SeeableEntity*> walls = {};
 	BatchLines primativeFOV;
 	bool mouseEnabled = false;
@@ -32,8 +32,14 @@ void GameLogicInterface::init() {
 	maping::setWalls();
 
 	std::cout << walls.size() << std::endl;
+	for (int c = 0; c < walls.size(); c++){
+		SeeableLine* temp = dynamic_cast<SeeableLine*>(walls[c]);
+		if (temp) {
+			std::cout << temp->getX1() << " " << temp->getY1() << " " << temp->getX2() << " " << temp->getY2() << std::endl;
+		}
+	}
 
-
+	walls.push_back(new SeeableRectangle(0, 0, 4.8, 2.4, &grimeTexture));
 
 	int numLines = 120;
 	for (int i = 0; i < numLines; i++) {
@@ -41,6 +47,7 @@ void GameLogicInterface::init() {
 		primativeFOV.addLine(x / 2 - 1.0f, 0.9f, x / 2 - 1.0f, -0.9f);
 	}
 
+	
 
 	//skull
 	Prop* badPtr = &BadGuy;
@@ -57,7 +64,7 @@ void GameLogicInterface::init() {
 	BrazierAnim.addFrame(80, 5 * width, 0 * width, width, width);
 	BrazierAnim.addFrame(80, 6 * width, 0 * width, width, width);
 	
-	Prop* brazierProp = new Brazier(0.f, 0.f, .25f, .75f, BrazierAnim);
+	Prop* brazierProp = new Brazier(0.15f, 0.15f, .25f, .75f, BrazierAnim);
 
 	props.push_back(brazierProp);
 

@@ -10,15 +10,17 @@ namespace maping {
     std::vector<block> blocks;
     std::vector<SeeableEntity*>* wallsPtr;
 
+    // note : at this time, adding blocks to the edges of the map will crash the program.
+    // the far right is the only exception as long as you avoid corners.
     int map[] =
     {
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,1,0,0,1,1,0,1,1,0,0,0,0,0,
-        0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,
-        0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,
-        0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,
-        0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,
-        0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,
+        0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,1,0,0,1,1,0,0,1,0,0,
+        0,0,1,1,1,1,1,1,1,1,1,0,0,1,0,0,
+        0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,
+        0,0,1,1,1,0,0,0,1,1,1,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     };
 
@@ -83,7 +85,7 @@ namespace maping {
 
             break;
         case 1:
-            wallsPtr->push_back(new SeeableLine(blocks[blockIndex].pos.x, blocks[blockIndex].pos.y, blocks[blockIndex].pos.x, blocks[blockIndex].pos.y + blockSize));
+            wallsPtr->push_back(new SeeableLine(blocks[blockIndex].pos.x + blockSize, blocks[blockIndex].pos.y, blocks[blockIndex].pos.x + blockSize, blocks[blockIndex].pos.y + blockSize));
 
             break;
         case 2:
@@ -106,24 +108,28 @@ namespace maping {
 
 
     void extendEdge(int blockIndex, int edgeType) {
+        SeeableLine* linePtr;
         switch (edgeType) {
         case 0:
-            wallsPtr[blocks[blockIndex - 1].edgeIndex[edgeType]].p[1].position.x += blockSize;
+            linePtr = (SeeableLine*)(*wallsPtr)[blocks[blockIndex - 1].edgeIndex[edgeType]];
+            (*linePtr).setX2((*linePtr).getX2()+blockSize);
             blocks[blockIndex].edgeActive[edgeType] = true;
             blocks[blockIndex].edgeIndex[edgeType] = blocks[blockIndex - 1].edgeIndex[edgeType];
             break;
         case 1:
-            wallsPtr[blocks[blockIndex - colNum].edgeIndex[edgeType]].p[1].position.y += blockSize;
+            linePtr = (SeeableLine*)(*wallsPtr)[blocks[blockIndex - colNum].edgeIndex[edgeType]];
+            (*linePtr).setY2((*linePtr).getY2() + blockSize);
             blocks[blockIndex].edgeActive[edgeType] = true;
             blocks[blockIndex].edgeIndex[edgeType] = blocks[blockIndex - colNum].edgeIndex[edgeType];
             break;
         case 2:
-            wallsPtr[blocks[blockIndex - 1].edgeIndex[edgeType]].p[1].position.x += blockSize;
-            blocks[blockIndex].edgeActive[edgeType] = true;
+            linePtr = (SeeableLine*)(*wallsPtr)[blocks[blockIndex - 1].edgeIndex[edgeType]];
+            (*linePtr).setX2((*linePtr).getX2() + blockSize);
             blocks[blockIndex].edgeIndex[edgeType] = blocks[blockIndex - 1].edgeIndex[edgeType];
             break;
         case 3:
-            wallsPtr[blocks[blockIndex - colNum].edgeIndex[edgeType]].p[1].position.y += blockSize;
+            linePtr = (SeeableLine*)(*wallsPtr)[blocks[blockIndex - colNum].edgeIndex[edgeType]];
+            (*linePtr).setY2((*linePtr).getY2() + blockSize);
             blocks[blockIndex].edgeActive[edgeType] = true;
             blocks[blockIndex].edgeIndex[edgeType] = blocks[blockIndex - colNum].edgeIndex[edgeType];
             break;
