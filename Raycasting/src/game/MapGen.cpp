@@ -15,12 +15,12 @@ namespace maping {
     int map[] =
     {
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,1,0,0,1,1,0,0,1,0,0,
-        0,0,1,1,1,1,1,1,1,1,1,0,0,1,0,0,
-        0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,
-        0,0,1,1,1,0,0,0,1,1,1,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,
+        0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,
+        0,0,1,0,1,1,1,1,1,1,1,1,0,0,0,0,
+        0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     };
 
@@ -111,25 +111,35 @@ namespace maping {
         SeeableLine* linePtr;
         switch (edgeType) {
         case 0:
-            linePtr = (SeeableLine*)(*wallsPtr)[blocks[blockIndex - 1].edgeIndex[edgeType]];
-            (*linePtr).setX2((*linePtr).getX2()+blockSize);
+            linePtr = dynamic_cast<SeeableLine*>((*wallsPtr)[blocks[blockIndex-1].edgeIndex[edgeType]]);
+            if (linePtr) {
+                (*linePtr).setX2((*linePtr).getX2() + blockSize);
+            }
+            //typeof?
             blocks[blockIndex].edgeActive[edgeType] = true;
             blocks[blockIndex].edgeIndex[edgeType] = blocks[blockIndex - 1].edgeIndex[edgeType];
             break;
         case 1:
-            linePtr = (SeeableLine*)(*wallsPtr)[blocks[blockIndex - colNum].edgeIndex[edgeType]];
-            (*linePtr).setY2((*linePtr).getY2() + blockSize);
+            linePtr = dynamic_cast<SeeableLine*>((*wallsPtr)[blocks[blockIndex - colNum].edgeIndex[edgeType]]);
+            if (linePtr) {
+                (*linePtr).setY2((*linePtr).getY2() + blockSize);
+            }
             blocks[blockIndex].edgeActive[edgeType] = true;
             blocks[blockIndex].edgeIndex[edgeType] = blocks[blockIndex - colNum].edgeIndex[edgeType];
             break;
         case 2:
-            linePtr = (SeeableLine*)(*wallsPtr)[blocks[blockIndex - 1].edgeIndex[edgeType]];
-            (*linePtr).setX2((*linePtr).getX2() + blockSize);
+            linePtr = dynamic_cast<SeeableLine*>((*wallsPtr)[blocks[blockIndex - 1].edgeIndex[edgeType]]);
+            if (linePtr) {
+                (*linePtr).setX2((*linePtr).getX2() + blockSize);
+            }
+            blocks[blockIndex].edgeActive[edgeType] = true;
             blocks[blockIndex].edgeIndex[edgeType] = blocks[blockIndex - 1].edgeIndex[edgeType];
             break;
         case 3:
-            linePtr = (SeeableLine*)(*wallsPtr)[blocks[blockIndex - colNum].edgeIndex[edgeType]];
-            (*linePtr).setY2((*linePtr).getY2() + blockSize);
+            linePtr = dynamic_cast<SeeableLine*>((*wallsPtr)[blocks[blockIndex - colNum].edgeIndex[edgeType]]);
+            if (linePtr) {
+                (*linePtr).setY2((*linePtr).getY2() + blockSize);
+            }
             blocks[blockIndex].edgeActive[edgeType] = true;
             blocks[blockIndex].edgeIndex[edgeType] = blocks[blockIndex - colNum].edgeIndex[edgeType];
             break;
@@ -184,7 +194,7 @@ namespace maping {
                     else {
                         // if block has a block to it's north does that block have an eastern edge
                         if (!blocks[c - colNum].edgeActive[1]) {
-                            // if the block to the north does not have an eastern edge creat an eastern edge on this block
+                            // if the block to the north does not have an eastern edge create an eastern edge on this block
                             addWall(c, 1);
                         }
                         else {
