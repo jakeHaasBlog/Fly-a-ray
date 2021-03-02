@@ -1,5 +1,6 @@
 #include "AnimatedSprite.h"
 #include "engine/TextureManager.h"
+#include <iostream>
 
 AnimatedSprite::AnimatedSprite(const std::string & filepathToTexture)
 {
@@ -19,6 +20,31 @@ void AnimatedSprite::addAnimation(const std::string & animationName)
 void AnimatedSprite::bindAnimation(const std::string & animationName)
 {
 	currentAnimation = animationName;
+}
+
+
+
+void AnimatedSprite::setFrames(int rowCount, int colCount, int frameCount, float frameDir, float frameX, float frameY)
+{
+	int frameVal = 0;
+	for (int c = 0; c < colCount; c++) {
+		for (int r = 0; r < rowCount; r++) {
+
+			if (frameVal < frameCount) {
+				std::cout << frameX * r << " " << frameY * c << " " << frameX << " " << frameY << std::endl;
+				addFrame(frameDir, frameX * r, frameY * c, frameX, frameY);
+				frameVal++;
+			}
+			else {
+				std::cout << "no frame added" << std::endl;
+			}
+			
+		}
+	}
+
+
+
+
 }
 
 void AnimatedSprite::addFrame(float durration, int sampleX, int sampleY, int sampleWidth, int sampleHeight)

@@ -17,6 +17,7 @@ public:
 	void bindAnimation(const std::string& animationName);
 	
 	// this should only be used for initializaton
+	void setFrames(int rowCount, int colCount, int frameCount, float frameDir, float frameX, float frameY); // add frames in bulk
 	void addFrame(float durration, int sampleX, int sampleY, int sampleWidth, int sampleHeight);
 	int getFrameCount();
 

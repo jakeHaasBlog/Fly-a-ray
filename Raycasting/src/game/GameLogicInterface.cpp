@@ -31,13 +31,13 @@ void GameLogicInterface::init() {
 	maping::init(&walls);
 	maping::setWalls();
 
-	std::cout << walls.size() << std::endl;
-	for (int c = 0; c < walls.size(); c++){
-		SeeableLine* temp = dynamic_cast<SeeableLine*>(walls[c]);
-		if (temp) {
-			std::cout << temp->getX1() << " " << temp->getY1() << " " << temp->getX2() << " " << temp->getY2() << std::endl;
-		}
-	}
+	//std::cout << walls.size() << std::endl;
+	//for (int c = 0; c < walls.size(); c++){
+	//	SeeableLine* temp = dynamic_cast<SeeableLine*>(walls[c]);
+	//	if (temp) {
+	//		std::cout << temp->getX1() << " " << temp->getY1() << " " << temp->getX2() << " " << temp->getY2() << std::endl;
+	//	}
+	//}
 
 	walls.push_back(new SeeableRectangle(0, 0, 4.8, 2.4, &grimeTexture));
 
@@ -56,14 +56,7 @@ void GameLogicInterface::init() {
 
 	int width = 320;
 	static AnimatedSprite BrazierAnim("assets/Brazier.png");
-	BrazierAnim.addFrame(80, 0 * width, 0 * width, width, width);
-	BrazierAnim.addFrame(80, 1 * width, 0 * width, width, width);
-	BrazierAnim.addFrame(80, 2 * width, 0 * width, width, width);
-	BrazierAnim.addFrame(80, 3 * width, 0 * width, width, width);
-	BrazierAnim.addFrame(80, 4 * width, 0 * width, width, width);
-	BrazierAnim.addFrame(80, 5 * width, 0 * width, width, width);
-	BrazierAnim.addFrame(80, 6 * width, 0 * width, width, width);
-	
+	BrazierAnim.setFrames(7,1,7,80,width,width);
 	Prop* brazierProp = new Brazier(0.15f, 0.15f, .25f, .75f, BrazierAnim);
 
 	props.push_back(brazierProp);
